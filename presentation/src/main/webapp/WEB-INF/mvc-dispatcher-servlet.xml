@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <import resource="classpath:dao-context.xml"/>
+
+    <context:annotation-config/>
+    <context:component-scan base-package="controller" />
+
+    <bean id="employeeDao" class="dao.implementation.EmployeeAccountDaoImpl"/>
+
+    <bean id="employeeService" class="service.implementation.EmployeeAccountServiceImpl" >
+        <property name="employeeDao" ref="employeeDao"/>
+    </bean>
+
+    <bean id="railWayStationDao" class="dao.implementation.RailWayStationDaoImpl"/>
+
+    <bean id="railWayStationService" class="service.implementation.RailWayStationServiceImpl" >
+        <property name="railWayStationDao" ref="railWayStationDao"/>
+    </bean>
+
+    <bean id="trainDao" class="dao.implementation.TrainDaoImpl"/>
+
+    <bean id="trainService" class="service.implementation.TrainServiceImpl" >
+        <property name="trainDao" ref="trainDao"/>
+    </bean>
+
+
+    <bean id="scheduleDao" class="dao.implementation.ScheduleDaoImpl"/>
+
+    <bean id="scheduleService" class="service.implementation.ScheduleServiceImpl" >
+        <property name="scheduleDao" ref="scheduleDao"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+
+</beans>

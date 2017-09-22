@@ -1,0 +1,13 @@
+# This file contains a set of project files for excluding out of version control
+
+# Exclude compiled classes
+**/target
+**/classes
+**/out
+
+# Exclude files of IDE environment
+/.idea
+*.iml
+
+# Exclude downloaded libs
+*lib
