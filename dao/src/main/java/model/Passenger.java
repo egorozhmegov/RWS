@@ -16,7 +16,7 @@ public class Passenger implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "PASSENGER_ID")
     private long passengerId;
 
     @Column(name = "FIRST_NAME")
@@ -31,6 +31,9 @@ public class Passenger implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Ticket ticket;
+
+    @ManyToOne(targetEntity = Train.class)
+    private Train train;
 
     public Passenger(){
     }
@@ -79,6 +82,14 @@ public class Passenger implements Serializable {
 
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
+    }
+
+    public Train getTrain() {
+        return train;
+    }
+
+    public void setTrain(Train train) {
+        this.train = train;
     }
 
     @Override

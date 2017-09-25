@@ -17,13 +17,19 @@ public class RailWayStation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "STATION_ID")
     private long stationId;
 
     @Column(name = "TITLE")
     private String stationName;
 
+    @ManyToMany(targetEntity = Train.class)
+    private List<Train> trains;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="STATION_SCHEDULE",
+            joinColumns = @JoinColumn(name = "STATION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SCHEDULE_ID"))
     private List<Schedule> schedule = new ArrayList<>();
 
     public RailWayStation(){
@@ -55,6 +61,14 @@ public class RailWayStation implements Serializable {
 
     public void setSchedule(List<Schedule> schedule) {
         this.schedule = schedule;
+    }
+
+    public List<Train> getTrains() {
+        return trains;
+    }
+
+    public void setTrains(List<Train> trains) {
+        this.trains = trains;
     }
 
     @Override

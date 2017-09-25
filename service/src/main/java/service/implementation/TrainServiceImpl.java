@@ -21,14 +21,14 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     private TrainDao trainDao;
 
     /**
-     * Get root points by id.
+     * Get route point by id.
      *
      * @param id train id.
      * @return List<RootPoint>.
      */
     @Override
-    public List<RailWayStation> getRootPointsById(int id) {
-        return trainDao.getRootPointsById(id);
+    public List<RailWayStation> getRoutePointById(int id) {
+        return trainDao.getRoutePointById(id);
     }
 
     public void setTrainDao(TrainDao trainDao) {

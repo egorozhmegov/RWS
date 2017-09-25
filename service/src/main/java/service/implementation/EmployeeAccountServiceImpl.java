@@ -26,7 +26,7 @@ public class EmployeeAccountServiceImpl
     private EmployeeAccountDao employeeDao;
 
     /**
-     * Gets employee by login.
+     * Get employee by login.
      *
      * @param login login.
      * @return EmployeeAccount.

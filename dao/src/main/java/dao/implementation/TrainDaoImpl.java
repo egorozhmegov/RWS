@@ -36,15 +36,15 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
     }
 
     /**
-     * Get root points by id.
+     * Get route point by id.
      *
      * @param id train id.
      * @return RailWayStation.
      */
     @Override
-    public List<RailWayStation> getRootPointsById(int id) {
+    public List<RailWayStation> getRoutePointById(int id) {
         Train train = read(id);
         LOG.info(String.format("RootPoint list of train with id = %s loaded seccessfully", id));
-        return train.getRootPoints();
+        return train.getRoute();
     }
 }

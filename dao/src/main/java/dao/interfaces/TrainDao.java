@@ -10,10 +10,10 @@ Train dao interface. Extends generic interface.
 
 public interface TrainDao extends GenericDao<Train>{
     /**
-     * Gets root points by id.
+     * Get route point by id.
      *
      * @param id train id.
      * @return RailWayStation.
      */
-    List<RailWayStation> getRootPointsById(int id);
+    List<RailWayStation> getRoutePointById(int id);
 }

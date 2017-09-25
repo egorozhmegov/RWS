@@ -16,7 +16,7 @@ public class Train implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "TRAIN_ID")
     private long trainId;
 
     @Column(name = "TRAIN_NUMBER")
@@ -29,9 +29,15 @@ public class Train implements Serializable {
     private int tariff;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<RailWayStation> rootPoints = new ArrayList<>();
+    @JoinTable(name = "TRAIN_STATION",
+            joinColumns = @JoinColumn(name = "TRAIN_ID"),
+            inverseJoinColumns = @JoinColumn(name ="STATION_ID"))
+    private List<RailWayStation> route = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="TRAIN_PASSENGER",
+            joinColumns = @JoinColumn(name = "TRAIN_ID"),
+            inverseJoinColumns = @JoinColumn(name = "PASSENGER_ID"))
     private List<Passenger> registeredPassengers = new ArrayList<>();
 
     public Train(){
@@ -43,12 +49,12 @@ public class Train implements Serializable {
         seats = 92;
     }
 
-    public List<RailWayStation> getRootPoints() {
-        return rootPoints;
+    public List<RailWayStation> getRoute() {
+        return route;
     }
 
-    public void setRootPoints(List<RailWayStation> rootPoints) {
-        this.rootPoints = rootPoints;
+    public void setRoute(List<RailWayStation> route) {
+        this.route = route;
     }
 
     public List<Passenger> getRegisteredPassengers() {
