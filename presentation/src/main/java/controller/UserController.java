@@ -1,6 +1,7 @@
 package controller;
 
 import exception.ServiceException;
+import exception.UserServiceException;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +25,14 @@ public class UserController {
 
     @RequestMapping(value="/loginEmployee", method = RequestMethod.POST)
     public ResponseEntity<User> login(@RequestBody User user, HttpServletResponse response) {
-        User authEmployee = userService.authenticate(user);
-        if(authEmployee == null){
-            return new ResponseEntity<>(authEmployee, HttpStatus.UNAUTHORIZED);
-        } else {
-            Cookie cookie = new Cookie("RWS_COOKIE", "1111");
+        try{
+            System.out.println(user);
+            User authUser = userService.authenticate(user);
+            Cookie cookie = new Cookie("RWS_COOKIE", "dF6p");
             response.addCookie(cookie);
-            return new ResponseEntity<>(authEmployee, HttpStatus.OK);
+            return new ResponseEntity<>(authUser, HttpStatus.OK);
+        } catch (UserServiceException e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 

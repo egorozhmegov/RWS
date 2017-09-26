@@ -43,6 +43,13 @@ public class TrainController {
             railWayStationService.create(new RailWayStation("A"));
             railWayStationService.create(new RailWayStation("B"));
             railWayStationService.create(new RailWayStation("C"));
+            RailWayStation s1 = railWayStationService.read(1);
+            System.out.println(s1);
+            RailWayStation s2 = railWayStationService.read(2);
+            RailWayStation s3 = railWayStationService.read(3);
+            train.getRoute().add(s1);
+            train.getRoute().add(s2);
+            train.getRoute().add(s3);
             trainService.create(train);
             return new ResponseEntity<Train>(train, HttpStatus.CREATED);
         }

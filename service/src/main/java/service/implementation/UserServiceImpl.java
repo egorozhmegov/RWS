@@ -3,8 +3,7 @@ package service.implementation;
 import dao.interfaces.UserDao;
 import dao.interfaces.GenericDao;
 import model.User;
-import exception.UserExistLoginServiceException;
-import exception.UserNullEntityServiceException;
+import exception.UserServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,24 +55,31 @@ public class UserServiceImpl
                 || user.getUserLogin().isEmpty()
                 || user.getUserPassword() == null
                 || user.getUserPassword().isEmpty()){
-            LOG.info(String.format("Invalid user data: %s", user));
-            throw new UserNullEntityServiceException("Method: registerUser. Null entity.");
+            throw new UserServiceException("Null entity.");
         } else if(getUserByLogin(user.getUserLogin()) != null){
-            LOG.info(String.format("Exist login: %s", user.getUserLogin()));
-            throw new UserExistLoginServiceException("Method: registerUser. Exist login.");
+            throw new UserServiceException("Login exist already");
         } else {
             userDao.create(user);
-            LOG.info(String.format("User successfully registered. User detailes: %s", user));
         }
     }
 
+    /**
+     * Check login and password of users.
+     *
+     * @param authentication
+     * @return User
+     */
     @Override
     @Transactional
-    public User authenticate(User authentication) {
+    public User authenticate(User authentication) throws UserServiceException {
         String login = authentication.getUserLogin();
         String password = authentication.getUserPassword();
-
-        return userDao.getUserByLoginAndPassword(login, password);
+        User user = userDao.getUserByLoginAndPassword(login, password);
+        if(user == null) {
+            LOG.info("Not valid login or password.");
+            throw new UserServiceException("Not valid login or password.");
+        }
+        return user;
     }
 
     public void setUserDao(UserDao userDao) {

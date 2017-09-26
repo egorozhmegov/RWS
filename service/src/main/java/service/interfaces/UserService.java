@@ -1,5 +1,6 @@
 package service.interfaces;
 
+import exception.UserServiceException;
 import model.User;
 
 public interface UserService extends GenericService<User> {
@@ -24,5 +25,5 @@ public interface UserService extends GenericService<User> {
      * @param authentication
      * @return User
      */
-    User authenticate(User authentication);
+    User authenticate(User authentication) throws UserServiceException;
 }
