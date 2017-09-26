@@ -19,20 +19,22 @@ public class Schedule implements Serializable {
     @Column(name = "SCHEDULE_ID")
     private long scheduleId;
 
-    @Column(name = "TRAIN_NUMBER")
-    private String trainNumber;
-
     @Column(name = "DEPARTURE_TIME")
     private LocalDateTime departureTime;
 
     @Column(name = "ARRIVAL_TIME")
     private LocalDateTime arrivalTime;
 
+    @ManyToOne(targetEntity = Train.class)
+    private Train train;
+
+    @ManyToOne(targetEntity = RailWayStation.class)
+    private RailWayStation station;
+
     public Schedule(){
     }
 
-    public Schedule(String trainNumber, LocalDateTime departureTime, LocalDateTime arrivalTime) {
-        this.trainNumber = trainNumber;
+    public Schedule(LocalDateTime departureTime, LocalDateTime arrivalTime) {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
     }
@@ -61,20 +63,19 @@ public class Schedule implements Serializable {
         this.scheduleId = scheduleId;
     }
 
-    public String getTrainNumber() {
-        return trainNumber;
+    public Train getTrain() {
+        return train;
     }
 
-    public void setTrainNumber(String trainNumber) {
-        this.trainNumber = trainNumber;
+    public void setTrain(Train train) {
+        this.train = train;
     }
 
-    @Override
-    public String toString() {
-        return "Schedule{" +
-                "scheduleId=" + scheduleId +
-                ", departureTime=" + departureTime +
-                ", arrivalTime=" + arrivalTime +
-                '}';
+    public RailWayStation getStation() {
+        return station;
+    }
+
+    public void setStation(RailWayStation station) {
+        this.station = station;
     }
 }
