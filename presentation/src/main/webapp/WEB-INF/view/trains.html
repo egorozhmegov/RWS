@@ -1,0 +1,191 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="style/index.css">
+    <link rel="stylesheet" href="style/trains.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
+
+    <link rel="stylesheet" href="datetimepicker/bootstrap-datetimepicker.min.css">
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="datetimepicker/moment.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="datetimepicker/bootstrap-datetimepicker.js"></script>
+
+    <title>Trains</title>
+</head>
+
+<body class="container-fluid">
+
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="modal fade" id="addTrain" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header"><button class="close" type="button" data-dismiss="modal">x</button>
+                        <h4 class="modal-title" id="myModalLabel">Add train</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" name="trainAddForm" ng-submit="addTrain()">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="trainNumber" ng-model="trainNumber" placeholder="Train number" required>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="tariff" ng-model="tariff" placeholder="Tariff" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-success">Save</button>
+                            <div class="animate-error" style="color:red" ng-show="showAddTrainError">
+                                <br><h4>Train {{trainNumber}} is exist already.</h4>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3><p class="text-center"><strong>Trains</strong></p></h3>
+
+        <div>
+            <table class="table table-striped table-hover" ng-init="getAllTrains()">
+                <tr>
+                    <th>Id</th>
+                    <th>Train number</th>
+                    <th>Tariff</th>
+                    <th><a data-toggle="modal" data-target="#addTrain">
+                        <button type="button" class="btn btn-default btn-circle btn-sm">
+                            <i class="glyphicon glyphicon-plus"></i></button>
+                    </a>
+                </tr>
+                <tr ng-repeat="train in trains" ng-click="getTrain(train)">
+                    <td>
+                        {{train.trainId}}
+                    </td>
+
+                    <td>
+                        <span ng-hide="train.editing" ng-dblclick="editTrain(train)">{{train.trainNumber}}</span>
+                        <input ng-show="train.editing" ng-model="train.trainNumber" ng-blur="doneEditing(train)" autofocus />
+                    </td>
+
+                    <td>
+                        <span ng-hide="train.editing" ng-dblclick="editTrain(train)">{{train.tariff}}</span>
+                        <input ng-show="train.editing" ng-model="train.tariff" ng-blur="doneEditing(train)" autofocus />
+                    </td>
+
+                    <td>
+                        <button type="button" ng-click="removeTrain(train.trainId)" class="btn btn-danger custom-width">Remove</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="modal fade" id="addRootPoints" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header"><button class="close" type="button" data-dismiss="modal">x</button>
+                        <h4 class="modal-title" id="myModalLabel2">Add root point {{train.trainNumber}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" name="rootPointAddForm" ng-submit="addRootPoint()">
+                            <div class="form-group">
+                                <input type="text" ng-model="addPoint" ng-focus="focus=true"
+                                       class="form-control" name="addPoint" placeholder="Station" required />
+                                <div ng-show="focus">
+                                    <div class="search-result" ng-repeat="item in stations | filter:addPoint"
+                                         ng-bind="item.stationName" ng-click="setSearchQuery(item.stationName)"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group date" id="arrivalTime">
+                                    <input type="text" ng-model="arrivalTime" name="arrivalTime" class="form-control" placeholder="Arrival time" required/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+
+                                <script type="text/javascript">
+                                    $(function () {
+                                        $('#arrivalTime').datetimepicker();
+                                    });
+                                </script>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group date" id="departureTime">
+                                    <input type="text" ng-model="departureTime" name="departureTime" class="form-control" placeholder="Departure time" required/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+
+                                <script type="text/javascript">
+                                    $(function () {
+                                        $('#departureTime').datetimepicker();
+                                    });
+                                </script>
+                            </div>
+
+
+                            <button type="submit" class="btn btn-success">Save</button>
+                            <div class="animate-error" style="color:red" ng-show="showAddRootPointError">
+                                <br><h4>Invalid form data.</h4>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <h3><p class="text-center"><strong>Root points of the train {{train.trainNumber}}</strong></p></h3>
+        <div>
+            <table class="table table-striped table-hover" ng-init="getAllRootPoints()">
+                <tr>
+                    <th>Station</th>
+                    <th>Arrival time</th>
+                    <th>Departure time</th>
+                    <th><a data-toggle="modal" data-target="#addRootPoints">
+                        <button type="button" class="btn btn-default btn-circle btn-sm">
+                            <i class="glyphicon glyphicon-plus"></i></button>
+                    </a>
+                </tr>
+
+                <tr ng-repeat="rootpoint in train.rootPoints">
+                    <td>
+                        {{rootpoint.stationName}}
+                    </td>
+
+                    <td ng-init="arrivalTime(train.trainNumber)">
+
+                    </td>
+
+                    <td>
+
+                    </td>
+
+                    <td>
+
+                    </td>
+                </tr>
+
+                <tr ng-repeat="rootPoint in rootPoints" ng-click="getRootPoints(rootPoint)">
+
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

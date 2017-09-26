@@ -41,6 +41,7 @@ abstract class GenericDaoImpl<T> implements GenericDao<T> {
     @Override
     public void create(T entity) {
         getEntityManager().persist(entity);
+
         LOG.info(String.format("Entity successfully created. Entity details: %s", entity));
     }
 

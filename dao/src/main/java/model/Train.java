@@ -23,12 +23,12 @@ public class Train implements Serializable {
     private String trainNumber;
 
     @Column(name = "SEATS")
-    private short seats;
+    private int seats;
 
     @Column(name = "TARIFF")
     private int tariff;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "TRAIN_STATION",
             joinColumns = @JoinColumn(name = "TRAIN_ID"),
             inverseJoinColumns = @JoinColumn(name ="STATION_ID"))
@@ -46,7 +46,7 @@ public class Train implements Serializable {
     public Train(String trainNumber, int tariff) {
         this.trainNumber = trainNumber;
         this.tariff = tariff;
-        seats = 92;
+        setSeats(92);
     }
 
     public List<RailWayStation> getRoute() {
@@ -89,11 +89,11 @@ public class Train implements Serializable {
         this.tariff = tariff;
     }
 
-    public short getSeats() {
+    public int getSeats() {
         return seats;
     }
 
-    public void setSeats(short seats) {
+    public void setSeats(int seats) {
         if(seats <= 92) this.seats = seats;
         else this.seats = 92;
     }

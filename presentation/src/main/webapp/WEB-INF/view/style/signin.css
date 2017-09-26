@@ -1,0 +1,25 @@
+.btn{
+    background: black;
+    color: white;
+}
+
+.btn:hover,
+
+.btn:focus,
+
+.btn:visited{
+    background: gray;
+    color: black;
+}
+
+.animate-error.ng-hide {
+    opacity: 0;
+}
+
+.animate-error.ng-hide-add,
+.animate-error.ng-hide-remove {
+    transition: all linear 0.5s;
+}
+
+
+

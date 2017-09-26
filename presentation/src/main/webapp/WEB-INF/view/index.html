@@ -1,0 +1,79 @@
+<html ng-app="app" ng-controller="indexCtrl">
+<head>
+    <link rel="stylesheet" href="datetimepicker/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="datetimepicker/moment/moment-with-locales.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="datetimepicker/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="style/index.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
+    <script src="app.js"></script>
+    <script src="modules/configuration/routing.js"></script>
+    <script src="modules/controller/authenticate.js"></script>
+    <script src="modules/controller/stations.js"></script>
+    <script src="modules/controller/trains.js"></script>
+    <script src="modules/controller/index.js"></script>
+    <script src="modules/service/register.js"></script>
+
+    <title>RailwayScanner</title>
+</head>
+
+<body>
+<div class="container-fluid">
+    <header>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#"><img id="logo" src="img/logo.jpg"></a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <h1 class="form-signin-heading">RailwayScanner</h1>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li ng-hide="loggedIn"><a href="#registration"><i class="glyphicon glyphicon-user"></i> registration</a></li>
+                        <li ng-hide="loggedIn"><a href="#signin"><i class="glyphicon glyphicon-off"></i> sign in</a></li>
+                        <li ng-show="loggedIn"><a><i class="glyphicon glyphicon-user"></i> {{user}}</a></li>
+                        <li ng-show="loggedIn"><a href="" ng-click="logout()"><i class="glyphicon glyphicon-off"></i> sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#trains">trains</a></li>
+                        <li><a href="#stations">railway stations</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+</div>
+
+<div class="container-fluid" ng-view></div>
+</body>
+</html>

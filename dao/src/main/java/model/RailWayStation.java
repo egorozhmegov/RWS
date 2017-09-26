@@ -23,14 +23,17 @@ public class RailWayStation implements Serializable {
     @Column(name = "TITLE")
     private String stationName;
 
-    @ManyToMany(targetEntity = Train.class)
-    private List<Train> trains;
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name="STATION_SCHEDULE",
             joinColumns = @JoinColumn(name = "STATION_ID"),
             inverseJoinColumns = @JoinColumn(name = "SCHEDULE_ID"))
     private List<Schedule> schedule = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "TRAIN_STATION",
+            joinColumns = @JoinColumn(name = "STATION_ID"),
+            inverseJoinColumns = @JoinColumn(name ="TRAIN_ID"))
+    private List<Train> trains = new ArrayList<>();
 
     public RailWayStation(){
     }

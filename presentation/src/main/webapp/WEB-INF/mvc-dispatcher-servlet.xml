@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <import resource="classpath:dao-context.xml"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="controller" />
 
-    <bean id="employeeDao" class="dao.implementation.EmployeeAccountDaoImpl"/>
+    <mvc:resources mapping="/view/**" location="/WEB-INF/view/" />
+    <mvc:default-servlet-handler/>
+    <mvc:annotation-driven/>
 
-    <bean id="employeeService" class="service.implementation.EmployeeAccountServiceImpl" >
-        <property name="employeeDao" ref="employeeDao"/>
+    <bean id="userDao" class="dao.implementation.UserDaoImpl"/>
+
+    <bean id="userService" class="service.implementation.UserServiceImpl" >
+        <property name="userDao" ref="userDao"/>
     </bean>
+
+    <bean id="userRoleDao" class="dao.implementation.UserRoleDaoImpl"/>
+
+    <bean id="userRoleService" class="service.implementation.UserRoleServiceImpl" >
+        <property name="userRoleDao" ref="userRoleDao"/>
+    </bean>
+
 
     <bean id="railWayStationDao" class="dao.implementation.RailWayStationDaoImpl"/>
 
@@ -36,6 +55,5 @@
     </bean>
 
     <tx:annotation-driven transaction-manager="transactionManager" />
-
 
 </beans>

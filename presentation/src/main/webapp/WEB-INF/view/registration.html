@@ -1,0 +1,185 @@
+<html>
+<head>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="style/registration.css">
+    <link rel="stylesheet" href="style/index.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-animate.js"></script>
+
+    <title>Registration</title>
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4"></div>
+
+        <div class="col-lg-4">
+            <h2>Registration</h2>
+
+            <form  name="registration" role="form" ng-submit="registerEmployee()">
+
+                <label>First Name</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" class="form-control input-sm"
+                           name="firstName"
+                           ng-model="firstName"
+                           placeholder="Enter your First Name"
+                           required
+                           oninvalid="this.setCustomValidity('Fill this form')"
+                           oninput="setCustomValidity('')"
+                    />
+                </div>
+                <div class="animate-error" style="color:red"
+                     ng-show="registration.firstName.$dirty
+                                && registration.firstName.$invalid
+                                    && registration.firstName.$error.required">
+                    First Name is not valid.
+                </div>
+
+
+
+                <label>Last Name</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" class="form-control input-sm"
+                           name="lastName"
+                           ng-model="lastName"
+                           placeholder="Enter your Last Name"
+                           required
+                           oninvalid="this.setCustomValidity('Fill this form')"
+                           oninput="setCustomValidity('')"
+                    />
+                </div>
+                <div class="animate-error" style="color:red"
+                     ng-show="registration.lastName.$dirty
+                                && registration.lastName.$invalid
+                                    && registration.lastName.$error.required">
+                    Last Name is not valid.
+                </div>
+
+
+
+                <label>Email</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-envelope" aria-hidden="true"></i>
+                    </span>
+                    <input type="email" class="form-control input-sm"
+                           name="myEmail"
+                           ng-model="myEmail"
+                           placeholder="Enter your Email"
+                           required
+                           oninvalid="this.setCustomValidity('Fill this form')"
+                           oninput="setCustomValidity('')"
+                    />
+                </div>
+                <div class="animate-error" style="color:red"
+                     ng-show="registration.myEmail.$dirty
+                            && registration.myEmail.$invalid
+                                && registration.myEmail.$invalid">
+                    Email is not valid.
+                </div>
+
+
+
+                <label>Login</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" class="form-control input-sm"
+                           name="login"
+                           ng-model="login"
+                           ng-minlength="3"
+                           placeholder="Enter your Login"
+                           required
+                           oninvalid="this.setCustomValidity('Fill this form')"
+                           oninput="setCustomValidity('')"
+                    />
+                </div>
+                <div class="animate-error" style="color:red"
+                     ng-show="registration.login.$dirty
+                               && registration.login.$invalid
+                                    && registration.login.$error.required">
+                    Login is not valid.
+                </div>
+                <div class="animate-error" style="color:red"
+                     ng-show="registration.login.$error.minlength">
+                    Login is too short.
+                </div>
+
+
+
+                <label>Password</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-lock" aria-hidden="true"></i>
+                    </span>
+                    <input type="password" class="form-control input-sm"
+                           name="myPassword"
+                           ng-model="myPassword"
+                           ng-minlength="4"
+                           placeholder="Enter your Password"
+                           required
+                           oninvalid="this.setCustomValidity('Fill this form')"
+                           oninput="setCustomValidity('')"
+                           ng-keyup="comparePswd()"
+                    />
+                </div>
+                <div class="animate-error" style="color:red"
+                     ng-show="registration.myPassword.$dirty
+                               && registration.myPassword.$invalid
+                                    && registration.myPassword.$error.required">
+                    Password is not valid.
+                </div>
+                <div class="animate-error" style="color:red"
+                     ng-show="registration.myPassword.$error.minlength">Password is too short.
+                </div>
+
+
+                <label>Confirm Password</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-lock" aria-hidden="true"></i>
+                    </span>
+                    <input type="password" class="form-control input-sm"
+                           name="confirm"
+                           ng-model="confirm"
+                           placeholder="Confirm your Password"
+                           required
+                           oninvalid="this.setCustomValidity('Fill this form')"
+                           oninput="setCustomValidity('')"
+                           ng-keyup="comparePswd()"/>
+                </div>
+                <div class="animate-error" style="color:red"
+                     ng-show="registration.confirm.$dirty
+                                && registration.confirm.$invalid
+                                    && registration.confirm.$error.required">
+                    Password is not match.
+                </div><br>
+
+
+                <button type="submit" class="btn btn-sm btn-block login-button">
+                    Register
+                </button>
+                <div class="animate-error" style="color:red" ng-show="showRegisterError">
+                    <br><h4>Invalid form or exist login.</h4>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-4"></div>
+    </div>
+</div>
+</body>
+</html>

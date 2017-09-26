@@ -18,6 +18,7 @@
         <com.fasterxml.jackson.core.version>2.4.1</com.fasterxml.jackson.core.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <t-systems.java.school.version>1.0-SNAPSHOT</t-systems.java.school.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>

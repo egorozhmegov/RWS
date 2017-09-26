@@ -2,7 +2,7 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /*
 Class of schedule entity. Use for information about train arrival and departure time.
@@ -20,39 +20,33 @@ public class Schedule implements Serializable {
     private long scheduleId;
 
     @Column(name = "DEPARTURE_TIME")
-    private LocalDateTime departureTime;
+    private LocalTime departureTime;
 
     @Column(name = "ARRIVAL_TIME")
-    private LocalDateTime arrivalTime;
+    private LocalTime arrivalTime;
 
-    @ManyToOne(targetEntity = Train.class)
+    @Column(name = "ARRIVAL_DAY")
+    private String arrivalDay;
+
+    @Column(name = "DEPARTURE_DAY")
+    private String departureDay;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "TRAIN_ID")
     private Train train;
 
-    @ManyToOne(targetEntity = RailWayStation.class)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "STATION_ID")
     private RailWayStation station;
 
     public Schedule(){
     }
 
-    public Schedule(LocalDateTime departureTime, LocalDateTime arrivalTime) {
+    public Schedule(LocalTime departureTime, LocalTime arrivalTime, String arrivalDay, String departureDay) {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
-    }
-
-    public LocalDateTime getDepartureTime() {
-        return departureTime;
-    }
-
-    public void setDepartureTime(LocalDateTime departureTime) {
-        this.departureTime = departureTime;
-    }
-
-    public LocalDateTime getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public void setArrivalTime(LocalDateTime arrivalTime) {
-        this.arrivalTime = arrivalTime;
+        this.arrivalDay = arrivalDay;
+        this.departureDay = departureDay;
     }
 
     public long getScheduleId() {
@@ -61,6 +55,38 @@ public class Schedule implements Serializable {
 
     public void setScheduleId(long scheduleId) {
         this.scheduleId = scheduleId;
+    }
+
+    public LocalTime getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(LocalTime departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public LocalTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    public String getArrivalDay() {
+        return arrivalDay;
+    }
+
+    public void setArrivalDay(String arrivalDay) {
+        this.arrivalDay = arrivalDay;
+    }
+
+    public String getDepartureDay() {
+        return departureDay;
+    }
+
+    public void setDepartureDay(String departureDay) {
+        this.departureDay = departureDay;
     }
 
     public Train getTrain() {

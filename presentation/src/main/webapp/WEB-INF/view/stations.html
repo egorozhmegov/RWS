@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="style/index.css">
+    <link rel="stylesheet" href="style/stations.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
+
+    <title>Stations</title>
+</head>
+
+<body class="container-fluid">
+<div class="row">
+    <div class="col-md-2">
+        <h3><p class="text-center"><strong>Add station</strong></p></h3>
+
+        <form role="form" name="stationAddForm" ng-submit="addStation()">
+            <div class="form-group">
+                <input type="text" class="form-control" name="stationName" ng-model="stationName" placeholder="Station name" required>
+            </div>
+
+            <button type="submit" class="btn btn-success">Add station</button>
+            <div class="animate-error" style="color:red" ng-show="showAddStationError">
+                <br><h4>Station {{stationName}} is exist already.</h4>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-5">
+        <h3><p class="text-center"><strong>List of stations</strong></p></h3>
+
+        <div>
+            <table class="table table-striped table-hover" ng-init="getAllStations()">
+                <tr>
+                    <th>Id</th>
+                    <th>Station name</th>
+                    <th></th>
+                </tr>
+                <tr ng-repeat="station in stations" ng-click="getStation(station)">
+                    <td>
+                        {{station.stationId}}
+                    </td>
+
+                    <td>
+                        <span ng-hide="station.editing" ng-dblclick="editStation(station)">{{station.stationName}}</span>
+                        <input ng-show="station.editing" ng-model="station.stationName" ng-blur="doneEditing(station)" autofocus />
+                    </td>
+
+                    <td>
+                        <button type="button" ng-click="removeStation(station.stationId)" class="btn btn-danger custom-width">Remove</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <h3><p class="text-center"><strong>Schedule</strong></p></h3>
+    </div>
+</div>
+</body>
+</html>

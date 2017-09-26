@@ -28,11 +28,15 @@ public class Passenger implements Serializable {
     @Column(name = "BIRTH_DAY")
     private LocalDate birthday;
 
+    @Column(name = "TRAIN_DATE")
+    private int trainDate;
+
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Ticket ticket;
 
-    @ManyToOne(targetEntity = Train.class)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "TRAIN_ID")
     private Train train;
 
     public Passenger(){

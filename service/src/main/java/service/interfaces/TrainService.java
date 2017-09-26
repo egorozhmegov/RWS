@@ -12,4 +12,6 @@ public interface TrainService extends GenericService<Train> {
      * @return List<RootPoint>.
      */
     List<RailWayStation> getRoutePointById(int id);
+
+    boolean existTrain(String number);
 }
