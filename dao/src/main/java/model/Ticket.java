@@ -16,7 +16,7 @@ public class Ticket implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private long ticketId;
+    private long id;
 
     @Column(name = "PRICE")
     private int ticketPrice;
@@ -31,12 +31,12 @@ public class Ticket implements Serializable {
         this.ticketPrice = ticketPrice;
     }
 
-    public long getTicketId() {
-        return ticketId;
+    public long getId() {
+        return id;
     }
 
-    public void setTicketId(long ticketId) {
-        this.ticketId = ticketId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getTicketPrice() {
@@ -58,7 +58,7 @@ public class Ticket implements Serializable {
     @Override
     public String toString() {
         return "Ticket{" +
-                "ticketId=" + ticketId +
+                "id=" + id +
                 ", ticketPrice=" + ticketPrice +
                 ", passenger=" + passenger +
                 '}';

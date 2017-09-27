@@ -1,5 +1,6 @@
 package dao.interfaces;
 
+import model.Employee;
 import model.User;
 
 /*
@@ -21,4 +22,13 @@ public interface UserDao extends GenericDao<User> {
      * @return User.
      */
     User getUserByLogin(String login);
+
+    /**
+     * Get employee by Fist Name and Last Name.
+     *
+     * @param firstName String
+     * @param lastName String
+     * @return Employee
+     */
+    Employee getEmployeeByFirstNameAndLastName(String firstName, String lastName);
 }

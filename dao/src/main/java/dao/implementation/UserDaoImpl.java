@@ -1,6 +1,7 @@
 package dao.implementation;
 
 import dao.interfaces.UserDao;
+import model.Employee;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import javax.persistence.Query;
  User dao implementation.
  */
 public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
+
     private final static Logger LOG = LoggerFactory.getLogger(UserDaoImpl.class);
 
     public UserDaoImpl() {
@@ -40,10 +42,10 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
      * @return User.
      */
     @Override
-    public User getUserByLoginAndPassword(final String login, final String password) {
+    public User getUserByLoginAndPassword(String login, String password) {
         try{
             String sqlQuery = String
-                    .format("SELECT u FROM User AS u WHERE u.userLogin = '%s' AND u.userPassword = '%s'", login, password);
+                    .format("SELECT u FROM User AS u WHERE u.login = '%s' AND u.password = '%s'", login, password);
             Query query = getEntityManager().createQuery(sqlQuery);
             return (User) query.getSingleResult();
         } catch (Exception e){
@@ -60,10 +62,27 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     @Override
     public User getUserByLogin(final String login) {
         try{
-            String sqlQuery = String.format("SELECT u FROM User AS u WHERE u.userLogin = '%s'", login);
+            String sqlQuery = String.format("SELECT u FROM User AS u WHERE u.login = '%s'", login);
             Query query = getEntityManager().createQuery(sqlQuery);
             return (User) query.getSingleResult();
         } catch (Throwable e){
+            return null;
+        }
+    }
+
+    /**
+     * Get employee by Fist Name and Last Name.
+     *
+     * @param firstName String
+     * @param lastName String
+     * @return Employee
+     */
+    @Override
+    public Employee getEmployeeByFirstNameAndLastName(String firstName, String lastName) {
+        try{
+            String query = String.format("SELECT e FROM Employee AS e WHERE e.firstName = '%s' AND e.lastName = '%s'", firstName, lastName);
+            return (Employee) getEntityManager().createQuery(query).getSingleResult();
+        } catch(Exception e) {
             return null;
         }
     }

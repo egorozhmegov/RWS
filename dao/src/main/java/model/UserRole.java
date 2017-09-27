@@ -17,10 +17,10 @@ public class UserRole implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ROLE_ID")
-    private int userRoleId;
+    private int id;
 
     @Column(name = "ROLE")
-    private String userRole;
+    private String role;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
@@ -29,23 +29,23 @@ public class UserRole implements Serializable {
     }
 
     public UserRole(String userRole) {
-        this.userRole = userRole;
+        this.role = userRole;
     }
 
-    public int getUserRoleId() {
-        return userRoleId;
+    public int getId() {
+        return id;
     }
 
-    public void setUserRoleId(int userRoleId) {
-        this.userRoleId = userRoleId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getUserRole() {
-        return userRole;
+    public String getRole() {
+        return role;
     }
 
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Set<User> getUsers() {

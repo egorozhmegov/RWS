@@ -43,7 +43,7 @@ class RailWayStationDaoImpl extends GenericDaoImpl<RailWayStation> implements Ra
     @Override
     public RailWayStation getStationByName(String name) {
         try{
-            String sqlQuery = String.format("SELECT r FROM RailWayStation AS r WHERE r.stationName = '%s'", name);
+            String sqlQuery = String.format("SELECT r FROM RailWayStation AS r WHERE r.title = '%s'", name);
             Query query = getEntityManager().createQuery(sqlQuery);
             RailWayStation station = (RailWayStation) query.getSingleResult();
             LOG.info(String.format("Found station with name: %s.", name));

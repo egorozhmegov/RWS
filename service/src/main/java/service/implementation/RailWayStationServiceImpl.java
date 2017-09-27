@@ -41,7 +41,7 @@ public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation
         } else {
             boolean exist = false;
             for(RailWayStation station : getDao().getAll()){
-                if(stationName.equals(station.getStationName())){
+                if(stationName.equals(station.getTitle())){
                     exist = true;
                     break;
                 }

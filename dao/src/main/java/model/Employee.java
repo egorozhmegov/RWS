@@ -15,42 +15,42 @@ public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "EMPLOYEE_ID")
-    private long employeeId;
+    private long id;
 
     @Column(name = "FIRST_NAME")
-    private String employeeFirstName;
+    private String firstName;
 
     @Column(name = "LAST_NAME")
-    private String employeeLastName;
+    private String lastName;
 
     public Employee(){}
 
-    public Employee(String employeeFirstName, String employeeLastName) {
-        this.employeeFirstName = employeeFirstName;
-        this.employeeLastName = employeeLastName;
+    public Employee(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public long getEmployeeId() {
-        return employeeId;
+    public long getId() {
+        return id;
     }
 
-    public void setEmployeeId(long employeeId) {
-        this.employeeId = employeeId;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getEmployeeFirstName() {
-        return employeeFirstName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setEmployeeFirstName(String employeeFirstName) {
-        this.employeeFirstName = employeeFirstName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getEmployeeLastName() {
-        return employeeLastName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setEmployeeLastName(String employeeLastName) {
-        this.employeeLastName = employeeLastName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

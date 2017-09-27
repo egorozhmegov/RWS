@@ -25,11 +25,11 @@ public class RailWayStationController {
 
     @RequestMapping(value="/view/add_station",method = RequestMethod.POST)
     public boolean addStation(@RequestBody RailWayStation station) {
-        if(railWayStationService.existStation(station.getStationName())){
-            LOG.info(String.format("Station with name: %s exist already.", station.getStationName()));
+        if(railWayStationService.existStation(station.getTitle())){
+            LOG.info(String.format("Station with name: %s exist already.", station.getTitle()));
             return false;
         } else {
-            LOG.info(String.format("Create station with name: %s", station.getStationName()));
+            LOG.info(String.format("Create station with name: %s", station.getTitle()));
             railWayStationService.create(station);
             return true;
         }
@@ -37,13 +37,13 @@ public class RailWayStationController {
 
     @RequestMapping(value="/view/remove_station/{stationId}",method = RequestMethod.DELETE)
     public void removeStation(@PathVariable("stationId") int stationId) {
-        LOG.info(String.format("Remove station: %s", railWayStationService.read(stationId).getStationName()));
+        LOG.info(String.format("Remove station: %s", railWayStationService.read(stationId).getTitle()));
         railWayStationService.delete(stationId);
     }
 
     @RequestMapping(value="/view/update_station",method = RequestMethod.PUT)
     public void updateStation(@RequestBody RailWayStation station) {
-        LOG.info(String.format("Station %s updated.", station.getStationName()));
+        LOG.info(String.format("Station %s updated.", station.getTitle()));
         railWayStationService.update(station);
     }
 }

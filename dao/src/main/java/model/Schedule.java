@@ -17,7 +17,7 @@ public class Schedule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SCHEDULE_ID")
-    private long scheduleId;
+    private long id;
 
     @Column(name = "DEPARTURE_TIME")
     private LocalTime departureTime;
@@ -33,7 +33,7 @@ public class Schedule implements Serializable {
     @JoinColumn(name = "STATION_ID")
     private RailWayStation station;
 
-    public Schedule(){
+    public Schedule(LocalTime of){
     }
 
     public Schedule(LocalTime departureTime, LocalTime arrivalTime) {
@@ -41,12 +41,12 @@ public class Schedule implements Serializable {
         this.arrivalTime = arrivalTime;
     }
 
-    public long getScheduleId() {
-        return scheduleId;
+    public long getId() {
+        return id;
     }
 
-    public void setScheduleId(long scheduleId) {
-        this.scheduleId = scheduleId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public LocalTime getDepartureTime() {

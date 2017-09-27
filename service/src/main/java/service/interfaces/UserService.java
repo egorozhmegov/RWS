@@ -1,6 +1,7 @@
 package service.interfaces;
 
 import exception.UserServiceException;
+import model.Employee;
 import model.User;
 
 /**
@@ -29,4 +30,13 @@ public interface UserService extends GenericService<User> {
      * @return User
      */
     User authenticate(User authentication) throws UserServiceException;
+
+    /**
+     * Get employee by Fist Name and Last Name.
+     *
+     * @param firstName String
+     * @param lastName String
+     * @return Employee
+     */
+    Employee getEmployeeByFirstNameAndLastName(String firstName, String lastName);
 }

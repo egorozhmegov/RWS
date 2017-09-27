@@ -19,6 +19,7 @@ import java.util.Objects;
 public class UserController {
 
     private final static Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private final static String COOKIE = "RWS_COOKIE";
 
     @Autowired
     private UserService userService;
@@ -26,9 +27,8 @@ public class UserController {
     @RequestMapping(value="/loginEmployee", method = RequestMethod.POST)
     public ResponseEntity<User> login(@RequestBody User user, HttpServletResponse response) {
         try{
-            System.out.println(user);
             User authUser = userService.authenticate(user);
-            Cookie cookie = new Cookie("RWS_COOKIE", "dF6p");
+            Cookie cookie = new Cookie(COOKIE, "dF6p");
             response.addCookie(cookie);
             return new ResponseEntity<>(authUser, HttpStatus.OK);
         } catch (UserServiceException e){
@@ -39,26 +39,23 @@ public class UserController {
     @RequestMapping(value="/logoutEmployee", method = RequestMethod.GET)
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for(Cookie cookie: cookies){
-                if(Objects.equals(cookie.getName(), "RWS_COOKIE")){
-                    cookie.setMaxAge(0);
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    response.addCookie(cookie);
-                }
+        for(Cookie cookie: cookies){
+            if(Objects.equals(cookie.getName(), COOKIE)){
+                cookie.setMaxAge(0);
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.addCookie(cookie);
             }
         }
     }
 
 
     @RequestMapping(value="/registerEmployee", method = RequestMethod.POST)
-    public boolean registerEmployee(@RequestBody User user, HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_OK);
+    public ResponseEntity<Boolean> registerEmployee(@RequestBody User user, HttpServletResponse response) {
         try{
             userService.registerUser(user);
-            return true;
+            return new ResponseEntity<Boolean>(true, HttpStatus.OK);
         } catch (ServiceException ex){
-            return false;
+            return new ResponseEntity<Boolean>(false, HttpStatus.OK);
         }
     }
 }

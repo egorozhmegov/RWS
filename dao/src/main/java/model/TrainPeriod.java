@@ -13,7 +13,7 @@ public class TrainPeriod {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PERIOD_ID")
-    private long periodId;
+    private long id;
 
     @Enumerated(EnumType.STRING)
     private WeekDays weekDays;
@@ -28,12 +28,12 @@ public class TrainPeriod {
         this.weekDays = weekDays;
     }
 
-    public long getPeriodId() {
-        return periodId;
+    public long getId() {
+        return id;
     }
 
-    public void setPeriodId(long periodId) {
-        this.periodId = periodId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public WeekDays getWeekDays() {

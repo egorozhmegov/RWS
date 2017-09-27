@@ -40,7 +40,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         } else {
             boolean exist = false;
             for(Train train : getDao().getAll()){
-                if(number.equals(train.getTrainNumber())){
+                if(number.equals(train.getNumber())){
                     exist = true;
                     break;
                 }

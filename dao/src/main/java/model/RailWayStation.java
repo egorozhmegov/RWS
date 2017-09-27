@@ -20,42 +20,44 @@ public class RailWayStation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "STATION_ID")
-    private long stationId;
+    private long id;
 
     @Column(name = "TITLE")
-    private String stationName;
+    private String title;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name="STATION_SCHEDULE",
+    @JoinTable(name = "STATION_SCHEDULE",
             joinColumns = @JoinColumn(name = "STATION_ID"),
             inverseJoinColumns = @JoinColumn(name = "SCHEDULE_ID"))
+    @JsonIgnore
     private Set<Schedule> schedule = new HashSet<>();
 
 
     @ManyToMany(mappedBy = "route")
+    @JsonIgnore
     private Set<Train> trains = new HashSet<>();
 
     public RailWayStation(){
     }
 
     public RailWayStation(String stationName) {
-        this.stationName = stationName;
+        this.title = stationName;
     }
 
-    public long getStationId() {
-        return stationId;
+    public long getId() {
+        return id;
     }
 
-    public void setStationId(long stationId) {
-        this.stationId = stationId;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getStationName() {
-        return stationName;
+    public String getTitle() {
+        return title;
     }
 
-    public void setStationName(String stationName) {
-        this.stationName = stationName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Set<Schedule> getSchedule() {
@@ -77,8 +79,8 @@ public class RailWayStation implements Serializable {
     @Override
     public String toString() {
         return "RailWayStation{" +
-                "stationId=" + stationId +
-                ", stationName='" + stationName + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 '}';
     }
 }

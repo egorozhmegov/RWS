@@ -17,7 +17,7 @@ public class Passenger implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PASSENGER_ID")
-    private long passengerId;
+    private long id;
 
     @Column(name = "FIRST_NAME")
     private String firstName;
@@ -48,12 +48,12 @@ public class Passenger implements Serializable {
         this.birthday = birthday;
     }
 
-    public long getPassengerId() {
-        return passengerId;
+    public long getId() {
+        return id;
     }
 
-    public void setPassengerId(long passengerId) {
-        this.passengerId = passengerId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -99,7 +99,7 @@ public class Passenger implements Serializable {
     @Override
     public String toString() {
         return "Passenger{" +
-                "passengerId=" + passengerId +
+                "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
