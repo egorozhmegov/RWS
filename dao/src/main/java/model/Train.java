@@ -2,8 +2,8 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
 Class of train entity.
@@ -28,17 +28,23 @@ public class Train implements Serializable {
     @Column(name = "TARIFF")
     private int tariff;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "TRAIN_STATION",
             joinColumns = @JoinColumn(name = "TRAIN_ID"),
             inverseJoinColumns = @JoinColumn(name ="STATION_ID"))
-    private List<RailWayStation> route = new ArrayList<>();
+    private Set<RailWayStation> route = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name="TRAIN_PASSENGER",
             joinColumns = @JoinColumn(name = "TRAIN_ID"),
             inverseJoinColumns = @JoinColumn(name = "PASSENGER_ID"))
-    private List<Passenger> registeredPassengers = new ArrayList<>();
+    private Set<Passenger> registeredPassengers = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="TRAIN_PERIOD",
+            joinColumns = @JoinColumn(name = "TRAIN_ID"),
+            inverseJoinColumns = @JoinColumn(name = "PERIOD_ID"))
+    private Set<TrainPeriod> period = new HashSet<>();
 
     public Train(){
     }
@@ -46,23 +52,6 @@ public class Train implements Serializable {
     public Train(String trainNumber, int tariff) {
         this.trainNumber = trainNumber;
         this.tariff = tariff;
-        setSeats(92);
-    }
-
-    public List<RailWayStation> getRoute() {
-        return route;
-    }
-
-    public void setRoute(List<RailWayStation> route) {
-        this.route = route;
-    }
-
-    public List<Passenger> getRegisteredPassengers() {
-        return registeredPassengers;
-    }
-
-    public void setRegisteredPassengers(List<Passenger> registeredPassengers) {
-        this.registeredPassengers = registeredPassengers;
     }
 
     public long getTrainId() {
@@ -94,8 +83,31 @@ public class Train implements Serializable {
     }
 
     public void setSeats(int seats) {
-        if(seats <= 92) this.seats = seats;
-        else this.seats = 92;
+        this.seats = seats;
+    }
+
+    public Set<RailWayStation> getRoute() {
+        return route;
+    }
+
+    public void setRoute(Set<RailWayStation> route) {
+        this.route = route;
+    }
+
+    public Set<Passenger> getRegisteredPassengers() {
+        return registeredPassengers;
+    }
+
+    public void setRegisteredPassengers(Set<Passenger> registeredPassengers) {
+        this.registeredPassengers = registeredPassengers;
+    }
+
+    public Set<TrainPeriod> getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Set<TrainPeriod> period) {
+        this.period = period;
     }
 
     @Override

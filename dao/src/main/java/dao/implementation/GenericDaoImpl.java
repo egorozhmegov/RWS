@@ -41,7 +41,6 @@ abstract class GenericDaoImpl<T> implements GenericDao<T> {
     @Override
     public void create(T entity) {
         getEntityManager().persist(entity);
-
         LOG.info(String.format("Entity successfully created. Entity details: %s", entity));
     }
 
@@ -52,7 +51,7 @@ abstract class GenericDaoImpl<T> implements GenericDao<T> {
      * @return T.
      */
     @Override
-    public T read(int id) {
+    public T read(long id) {
         LOG.info("Entity successfully loaded.");
         return getEntityManager().find(genericClass, id);
     }
@@ -77,7 +76,7 @@ abstract class GenericDaoImpl<T> implements GenericDao<T> {
      * @param id id.
      */
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         T entity = getEntityManager().find(genericClass, id);
         getEntityManager().remove(entity);
         LOG.info(String.format("Entity successfully deleted. Entity details: %s", entity));

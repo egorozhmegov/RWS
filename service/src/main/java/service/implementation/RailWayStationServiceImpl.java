@@ -7,12 +7,14 @@ import model.RailWayStation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.RailWayStationService;
 
 /**
  * Railway station service implementation.
  */
+@Service("railWayStationServiceImpl")
 public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation> implements RailWayStationService {
 
     private final static Logger LOG = LoggerFactory.getLogger(RailWayStationServiceImpl.class);

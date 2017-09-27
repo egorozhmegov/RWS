@@ -37,8 +37,8 @@ abstract class GenericServiceImpl<T> implements GenericService<T>{
      * @return T.
      */
     @Override
-    @Transactional(readOnly = true)
-    public T read(int id) {
+    @Transactional
+    public T read(long id) {
         LOG.info("Entity successfully loaded.");
         return getDao().read(id);
     }
@@ -62,7 +62,7 @@ abstract class GenericServiceImpl<T> implements GenericService<T>{
      */
     @Override
     @Transactional
-    public void delete(int id) {
+    public void delete(long id) {
         getDao().delete(id);
         LOG.info("Entity successfully deleted.");
     }

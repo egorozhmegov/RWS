@@ -2,8 +2,8 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
 Class of user role entity.
@@ -22,11 +22,8 @@ public class UserRole implements Serializable {
     @Column(name = "ROLE")
     private String userRole;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_ROLE",
-            joinColumns = @JoinColumn(name = "ROLE_ID"),
-            inverseJoinColumns = @JoinColumn(name ="USER_ID"))
-    private List<User> users = new ArrayList<>();
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users = new HashSet<>();
 
     public UserRole(){
     }
@@ -51,11 +48,11 @@ public class UserRole implements Serializable {
         this.userRole = userRole;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 }

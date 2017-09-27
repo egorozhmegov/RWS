@@ -2,6 +2,9 @@ package service.interfaces;
 
 import model.RailWayStation;
 
+/**
+ * Station service.
+ */
 public interface RailWayStationService extends GenericService<RailWayStation> {
     /**
      * Gets RailWayStation by name.

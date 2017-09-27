@@ -1,9 +1,11 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
 Class of railway station entity. Use for information about train schedule.
@@ -27,13 +29,11 @@ public class RailWayStation implements Serializable {
     @JoinTable(name="STATION_SCHEDULE",
             joinColumns = @JoinColumn(name = "STATION_ID"),
             inverseJoinColumns = @JoinColumn(name = "SCHEDULE_ID"))
-    private List<Schedule> schedule = new ArrayList<>();
+    private Set<Schedule> schedule = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "TRAIN_STATION",
-            joinColumns = @JoinColumn(name = "STATION_ID"),
-            inverseJoinColumns = @JoinColumn(name ="TRAIN_ID"))
-    private List<Train> trains = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "route")
+    private Set<Train> trains = new HashSet<>();
 
     public RailWayStation(){
     }
@@ -58,19 +58,19 @@ public class RailWayStation implements Serializable {
         this.stationName = stationName;
     }
 
-    public List<Schedule> getSchedule() {
+    public Set<Schedule> getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(List<Schedule> schedule) {
+    public void setSchedule(Set<Schedule> schedule) {
         this.schedule = schedule;
     }
 
-    public List<Train> getTrains() {
+    public Set<Train> getTrains() {
         return trains;
     }
 
-    public void setTrains(List<Train> trains) {
+    public void setTrains(Set<Train> trains) {
         this.trains = trains;
     }
 

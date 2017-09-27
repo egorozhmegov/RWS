@@ -8,19 +8,20 @@ import model.Train;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import service.interfaces.TrainService;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Train service implementation.
  */
+@Service("trainServiceImpl")
 public class TrainServiceImpl extends GenericServiceImpl<Train> implements TrainService {
 
     private final static Logger LOG = LoggerFactory.getLogger(TrainServiceImpl.class);
 
     @Autowired
     private TrainDao trainDao;
-
     /**
      * Get route point by id.
      *
@@ -28,7 +29,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
      * @return List<RootPoint>.
      */
     @Override
-    public List<RailWayStation> getRoutePointById(int id) {
+    public Set<RailWayStation> getRoutePointById(long id) {
         return trainDao.getRoutePointById(id);
     }
 

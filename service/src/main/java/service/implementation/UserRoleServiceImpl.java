@@ -4,11 +4,13 @@ import dao.interfaces.GenericDao;
 import dao.interfaces.UserRoleDao;
 import model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import service.interfaces.UserRoleService;
 
 /**
  * User role service implementation.
  */
+@Service("userRoleServiceImpl")
 public class UserRoleServiceImpl extends GenericServiceImpl<UserRole> implements UserRoleService {
     @Autowired
     private UserRoleDao userRoleDao;

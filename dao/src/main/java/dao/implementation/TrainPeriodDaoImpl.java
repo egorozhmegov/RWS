@@ -1,22 +1,22 @@
 package dao.implementation;
 
-import dao.interfaces.TicketDao;
-import model.Ticket;
+import dao.interfaces.TrainPeriodDao;
+import model.TrainPeriod;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- Ticket dao implementation.
+ * Train period dao implementation.
  */
-public class TicketDaoImpl extends GenericDaoImpl<Ticket> implements TicketDao {
+public class TrainPeriodDaoImpl extends GenericDaoImpl<TrainPeriod> implements TrainPeriodDao {
     /**
      * Injected instance of entity manager.
      */
     @PersistenceContext
     private EntityManager entityManager;
 
-    public TicketDaoImpl() {
-        super(Ticket.class);
+    public TrainPeriodDaoImpl() {
+        super(TrainPeriod.class);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class TicketDaoImpl extends GenericDaoImpl<Ticket> implements TicketDao {
         return entityManager;
     }
 
-    public TicketDaoImpl(Class<Ticket> genericClass) {
+    public TrainPeriodDaoImpl(Class<TrainPeriod> genericClass) {
         super(genericClass);
     }
 }

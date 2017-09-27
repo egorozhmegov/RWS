@@ -15,9 +15,7 @@ import service.interfaces.UserService;
  * User account service implementation.
  */
 @Service("userServiceImpl")
-public class UserServiceImpl
-        extends GenericServiceImpl<User>
-            implements UserService {
+public class UserServiceImpl extends GenericServiceImpl<User> implements UserService {
 
     private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 

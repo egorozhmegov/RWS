@@ -21,7 +21,7 @@ public interface GenericService<T> {
      * @param id id.
      * @return T.
      */
-    T read(int id);
+    T read(long id);
 
     /**
      * Updates passed object to the dao layer.
@@ -35,7 +35,7 @@ public interface GenericService<T> {
      *
      * @param id id.
      */
-    void delete(int id);
+    void delete(long id);
 
     /**
      * Gets list of entities.

@@ -18,9 +18,44 @@
     <context:annotation-config/>
     <context:component-scan base-package="controller" />
 
-    <mvc:resources mapping="/view/**" location="/WEB-INF/view/" />
     <mvc:default-servlet-handler/>
     <mvc:annotation-driven/>
+
+    <bean id="passengerDao" class="dao.implementation.PassengerDaoImpl"/>
+
+    <bean id="passengerService" class="service.implementation.PassengerServiceImp" >
+        <property name="passengerDao" ref="passengerDao"/>
+    </bean>
+
+    <bean id="railWayStationDao" class="dao.implementation.RailWayStationDaoImpl"/>
+
+    <bean id="railWayStationService" class="service.implementation.RailWayStationServiceImpl" >
+        <property name="railWayStationDao" ref="railWayStationDao"/>
+    </bean>
+
+    <bean id="scheduleDao" class="dao.implementation.ScheduleDaoImpl"/>
+
+    <bean id="scheduleService" class="service.implementation.ScheduleServiceImpl" >
+        <property name="scheduleDao" ref="scheduleDao"/>
+    </bean>
+
+    <bean id="ticketDao" class="dao.implementation.TicketDaoImpl"/>
+
+    <bean id="ticketService" class="service.implementation.TicketServiceImpl" >
+        <property name="ticketDao" ref="ticketDao"/>
+    </bean>
+
+    <bean id="trainDao" class="dao.implementation.TrainDaoImpl"/>
+
+    <bean id="trainService" class="service.implementation.TrainServiceImpl" >
+        <property name="trainDao" ref="trainDao"/>
+    </bean>
+
+    <bean id="trainPeriodDao" class="dao.implementation.TrainPeriodDaoImpl"/>
+
+    <bean id="trainPeriodService" class="service.implementation.TrainPeriodServiceImpl" >
+        <property name="trainPeriodDao" ref="trainPeriodDao"/>
+    </bean>
 
     <bean id="userDao" class="dao.implementation.UserDaoImpl"/>
 
@@ -32,26 +67,6 @@
 
     <bean id="userRoleService" class="service.implementation.UserRoleServiceImpl" >
         <property name="userRoleDao" ref="userRoleDao"/>
-    </bean>
-
-
-    <bean id="railWayStationDao" class="dao.implementation.RailWayStationDaoImpl"/>
-
-    <bean id="railWayStationService" class="service.implementation.RailWayStationServiceImpl" >
-        <property name="railWayStationDao" ref="railWayStationDao"/>
-    </bean>
-
-    <bean id="trainDao" class="dao.implementation.TrainDaoImpl"/>
-
-    <bean id="trainService" class="service.implementation.TrainServiceImpl" >
-        <property name="trainDao" ref="trainDao"/>
-    </bean>
-
-
-    <bean id="scheduleDao" class="dao.implementation.ScheduleDaoImpl"/>
-
-    <bean id="scheduleService" class="service.implementation.ScheduleServiceImpl" >
-        <property name="scheduleDao" ref="scheduleDao"/>
     </bean>
 
     <tx:annotation-driven transaction-manager="transactionManager" />

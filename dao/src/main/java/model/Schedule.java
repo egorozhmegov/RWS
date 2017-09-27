@@ -25,12 +25,6 @@ public class Schedule implements Serializable {
     @Column(name = "ARRIVAL_TIME")
     private LocalTime arrivalTime;
 
-    @Column(name = "ARRIVAL_DAY")
-    private String arrivalDay;
-
-    @Column(name = "DEPARTURE_DAY")
-    private String departureDay;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "TRAIN_ID")
     private Train train;
@@ -42,11 +36,9 @@ public class Schedule implements Serializable {
     public Schedule(){
     }
 
-    public Schedule(LocalTime departureTime, LocalTime arrivalTime, String arrivalDay, String departureDay) {
+    public Schedule(LocalTime departureTime, LocalTime arrivalTime) {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
-        this.arrivalDay = arrivalDay;
-        this.departureDay = departureDay;
     }
 
     public long getScheduleId() {
@@ -71,22 +63,6 @@ public class Schedule implements Serializable {
 
     public void setArrivalTime(LocalTime arrivalTime) {
         this.arrivalTime = arrivalTime;
-    }
-
-    public String getArrivalDay() {
-        return arrivalDay;
-    }
-
-    public void setArrivalDay(String arrivalDay) {
-        this.arrivalDay = arrivalDay;
-    }
-
-    public String getDepartureDay() {
-        return departureDay;
-    }
-
-    public void setDepartureDay(String departureDay) {
-        this.departureDay = departureDay;
     }
 
     public Train getTrain() {

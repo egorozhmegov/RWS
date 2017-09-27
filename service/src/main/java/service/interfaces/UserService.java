@@ -3,6 +3,9 @@ package service.interfaces;
 import exception.UserServiceException;
 import model.User;
 
+/**
+ * User service.
+ */
 public interface UserService extends GenericService<User> {
     /**
      * Register new user.

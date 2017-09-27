@@ -39,20 +39,30 @@ public class TrainController {
             LOG.info(String.format("Train with number: %s exist already.", train.getTrainNumber()));
             return new ResponseEntity<Train>(train, HttpStatus.NO_CONTENT);
         } else {
-            LOG.info(String.format("Created train with number: %s", train.getTrainNumber()));
-            railWayStationService.create(new RailWayStation("A"));
-            railWayStationService.create(new RailWayStation("B"));
-            railWayStationService.create(new RailWayStation("C"));
+            railWayStationService.create(new RailWayStation("Znamesk"));
+            railWayStationService.create(new RailWayStation("Smolensk"));
+            railWayStationService.create(new RailWayStation("Volgograd"));
             RailWayStation s1 = railWayStationService.read(1);
-            System.out.println(s1);
             RailWayStation s2 = railWayStationService.read(2);
             RailWayStation s3 = railWayStationService.read(3);
-            train.getRoute().add(s1);
-            train.getRoute().add(s2);
-            train.getRoute().add(s3);
+
             trainService.create(train);
-            return new ResponseEntity<Train>(train, HttpStatus.CREATED);
+
+            Train train2 = trainService.read(1);
+
+            train2.getRoute().add(s1);
+            train2.getRoute().add(s2);
+            train2.getRoute().add(s3);
+
+            trainService.update(train2);
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
+    }
+
+    @RequestMapping(value="/getTrain/{trainId}",method = RequestMethod.GET)
+    public ResponseEntity<Train> addTrain(@PathVariable("trainId") int trainId) {
+        return new ResponseEntity<Train>(HttpStatus.OK);
     }
 
     @RequestMapping(value="/deleteTrain/{trainId}",method = RequestMethod.DELETE)

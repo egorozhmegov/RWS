@@ -15,6 +15,10 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
     @PersistenceContext
     private EntityManager entityManager;
 
+    public PassengerDaoImpl() {
+        super(Passenger.class);
+    }
+
     @Override
     EntityManager getEntityManager() {
         return entityManager;

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
+import java.util.Set;
 
 /**
  Train dao implementation.
@@ -42,9 +42,8 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
      * @return RailWayStation.
      */
     @Override
-    public List<RailWayStation> getRoutePointById(int id) {
+    public Set<RailWayStation> getRoutePointById(long id) {
         Train train = read(id);
-        LOG.info(String.format("RootPoint list of train with id = %s loaded seccessfully", id));
         return train.getRoute();
     }
 }
