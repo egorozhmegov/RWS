@@ -46,4 +46,5 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
         Train train = read(id);
         return train.getRoute();
     }
+
 }

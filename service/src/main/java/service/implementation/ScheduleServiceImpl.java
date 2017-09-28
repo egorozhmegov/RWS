@@ -5,6 +5,7 @@ import dao.interfaces.ScheduleDao;
 import model.Schedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.ScheduleService;
 
 /**
@@ -15,6 +16,28 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
 
     @Autowired
     private ScheduleDao scheduleDao;
+
+    /**
+     * Delete schedule by train.
+     *
+     * @param train String
+     */
+    @Transactional
+    @Override
+    public void deleteByTrain(String train){
+        scheduleDao.deleteByTrain(train);
+    }
+
+    /**
+     * Delete schedule by station.
+     *
+     * @param station String
+     */
+    @Transactional
+    @Override
+    public void deleteByStation(String station){
+        scheduleDao.deleteByStation(station);
+    }
 
     @Override
     GenericDao<Schedule> getDao() {

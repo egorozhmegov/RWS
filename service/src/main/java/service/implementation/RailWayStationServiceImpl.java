@@ -2,7 +2,7 @@ package service.implementation;
 
 import dao.interfaces.GenericDao;
 import dao.interfaces.RailWayStationDao;
-import exception.RailWayStationNullEntityServiceException;
+import exception.RailWayStationServiceException;
 import model.RailWayStation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation
     @Override
     public boolean existStation(String stationName) {
         if(stationName == null || stationName.isEmpty()){
-            throw new RailWayStationNullEntityServiceException("Method: existStation. Null or empty station name.");
+            throw new RailWayStationServiceException("Method: existStation. Null or empty station name.");
         } else {
             boolean exist = false;
             for(RailWayStation station : getDao().getAll()){

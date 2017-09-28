@@ -25,20 +25,33 @@ public class Schedule implements Serializable {
     @Column(name = "ARRIVAL_TIME")
     private LocalTime arrivalTime;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "TRAIN_ID")
-    private Train train;
+    @Column(name = "DEPARTURE_DAY")
+    private String departureDay;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "STATION_ID")
-    private RailWayStation station;
+    @Column(name = "ARRIVAL_DAY")
+    private String arrivalDay;
 
-    public Schedule(LocalTime of){
+    @Column(name = "TRAIN")
+    private String train;
+
+    @Column(name = "STATION")
+    private String station;
+
+    public Schedule(){
     }
 
-    public Schedule(LocalTime departureTime, LocalTime arrivalTime) {
+    public Schedule(LocalTime departureTime,
+                    LocalTime arrivalTime,
+                    String departureDay,
+                    String arrivalDay,
+                    String train,
+                    String station) {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+        this.departureDay = departureDay;
+        this.arrivalDay = arrivalDay;
+        this.train = train;
+        this.station = station;
     }
 
     public long getId() {
@@ -65,19 +78,35 @@ public class Schedule implements Serializable {
         this.arrivalTime = arrivalTime;
     }
 
-    public Train getTrain() {
+    public String getDepartureDay() {
+        return departureDay;
+    }
+
+    public void setDepartureDay(String departureDay) {
+        this.departureDay = departureDay;
+    }
+
+    public String getArrivalDay() {
+        return arrivalDay;
+    }
+
+    public void setArrivalDay(String arrivalDay) {
+        this.arrivalDay = arrivalDay;
+    }
+
+    public String getTrain() {
         return train;
     }
 
-    public void setTrain(Train train) {
+    public void setTrain(String train) {
         this.train = train;
     }
 
-    public RailWayStation getStation() {
+    public String getStation() {
         return station;
     }
 
-    public void setStation(RailWayStation station) {
+    public void setStation(String station) {
         this.station = station;
     }
 }

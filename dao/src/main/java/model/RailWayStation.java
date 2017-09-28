@@ -25,14 +25,6 @@ public class RailWayStation implements Serializable {
     @Column(name = "TITLE")
     private String title;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "STATION_SCHEDULE",
-            joinColumns = @JoinColumn(name = "STATION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SCHEDULE_ID"))
-    @JsonIgnore
-    private Set<Schedule> schedule = new HashSet<>();
-
-
     @ManyToMany(mappedBy = "route")
     @JsonIgnore
     private Set<Train> trains = new HashSet<>();
@@ -58,14 +50,6 @@ public class RailWayStation implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Set<Schedule> getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(Set<Schedule> schedule) {
-        this.schedule = schedule;
     }
 
     public Set<Train> getTrains() {

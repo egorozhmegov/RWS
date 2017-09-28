@@ -51,12 +51,6 @@
         <property name="trainDao" ref="trainDao"/>
     </bean>
 
-    <bean id="trainPeriodDao" class="dao.implementation.TrainPeriodDaoImpl"/>
-
-    <bean id="trainPeriodService" class="service.implementation.TrainPeriodServiceImpl" >
-        <property name="trainPeriodDao" ref="trainPeriodDao"/>
-    </bean>
-
     <bean id="userDao" class="dao.implementation.UserDaoImpl"/>
 
     <bean id="userService" class="service.implementation.UserServiceImpl" >

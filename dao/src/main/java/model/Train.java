@@ -1,7 +1,6 @@
 package model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -30,7 +29,7 @@ public class Train implements Serializable {
     @Column(name = "TARIFF")
     private int tariff;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "TRAIN_STATION",
             joinColumns = @JoinColumn(name = "TRAIN_ID"),
             inverseJoinColumns = @JoinColumn(name = "STATION_ID"))
@@ -44,12 +43,6 @@ public class Train implements Serializable {
     @JsonIgnore
     private Set<Passenger> registeredPassengers = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "TRAIN_PERIOD",
-            joinColumns = @JoinColumn(name = "TRAIN_ID"),
-            inverseJoinColumns = @JoinColumn(name = "PERIOD_ID"))
-    @JsonIgnore
-    private Set<TrainPeriod> period = new HashSet<>();
 
     public Train(){
     }
@@ -105,14 +98,6 @@ public class Train implements Serializable {
 
     public void setRegisteredPassengers(Set<Passenger> registeredPassengers) {
         this.registeredPassengers = registeredPassengers;
-    }
-
-    public Set<TrainPeriod> getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(Set<TrainPeriod> period) {
-        this.period = period;
     }
 
     @Override

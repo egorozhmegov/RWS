@@ -2,7 +2,7 @@ package service.implementation;
 
 import dao.interfaces.GenericDao;
 import dao.interfaces.TrainDao;
-import exception.TrainException;
+import exception.TrainServiceException;
 import model.RailWayStation;
 import model.Train;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     @Override
     public boolean existTrain(String number) {
         if(number == null || number.isEmpty()){
-            throw new TrainException("Null or empty train number.");
+            throw new TrainServiceException("Null or empty train number.");
         } else {
             boolean exist = false;
             for(Train train : getDao().getAll()){
