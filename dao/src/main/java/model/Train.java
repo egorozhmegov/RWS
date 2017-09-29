@@ -29,13 +29,6 @@ public class Train implements Serializable {
     @Column(name = "TARIFF")
     private int tariff;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "TRAIN_STATION",
-            joinColumns = @JoinColumn(name = "TRAIN_ID"),
-            inverseJoinColumns = @JoinColumn(name = "STATION_ID"))
-    @JsonIgnore
-    private Set<RailWayStation> route = new HashSet<>();
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "TRAIN_PASSENGER",
             joinColumns = @JoinColumn(name = "TRAIN_ID"),
@@ -82,14 +75,6 @@ public class Train implements Serializable {
 
     public void setSeats(int seats) {
         this.seats = seats;
-    }
-
-    public Set<RailWayStation> getRoute() {
-        return route;
-    }
-
-    public void setRoute(Set<RailWayStation> route) {
-        this.route = route;
     }
 
     public Set<Passenger> getRegisteredPassengers() {

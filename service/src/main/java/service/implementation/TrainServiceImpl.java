@@ -22,16 +22,6 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
 
     @Autowired
     private TrainDao trainDao;
-    /**
-     * Get route point by id.
-     *
-     * @param id train id.
-     * @return List<RootPoint>.
-     */
-    @Override
-    public Set<RailWayStation> getRoutePointById(long id) {
-        return trainDao.getRoutePointById(id);
-    }
 
     @Override
     public boolean existTrain(String number) {

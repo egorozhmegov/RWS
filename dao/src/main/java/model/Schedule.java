@@ -26,32 +26,35 @@ public class Schedule implements Serializable {
     private LocalTime arrivalTime;
 
     @Column(name = "DEPARTURE_DAY")
-    private String departureDay;
+    private int departureDay;
 
     @Column(name = "ARRIVAL_DAY")
-    private String arrivalDay;
+    private int arrivalDay;
 
-    @Column(name = "TRAIN")
-    private String train;
+    @Column(name = "SEATS")
+    private int trainSeats;
 
-    @Column(name = "STATION")
-    private String station;
+    @ManyToOne
+    @JoinColumn(name = "TRAIN_ID")
+    private Train train;
+
+    @ManyToOne
+    @JoinColumn(name = "STATION_ID")
+    private RailWayStation station;
 
     public Schedule(){
     }
 
     public Schedule(LocalTime departureTime,
                     LocalTime arrivalTime,
-                    String departureDay,
-                    String arrivalDay,
-                    String train,
-                    String station) {
+                    int departureDay,
+                    int arrivalDay,
+                    int trainSeats) {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.departureDay = departureDay;
         this.arrivalDay = arrivalDay;
-        this.train = train;
-        this.station = station;
+        this.trainSeats = trainSeats;
     }
 
     public long getId() {
@@ -78,35 +81,57 @@ public class Schedule implements Serializable {
         this.arrivalTime = arrivalTime;
     }
 
-    public String getDepartureDay() {
+    public int getDepartureDay() {
         return departureDay;
     }
 
-    public void setDepartureDay(String departureDay) {
+    public void setDepartureDay(int departureDay) {
         this.departureDay = departureDay;
     }
 
-    public String getArrivalDay() {
+    public int getArrivalDay() {
         return arrivalDay;
     }
 
-    public void setArrivalDay(String arrivalDay) {
+    public void setArrivalDay(int arrivalDay) {
         this.arrivalDay = arrivalDay;
     }
 
-    public String getTrain() {
+    public int getTrainSeats() {
+        return trainSeats;
+    }
+
+    public void setTrainSeats(int trainSeats) {
+        this.trainSeats = trainSeats;
+    }
+
+    public Train getTrain() {
         return train;
     }
 
-    public void setTrain(String train) {
+    public void setTrain(Train train) {
         this.train = train;
     }
 
-    public String getStation() {
+    public RailWayStation getStation() {
         return station;
     }
 
-    public void setStation(String station) {
+    public void setStation(RailWayStation station) {
         this.station = station;
+    }
+
+    @Override
+    public String toString() {
+        return "Schedule{" +
+                "id=" + id +
+                ", departureTime=" + departureTime +
+                ", arrivalTime=" + arrivalTime +
+                ", departureDay=" + departureDay +
+                ", arrivalDay=" + arrivalDay +
+                ", trainSeats=" + trainSeats +
+                ", train=" + train +
+                ", station=" + station +
+                '}';
     }
 }

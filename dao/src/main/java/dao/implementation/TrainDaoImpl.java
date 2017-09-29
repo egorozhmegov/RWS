@@ -35,16 +35,4 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
         super(genericClass);
     }
 
-    /**
-     * Get route point by id.
-     *
-     * @param id train id.
-     * @return RailWayStation.
-     */
-    @Override
-    public Set<RailWayStation> getRoutePointById(long id) {
-        Train train = read(id);
-        return train.getRoute();
-    }
-
 }

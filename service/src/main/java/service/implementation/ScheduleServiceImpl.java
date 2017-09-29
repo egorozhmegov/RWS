@@ -3,10 +3,13 @@ package service.implementation;
 import dao.interfaces.GenericDao;
 import dao.interfaces.ScheduleDao;
 import model.Schedule;
+import model.Train;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.ScheduleService;
+
+import java.util.List;
 
 /**
  * Schedule service implementation.
@@ -18,25 +21,39 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     private ScheduleDao scheduleDao;
 
     /**
-     * Delete schedule by train.
+     * Delete schedule by train id.
      *
-     * @param train String
+     * @param trainId long
      */
     @Transactional
     @Override
-    public void deleteByTrain(String train){
-        scheduleDao.deleteByTrain(train);
+    public void deleteByTrainId(long trainId){
+        scheduleDao.deleteByTrainId(trainId);
     }
 
     /**
-     * Delete schedule by station.
+     * Delete schedule by station id.
      *
-     * @param station String
+     * @param stationId long
      */
     @Transactional
     @Override
-    public void deleteByStation(String station){
-        scheduleDao.deleteByStation(station);
+    public void deleteByStationId(long stationId){
+        scheduleDao.deleteByStationId(stationId);
+    }
+
+    /**
+     * Get list train of a select day, which have in route departure and arrival stations.
+     *
+     * @param departStationId long
+     * @param arriveStationId long
+     * @param departDay int
+     * @return List<Train>
+     */
+    @Transactional
+    @Override
+    public List<Train> searchTrain(long departStationId, long arriveStationId, int departDay){
+        return scheduleDao.searchTrain(departStationId, arriveStationId, departDay);
     }
 
     @Override

@@ -25,10 +25,6 @@ public class RailWayStation implements Serializable {
     @Column(name = "TITLE")
     private String title;
 
-    @ManyToMany(mappedBy = "route")
-    @JsonIgnore
-    private Set<Train> trains = new HashSet<>();
-
     public RailWayStation(){
     }
 
@@ -50,14 +46,6 @@ public class RailWayStation implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Set<Train> getTrains() {
-        return trains;
-    }
-
-    public void setTrains(Set<Train> trains) {
-        this.trains = trains;
     }
 
     @Override
