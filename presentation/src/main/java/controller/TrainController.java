@@ -89,7 +89,62 @@ public class TrainController {
 
     @RequestMapping(value="/deleteTrain/{id}",method = RequestMethod.DELETE)
     public ResponseEntity<Integer> deleteTrain(@PathVariable("id") int id){
-        scheduleService.searchTrain(2,3,3);
+
+        Schedule s1 = scheduleService.read(21);
+        s1.setDepartureTime(LocalTime.of(10,30));
+        scheduleService.update(s1);
+
+        Schedule s2 = scheduleService.read(17);
+        s2.setDepartureTime(LocalTime.of(12,30));
+        scheduleService.update(s2);
+
+//        Schedule s1 = new Schedule(LocalTime.of(11,30),LocalTime.of(11,30),4,2,5);
+//        s1.setStation(railWayStationService.read(2));
+//        s1.setTrain(trainService.read(1));
+//        scheduleService.create(s1);
+//
+//        Schedule s2 = new Schedule(LocalTime.of(11,30),LocalTime.of(11,30),4,2,5);
+//        s2.setStation(railWayStationService.read(3));
+//        s2.setTrain(trainService.read(1));
+//        scheduleService.create(s2);
+//
+//        Schedule s3 = new Schedule(LocalTime.of(11,30),LocalTime.of(11,30),4,2,5);
+//        s3.setStation(railWayStationService.read(3));
+//        s3.setTrain(trainService.read(2));
+//        scheduleService.create(s3);
+//
+//        Schedule s4 = new Schedule(LocalTime.of(11,30),LocalTime.of(11,30),4,2,5);
+//        s4.setStation(railWayStationService.read(2));
+//        s4.setTrain(trainService.read(2));
+//        scheduleService.create(s4);
+//
+//        Schedule s5 = new Schedule(LocalTime.of(11,30),LocalTime.of(11,30),4,2,5);
+//        s5.setStation(railWayStationService.read(1));
+//        s5.setTrain(trainService.read(2));
+//        scheduleService.create(s5);
+//
+//        Schedule s6 = new Schedule(LocalTime.of(11,30),LocalTime.of(11,30),4,2,5);
+//        s6.setStation(railWayStationService.read(4));
+//        s6.setTrain(trainService.read(3));
+//        scheduleService.create(s6);
+//
+//        Schedule s7 = new Schedule(LocalTime.of(11,30),LocalTime.of(11,30),4,2,5);
+//        s7.setStation(railWayStationService.read(5));
+//        s7.setTrain(trainService.read(3));
+//        scheduleService.create(s7);
+//
+//        Schedule s8 = new Schedule(LocalTime.of(11,30),LocalTime.of(11,30),4,2,5);
+//        s8.setStation(railWayStationService.read(6));
+//        s8.setTrain(trainService.read(3));
+//        scheduleService.create(s8);
+//
+//        Schedule s9 = new Schedule(LocalTime.of(11,30),LocalTime.of(11,30),4,2,5);
+//        s9.setStation(railWayStationService.read(1));
+//        s9.setTrain(trainService.read(1));
+//        scheduleService.create(s9);
+//
+//
+//        scheduleService.searchTrain(2,3,3);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
