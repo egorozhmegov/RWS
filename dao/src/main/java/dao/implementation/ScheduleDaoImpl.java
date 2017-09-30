@@ -56,11 +56,22 @@ public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements Schedul
      */
     @Override
     public List<Train> searchTrain(long departStationId, long arriveStationId, int departDay) {
-        String sqlQuery = "SELECT s FROM Schedule AS s";
+        String sqlQuery =
+                "SELECT s FROM Schedule AS s " +
+                        "WHERE s.station.id in (" + departStationId + "," + arriveStationId + ") " +
+                        "AND s.train.id IN (" +
+                        "SELECT s.train.id FROM Schedule AS s " +
+                        "WHERE (s.departureDay = " + departDay + " " +
+                        "AND s.station.id = " +  departStationId + ") " +
+                        "OR (s.station.id = " + arriveStationId + ") " +
+                        "GROUP BY s.train.id HAVING COUNT(s.train.id) > 1 " +
+                        "ORDER BY s.departureDay, s.departureTime) " +
+                "AND s.departureDay = " + departDay + " " +
+                "GROUP BY s.train.id " +
+                "HAVING s.station.id = " + departStationId + " " +
+                "AND COUNT(s.train.id) > 1";
         Query query = getEntityManager().createQuery(sqlQuery);
-        System.out.println(query.getResultList());
-        return null;
-
+        return query.getResultList();
     }
 
     @Override
