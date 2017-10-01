@@ -92,6 +92,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
      * @param lastName String
      * @return Employee
      */
+    @Transactional
     @Override
     public Employee getEmployeeByFirstNameAndLastName(String firstName, String lastName){
         return userDao.getEmployeeByFirstNameAndLastName(firstName, lastName);

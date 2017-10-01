@@ -28,8 +28,8 @@ public class Train implements Serializable {
     public Train(){
     }
 
-    public Train(String trainNumber, int tariff) {
-        this.number = trainNumber;
+    public Train(String number, int tariff) {
+        this.number = number;
         this.tariff = tariff;
     }
 
@@ -49,7 +49,7 @@ public class Train implements Serializable {
         this.number = number;
     }
 
-    public double getTariff() {
+    public int getTariff() {
         return tariff;
     }
 

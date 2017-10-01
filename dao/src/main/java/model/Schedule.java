@@ -2,12 +2,10 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalTime;
 
 /*
 Class of schedule entity. Use for information about train arrival and departure time.
  */
-
 @Entity
 @Table(name = "SCHEDULE")
 public class Schedule implements Serializable {
@@ -20,16 +18,22 @@ public class Schedule implements Serializable {
     private long id;
 
     @Column(name = "DEPARTURE_TIME")
-    private LocalTime departureTime;
+    private String departureTime;
 
     @Column(name = "ARRIVAL_TIME")
-    private LocalTime arrivalTime;
+    private String arrivalTime;
 
     @Column(name = "DEPARTURE_DAY")
     private int departureDay;
 
     @Column(name = "ARRIVAL_DAY")
     private int arrivalDay;
+
+    @Column(name = "DEPART_PERIOD")
+    private String departPeriod;
+
+    @Column(name = "ARRIVE_PERIOD")
+    private String arrivePeriod;
 
     @ManyToOne
     @JoinColumn(name = "TRAIN_ID")
@@ -42,14 +46,18 @@ public class Schedule implements Serializable {
     public Schedule(){
     }
 
-    public Schedule(LocalTime departureTime,
-                    LocalTime arrivalTime,
+    public Schedule(String departureTime,
+                    String arrivalTime,
                     int departureDay,
-                    int arrivalDay) {
+                    int arrivalDay,
+                    String departPeriod,
+                    String arrivePeriod) {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.departureDay = departureDay;
         this.arrivalDay = arrivalDay;
+        this.departPeriod = departPeriod;
+        this.arrivePeriod = arrivePeriod;
     }
 
     public long getId() {
@@ -60,19 +68,19 @@ public class Schedule implements Serializable {
         this.id = id;
     }
 
-    public LocalTime getDepartureTime() {
+    public String getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(LocalTime departureTime) {
+    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 
-    public LocalTime getArrivalTime() {
+    public String getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(LocalTime arrivalTime) {
+    public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
@@ -108,16 +116,32 @@ public class Schedule implements Serializable {
         this.station = station;
     }
 
+    public String getDepartPeriod() {
+        return departPeriod;
+    }
+
+    public void setDepartPeriod(String departPeriod) {
+        this.departPeriod = departPeriod;
+    }
+
+    public String getArrivePeriod() {
+        return arrivePeriod;
+    }
+
+    public void setArrivePeriod(String arrivePeriod) {
+        this.arrivePeriod = arrivePeriod;
+    }
+
     @Override
     public String toString() {
         return "Schedule{" +
                 "id=" + id +
-                ", departureTime=" + departureTime +
-                ", arrivalTime=" + arrivalTime +
+                ", departureTime='" + departureTime + '\'' +
+                ", arrivalTime='" + arrivalTime + '\'' +
                 ", departureDay=" + departureDay +
                 ", arrivalDay=" + arrivalDay +
-                ", train=" + train +
-                ", station=" + station +
+                ", departPeriod='" + departPeriod + '\'' +
+                ", arrivePeriod='" + arrivePeriod + '\'' +
                 '}';
     }
 }

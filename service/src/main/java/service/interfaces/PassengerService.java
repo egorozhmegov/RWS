@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface PassengerService extends GenericService<Passenger> {
     /**
-     * Get list of registered passenger on train.
+     * Get list of registered passengers on train.
      *
      * @param trainId long
      * @param departStationId long
@@ -18,8 +18,24 @@ public interface PassengerService extends GenericService<Passenger> {
      * @param departDate String
      * @return List<Passenger>
      */
-    List<Passenger> getRegisteredPassenger(long trainId,
+    List<Passenger> getRegisteredPassengers(long trainId,
                                            long departStationId,
                                            long arriveStationId,
                                            String departDate);
+
+    /**
+     * Get registered passenger on train.
+     *
+     * @param trainId long
+     * @param departStationId long
+     * @param arriveStationId long
+     * @param departDate String
+     * @param passenger Passenger
+     * @return Passenger
+     */
+    public Passenger getRegisteredPassenger(long trainId,
+                                            long departStationId,
+                                            long arriveStationId,
+                                            String departDate,
+                                            Passenger passenger);
 }

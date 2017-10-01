@@ -2,18 +2,20 @@ package dao.implementation;
 
 import dao.interfaces.PassengerDao;
 import model.Passenger;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
  Passenger dao implementation.
  */
 public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements PassengerDao {
+
+    private final static Logger LOG = LoggerFactory.getLogger(PassengerDaoImpl.class);
+
     /**
      * Injected instance of entity manager.
      */
@@ -25,7 +27,7 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
     }
 
     /**
-     * Get list of registered passenger on train.
+     * Get list of registered passengers on train.
      *
      * @param trainId long
      * @param departStationId long
@@ -34,19 +36,68 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
      * @return List<Passenger>
      */
     @Override
-    public List<Passenger> getRegisteredPassenger(long trainId,
+    public List<Passenger> getRegisteredPassengers(long trainId,
                                                   long departStationId,
                                                   long arriveStationId,
                                                   String departDate) {
 
         String sqlQuery =
-                "SELECT p FROM Passenger AS p " +
-                        "WHERE p.train.id = " + trainId +
-                " AND p.trainDate = " + departDate;
+                String.format(
+                        "SELECT p FROM Passenger AS p " +
+                        "WHERE p.train.id = '%s' " +
+                        "AND p.trainDate = '%s' " +
+                        "AND p.station.id IN('%s','%s')"
+                , trainId, departDate, departStationId, arriveStationId);
         Query query = getEntityManager().createQuery(sqlQuery);
-        System.out.println(query.getResultList());
-        return null;
+        try{
+            LOG.info("No passengers for this request");
+            return query.getResultList();
+        } catch(Exception e){
+            return null;
+        }
     }
+
+    /**
+     * Get registered passenger on train.
+     *
+     * @param trainId long
+     * @param departStationId long
+     * @param arriveStationId long
+     * @param departDate String
+     * @param passenger Passenger
+     * @return Passenger
+     */
+    public Passenger getRegisteredPassenger(long trainId,
+                                     long departStationId,
+                                     long arriveStationId,
+                                     String departDate,
+                                     Passenger passenger){
+        String sqlQuery =
+                String.format(
+                        "SELECT p FROM Passenger AS p " +
+                                "WHERE p.train.id = '%s' " +
+                                "AND p.trainDate = '%s' " +
+                                "AND p.station.id IN('%s','%s') " +
+                                "AND p.firstName = '%s' " +
+                                "AND p.lastName = '%s' " +
+                                "AND p.birthday = '%s' "
+                        , trainId
+                        , departDate
+                        , departStationId
+                        , arriveStationId
+                        , passenger.getFirstName()
+                        , passenger.getLastName()
+                        , passenger.getBirthday());
+        Query query = getEntityManager().createQuery(sqlQuery);
+        try{
+            return (Passenger) query.getSingleResult();
+        } catch(Exception e){
+            LOG.info("No passengers for this request");
+            return null;
+        }
+    }
+
+
 
 
     @Override

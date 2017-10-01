@@ -6,7 +6,6 @@ import java.io.Serializable;
 /*
 Class of ticket entity. Use for print information about passenger travel and price of travel.
  */
-
 @Entity
 @Table(name = "TICKET")
 public class Ticket implements Serializable {

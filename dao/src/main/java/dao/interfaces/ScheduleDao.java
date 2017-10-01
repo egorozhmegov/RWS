@@ -32,5 +32,23 @@ public interface ScheduleDao extends GenericDao<Schedule> {
      * @param departDay int
      * @return List<Train>
      */
-    public List<Train> searchTrain(long departStationId, long arriveStationId, int departDay);
+    List<Schedule> searchTrain(long departStationId, long arriveStationId, int departDay);
+
+    /**
+     * Get station departure schedule by id.
+     *
+     * @param stationId long
+     * @param weekDay int
+     * @return List<Schedule>
+     */
+    List<Schedule> getStationDepartSchedule(long stationId, int weekDay);
+
+    /**
+     * Get station arrival schedule by id.
+     *
+     * @param stationId long
+     * @param weekDay int
+     * @return List<Schedule>
+     */
+    List<Schedule> getStationArriveSchedule(long stationId, int weekDay);
 }

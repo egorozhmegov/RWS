@@ -1,13 +1,37 @@
 package service.interfaces;
 
-import model.RailWayStation;
+import model.Schedule;
 import model.Train;
+
 import java.util.List;
-import java.util.Set;
 
 /**
  * Train service.
  */
 public interface TrainService extends GenericService<Train> {
-    boolean existTrain(String number);
+
+    /**
+     * Get train route
+     *
+     * @param trainId long
+     * @return List<Schedule>
+     */
+    List<Schedule> getRoute(long trainId);
+
+    /**
+     * Get train departure time.
+     *
+     * @param trainId long
+     * @param stationId long
+     * @param weekDay weekDay
+     * @return String
+     */
+    String getDepartureTime(long trainId, long stationId, int weekDay);
+
+    /**
+     * Add train.
+     *
+     * @param train Train
+     */
+    void addTrain(Train train);
 }

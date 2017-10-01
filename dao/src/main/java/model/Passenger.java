@@ -2,8 +2,6 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /*
 Class of passenger entity. Use for buy tickets by passenger and registration him on train.

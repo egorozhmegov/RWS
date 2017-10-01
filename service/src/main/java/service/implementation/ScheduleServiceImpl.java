@@ -52,8 +52,34 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
      */
     @Transactional
     @Override
-    public List<Train> searchTrain(long departStationId, long arriveStationId, int departDay){
+    public List<Schedule> searchTrain(long departStationId, long arriveStationId, int departDay){
         return scheduleDao.searchTrain(departStationId, arriveStationId, departDay);
+    }
+
+    /**
+     * Get station departure schedule by id.
+     *
+     * @param stationId long
+     * @param weekDay int
+     * @return List<Schedule>
+     */
+    @Transactional
+    @Override
+    public List<Schedule> getStationDepartSchedule(long stationId, int weekDay){
+        return scheduleDao.getStationDepartSchedule(stationId, weekDay);
+    }
+
+    /**
+     * Get station arrival schedule by id.
+     *
+     * @param stationId long
+     * @param weekDay int
+     * @return List<Schedule>
+     */
+    @Transactional
+    @Override
+    public List<Schedule> getStationArriveSchedule(long stationId, int weekDay){
+        return scheduleDao.getStationArriveSchedule(stationId, weekDay);
     }
 
     @Override

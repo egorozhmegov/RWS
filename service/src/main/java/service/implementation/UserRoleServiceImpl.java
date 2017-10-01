@@ -20,10 +20,6 @@ public class UserRoleServiceImpl extends GenericServiceImpl<UserRole> implements
         return userRoleDao;
     }
 
-    public UserRoleDao getUserRoleDao() {
-        return userRoleDao;
-    }
-
     public void setUserRoleDao(UserRoleDao userRoleDao) {
         this.userRoleDao = userRoleDao;
     }

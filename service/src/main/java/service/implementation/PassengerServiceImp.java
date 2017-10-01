@@ -5,6 +5,7 @@ import dao.interfaces.PassengerDao;
 import model.Passenger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.PassengerService;
 
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
     private PassengerDao passengerDao;
 
     /**
-     * Get list of registered passenger on train.
+     * Get list of registered passengers on train.
      *
      * @param trainId long
      * @param departStationId long
@@ -29,12 +30,38 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
      * @param departDate String
      * @return List<Passenger>
      */
+    @Transactional
     @Override
-    public List<Passenger> getRegisteredPassenger(long trainId,
+    public List<Passenger> getRegisteredPassengers(long trainId,
                                                   long departStationId,
                                                   long arriveStationId,
                                                   String departDate){
-        return passengerDao.getRegisteredPassenger(trainId,departStationId,arriveStationId,departDate);
+        return passengerDao.getRegisteredPassengers(trainId,departStationId,arriveStationId,departDate);
+    }
+
+    /**
+     * Get registered passenger on train.
+     *
+     * @param trainId long
+     * @param departStationId long
+     * @param arriveStationId long
+     * @param departDate String
+     * @param passenger Passenger
+     * @return Passenger
+     */
+    @Transactional
+    @Override
+    public Passenger getRegisteredPassenger(long trainId,
+                                            long departStationId,
+                                            long arriveStationId,
+                                            String departDate,
+                                            Passenger passenger){
+        return passengerDao.getRegisteredPassenger(
+                trainId
+                ,departStationId
+                ,arriveStationId
+                ,departDate
+                ,passenger);
     }
 
     @Override

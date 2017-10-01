@@ -1,11 +1,7 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 /*
 Class of railway station entity. Use for information about train schedule.
