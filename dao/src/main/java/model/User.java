@@ -2,13 +2,10 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 /*
 Class of user account entity. Use for user registration and authorization.
  */
-
 @Entity
 @Table(name = "USER")
 public class User implements Serializable {
@@ -35,11 +32,9 @@ public class User implements Serializable {
     @Column(name = "PASSWORD")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_ROLE",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name ="ROLE_ID"))
-    private Set<UserRole> roles = new HashSet<>();
+    @OneToOne
+    @JoinColumn(name = "ROLE_ID")
+    private UserRole role;
 
     public User(){
     }
@@ -104,12 +99,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public Set<UserRole> getRoles() {
-        return roles;
+    public UserRole getRole() {
+        return role;
     }
 
-    public void setRoles(Set<UserRole> roles) {
-        this.roles = roles;
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     @Override

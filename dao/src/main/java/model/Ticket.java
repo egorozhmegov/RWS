@@ -21,7 +21,8 @@ public class Ticket implements Serializable {
     @Column(name = "PRICE")
     private int ticketPrice;
 
-    @OneToOne(mappedBy = "ticket")
+    @OneToOne
+    @JoinColumn(name = "PASSENGER_ID")
     private Passenger passenger;
 
     public Ticket(){

@@ -3,11 +3,11 @@ package model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /*
 Class of passenger entity. Use for buy tickets by passenger and registration him on train.
  */
-
 @Entity
 @Table(name = "PASSENGER")
 public class Passenger implements Serializable {
@@ -26,23 +26,23 @@ public class Passenger implements Serializable {
     private String lastName;
 
     @Column(name = "BIRTH_DAY")
-    private LocalDate birthday;
+    private String birthday;
 
     @Column(name = "TRAIN_DATE")
-    private int trainDate;
+    private String trainDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private Ticket ticket;
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "TRAIN_ID")
     private Train train;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "STATION_ID")
+    private RailWayStation station;
 
     public Passenger(){
     }
 
-    public Passenger(String firstName, String lastName, LocalDate birthday) {
+    public Passenger(String firstName, String lastName, String birthday) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
@@ -72,20 +72,12 @@ public class Passenger implements Serializable {
         this.lastName = lastName;
     }
 
-    public LocalDate getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
-    }
-
-    public Ticket getTicket() {
-        return ticket;
-    }
-
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
     }
 
     public Train getTrain() {
@@ -94,6 +86,22 @@ public class Passenger implements Serializable {
 
     public void setTrain(Train train) {
         this.train = train;
+    }
+
+    public String getTrainDate() {
+        return trainDate;
+    }
+
+    public void setTrainDate(String trainDate) {
+        this.trainDate = trainDate;
+    }
+
+    public RailWayStation getStation() {
+        return station;
+    }
+
+    public void setStation(RailWayStation station) {
+        this.station = station;
     }
 
     @Override

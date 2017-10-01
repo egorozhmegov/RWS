@@ -31,9 +31,6 @@ public class Schedule implements Serializable {
     @Column(name = "ARRIVAL_DAY")
     private int arrivalDay;
 
-    @Column(name = "SEATS")
-    private int trainSeats;
-
     @ManyToOne
     @JoinColumn(name = "TRAIN_ID")
     private Train train;
@@ -48,13 +45,11 @@ public class Schedule implements Serializable {
     public Schedule(LocalTime departureTime,
                     LocalTime arrivalTime,
                     int departureDay,
-                    int arrivalDay,
-                    int trainSeats) {
+                    int arrivalDay) {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.departureDay = departureDay;
         this.arrivalDay = arrivalDay;
-        this.trainSeats = trainSeats;
     }
 
     public long getId() {
@@ -97,14 +92,6 @@ public class Schedule implements Serializable {
         this.arrivalDay = arrivalDay;
     }
 
-    public int getTrainSeats() {
-        return trainSeats;
-    }
-
-    public void setTrainSeats(int trainSeats) {
-        this.trainSeats = trainSeats;
-    }
-
     public Train getTrain() {
         return train;
     }
@@ -129,9 +116,9 @@ public class Schedule implements Serializable {
                 ", arrivalTime=" + arrivalTime +
                 ", departureDay=" + departureDay +
                 ", arrivalDay=" + arrivalDay +
-                ", trainSeats=" + trainSeats +
                 ", train=" + train +
                 ", station=" + station +
                 '}';
     }
 }
+

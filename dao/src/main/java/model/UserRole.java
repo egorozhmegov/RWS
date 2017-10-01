@@ -2,8 +2,6 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 /*
 Class of user role entity.
@@ -21,9 +19,6 @@ public class UserRole implements Serializable {
 
     @Column(name = "ROLE")
     private String role;
-
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users = new HashSet<>();
 
     public UserRole(){
     }
@@ -46,13 +41,5 @@ public class UserRole implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
     }
 }
