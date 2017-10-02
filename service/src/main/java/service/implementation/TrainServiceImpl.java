@@ -78,11 +78,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
      */
     @Override
     public void addRoutePoint(Schedule routePoint){
-        String stationTitle = routePoint.getStation().getTitle();
-        String[] departPeriod = routePoint.getDepartPeriod().split(" ");
-        String[] arrivePeriod = routePoint.getArrivePeriod().split(" ");
-        String departureTime = routePoint.getDepartureTime();
-        String arrivalTime = routePoint.getArrivalTime();
+
     }
 
     /**

@@ -2,6 +2,7 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /*
 Class of passenger entity. Use for buy tickets by passenger and registration him on train.
@@ -24,10 +25,10 @@ public class Passenger implements Serializable {
     private String lastName;
 
     @Column(name = "BIRTH_DAY")
-    private String birthday;
+    private LocalDate birthday;
 
     @Column(name = "TRAIN_DATE")
-    private String trainDate;
+    private LocalDate trainDate;
 
     @ManyToOne
     @JoinColumn(name = "TRAIN_ID")
@@ -40,7 +41,7 @@ public class Passenger implements Serializable {
     public Passenger(){
     }
 
-    public Passenger(String firstName, String lastName, String birthday) {
+    public Passenger(String firstName, String lastName, LocalDate birthday) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
@@ -70,11 +71,11 @@ public class Passenger implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 
@@ -86,11 +87,11 @@ public class Passenger implements Serializable {
         this.train = train;
     }
 
-    public String getTrainDate() {
+    public LocalDate getTrainDate() {
         return trainDate;
     }
 
-    public void setTrainDate(String trainDate) {
+    public void setTrainDate(LocalDate trainDate) {
         this.trainDate = trainDate;
     }
 

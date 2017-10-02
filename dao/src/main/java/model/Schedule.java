@@ -2,6 +2,7 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalTime;
 
 /*
 Class of schedule entity. Use for information about train arrival and departure time.
@@ -18,10 +19,10 @@ public class Schedule implements Serializable {
     private long id;
 
     @Column(name = "DEPARTURE_TIME")
-    private String departureTime;
+    private LocalTime departureTime;
 
     @Column(name = "ARRIVAL_TIME")
-    private String arrivalTime;
+    private LocalTime arrivalTime;
 
     @Column(name = "DEPARTURE_DAY")
     private int departureDay;
@@ -46,8 +47,8 @@ public class Schedule implements Serializable {
     public Schedule(){
     }
 
-    public Schedule(String departureTime,
-                    String arrivalTime,
+    public Schedule(LocalTime departureTime,
+                    LocalTime arrivalTime,
                     int departureDay,
                     int arrivalDay,
                     String departPeriod,
@@ -68,19 +69,19 @@ public class Schedule implements Serializable {
         this.id = id;
     }
 
-    public String getDepartureTime() {
+    public LocalTime getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(String departureTime) {
+    public void setDepartureTime(LocalTime departureTime) {
         this.departureTime = departureTime;
     }
 
-    public String getArrivalTime() {
+    public LocalTime getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(String arrivalTime) {
+    public void setArrivalTime(LocalTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 

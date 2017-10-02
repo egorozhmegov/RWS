@@ -67,7 +67,7 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
                 "SELECT s.departureTime FROM Schedule AS s " +
                         "WHERE s.train.id = " + trainId + " " +
                         "AND s.station.id = " + stationId + " " +
-                        "AND s.weekDay = " + weekDay;
+                        "AND s.departureDay = " + weekDay;
         Query query = getEntityManager().createQuery(sqlQuery);
         try{
             return (String) query.getSingleResult();
@@ -80,7 +80,7 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
     /**
      * Get train by number.
      *
-     * @param trainNumber String
+     * @param number String
      * @return Train
      */
     @Override
