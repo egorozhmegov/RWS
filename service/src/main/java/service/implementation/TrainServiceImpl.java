@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.TrainService;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,6 +23,8 @@ import java.util.List;
 public class TrainServiceImpl extends GenericServiceImpl<Train> implements TrainService {
 
     private final static Logger LOG = LoggerFactory.getLogger(TrainServiceImpl.class);
+
+    private final static List<String> WEEK_DAYS = Arrays.asList("sun", "mon", "tue", "wed", "thu", "fri", "sat");
 
     @Autowired
     private TrainDao trainDao;
@@ -64,6 +69,35 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
             throw new TrainServiceException("Not valid train data");
 
         trainDao.create(train);
+    }
+
+    /**
+     * Add route point to train.
+     *
+     * @param routePoint Schedule
+     */
+    @Override
+    public void addRoutePoint(Schedule routePoint){
+        String stationTitle = routePoint.getStation().getTitle();
+        String[] departPeriod = routePoint.getDepartPeriod().split(" ");
+        String[] arrivePeriod = routePoint.getArrivePeriod().split(" ");
+        String departureTime = routePoint.getDepartureTime();
+        String arrivalTime = routePoint.getArrivalTime();
+    }
+
+    /**
+     * Check on validate data of train periods.
+     *
+     * @param days String[]
+     * @return boolean
+     */
+    private boolean checkWeekDays(String[] days){
+        boolean check = true;
+        for (String day : days) {
+            if (!WEEK_DAYS.contains(day))
+                check = false;
+        }
+        return check;
     }
 
     public void setTrainDao(TrainDao trainDao) {

@@ -62,4 +62,10 @@ public class TrainController {
     public ResponseEntity<List<Schedule>> getRoute(@PathVariable("id") long id){
        return new ResponseEntity<>(trainService.getRoute(id), HttpStatus.OK);
     }
+
+    @RequestMapping(value="/addRoutePoint",method = RequestMethod.POST)
+    public ResponseEntity<Schedule> addRoutePoint(@RequestBody Schedule routePoint){
+        trainService.addRoutePoint(routePoint);
+        return null;
+    }
 }
