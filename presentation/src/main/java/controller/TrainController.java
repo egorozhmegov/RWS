@@ -1,12 +1,14 @@
 package controller;
 
 import exception.TrainServiceException;
+import model.Passenger;
 import model.RailWayStation;
 import model.Schedule;
 import model.Train;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import service.interfaces.RailWayStationService;
 import service.interfaces.ScheduleService;
 import service.interfaces.TrainService;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -67,7 +70,7 @@ public class TrainController {
 
     @RequestMapping(value="/addRoutePoint",method = RequestMethod.POST)
     public ResponseEntity<Schedule> addRoutePoint(@RequestBody Schedule routePoint){
-        trainService.addRoutePoint(routePoint);
+        System.out.println(routePoint);
         return null;
     }
 }

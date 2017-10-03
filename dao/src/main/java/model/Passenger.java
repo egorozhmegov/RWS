@@ -3,6 +3,7 @@ package model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 /*
 Class of passenger entity. Use for buy tickets by passenger and registration him on train.
@@ -38,13 +39,24 @@ public class Passenger implements Serializable {
     @JoinColumn(name = "STATION_ID")
     private RailWayStation station;
 
+    private LocalTime time;
+
     public Passenger(){
     }
 
-    public Passenger(String firstName, String lastName, LocalDate birthday) {
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
+    public Passenger(String firstName, String lastName, LocalDate birthday, LocalTime time) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
+        this.time = time;
     }
 
     public long getId() {
