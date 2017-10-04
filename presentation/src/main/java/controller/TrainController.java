@@ -32,14 +32,6 @@ public class TrainController {
     @Autowired
     private TrainService trainService;
 
-    @Autowired
-    private RailWayStationService railWayStationService;
-
-    @Autowired
-    private ScheduleService scheduleService;
-
-    @Autowired
-    private PassengerService passengerService;
 
     @RequestMapping(value="/getTrains",method = RequestMethod.GET)
     public ResponseEntity<List<Train>> getAllTrains() {
@@ -58,8 +50,7 @@ public class TrainController {
 
     @RequestMapping(value="/deleteTrain/{id}",method = RequestMethod.DELETE)
     public ResponseEntity<Long> deleteTrain(@PathVariable("id") long id){
-        scheduleService.deleteByTrainId(id);
-        trainService.delete(id);
+        trainService.removeTrain(id);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
@@ -70,7 +61,11 @@ public class TrainController {
 
     @RequestMapping(value="/addRoutePoint",method = RequestMethod.POST)
     public ResponseEntity<Schedule> addRoutePoint(@RequestBody Schedule routePoint){
-        System.out.println(routePoint);
-        return null;
+        try{
+            trainService.addRoutePoint(routePoint);
+            return new ResponseEntity<>(routePoint, HttpStatus.CREATED);
+        } catch (TrainServiceException e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 }

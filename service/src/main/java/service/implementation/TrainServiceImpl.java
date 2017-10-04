@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import service.interfaces.ScheduleService;
 import service.interfaces.TrainService;
 
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     private final static Logger LOG = LoggerFactory.getLogger(TrainServiceImpl.class);
 
     private final static List<String> WEEK_DAYS = Arrays.asList("sun", "mon", "tue", "wed", "thu", "fri", "sat");
+
+    @Autowired
+    private ScheduleService scheduleService;
 
     @Autowired
     private TrainDao trainDao;
@@ -72,13 +76,28 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     }
 
     /**
+     * Remove train.
+     *
+     * @param id long
+     */
+    @Transactional
+    @Override
+    public void removeTrain(long id){
+        scheduleService.deleteByTrainId(id);
+        LOG.info(String.format("All schedules with train id = '%s' removed", id));
+
+        trainDao.delete(id);
+        LOG.info(String.format("Train with id = '%s' removed", id));
+    }
+
+    /**
      * Add route point to train.
      *
      * @param routePoint Schedule
      */
     @Override
     public void addRoutePoint(Schedule routePoint){
-
+        
     }
 
     /**
