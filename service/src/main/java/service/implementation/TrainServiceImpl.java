@@ -146,19 +146,10 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 departureTime,
                 intListArriveDays,
                 intListDepartDays)
-//        && !isPossibleAddRoutePoint(
-//                arrivalTime,
-//                departureTime,
-//                intListArriveDays,
-//                intListDepartDays,
-//                route)
-            ){
+        && !isPossibleAddRoutePoint(routePoint, route)){
             LOG.info("Departure time is before arrival time.");
             throw new TrainServiceException("Departure time is before arrival time.");
         }
-
-
-
 
         List<Integer> days = intListArriveDays.size() == 0
                 ? intListDepartDays
@@ -247,8 +238,9 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                                                 List<Integer> departPeriod){
         boolean result = true;
 
-        if(arrivePeriod.size() == 0) return true;
-        if(departPeriod.size() == 0) return true;
+        if(arrivePeriod.size() == 0
+                || departPeriod.size() == 0)
+            return true;
 
         for (int i = 0; i < departPeriod.size(); i++) {
             int arriveDay = arrivePeriod.get(i);
@@ -256,10 +248,11 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
 
             if(departDay < arriveDay
                     && departDay == 1
-                    && arriveDay == 7
-                    && departureTime.isAfter(arrivalTime)){
+                    && arriveDay == 7){
                 result = true;
-            } else if(departDay < arriveDay){
+            } else if(departDay < arriveDay
+                    && (departDay == 1
+                    && arriveDay == 7)){
                 result = false;
                 break;
             } else if(departDay == arriveDay
@@ -277,62 +270,102 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
      *
      * @return boolean
      */
-    private boolean isPossibleAddRoutePoint(LocalTime arrivalTime,
-                                            LocalTime departureTime,
-                                            List<Integer> arrivePeriod,
-                                            List<Integer> departPeriod,
-                                            List<Schedule> route){
-        boolean result = false;
+    private boolean isPossibleAddRoutePoint(Schedule routePoint, List<Schedule> route){
+        boolean result = true;
 
-        for (int i = 0; i < route.size(); i++) {
-            LocalTime arrTime = route.get(i).getArrivalTime();
-            LocalTime depTime = route.get(i).getDepartureTime();
-            List<Integer> arrPeriod
-                    = parseToIntTrainPeriod(route.get(i)
-                    .getArrivePeriod()
-                    .split(","));
-            List<Integer> depPeriod
-                    = parseToIntTrainPeriod(route.get(i)
-                    .getDepartPeriod()
-                    .split(","));
+        if(route.size() == 0) return true;
 
-            if(i == 0
-                    && arrTime != null
-                    && arrPeriod.size() != 0){
-                for (int j = 0; j < depPeriod.size(); j++) {
-                    if(departPeriod.get(j) > depPeriod.get(j)
-                        || arrivePeriod.get(j) > arrPeriod.get(j)
-                        || arrivalTime.isAfter(arrTime)
-                        || departureTime.isAfter(depTime)){
+        List<Integer> departPeriod
+                = parseToIntTrainPeriod(
+                        routePoint
+                                .getDepartPeriod()
+                                    .split(",")
+        );
+
+        List<Integer> arrivePeriod
+                = parseToIntTrainPeriod(
+                routePoint
+                        .getArrivePeriod()
+                            .split(",")
+        );
+
+        LocalTime departureTime = routePoint.getDepartureTime();
+        LocalTime arrivalTime = routePoint.getArrivalTime();
+
+        if(arrivePeriod.size() == 0){
+            List<Integer> routeDepartPeriod
+                    = parseToIntTrainPeriod(
+                            route.get(0)
+                                    .getDepartPeriod()
+                                        .split(","));
+            LocalTime routeDepartureTime = route.get(0).getDepartureTime();
+
+            for (int i = 0; i < departPeriod.size(); i++) {
+                if(departPeriod.get(i) > routeDepartPeriod.get(i)
+                        && departureTime.isAfter(routeDepartureTime)){
+                    result = false;
+                    break;
+                } else if(Objects.equals(departPeriod.get(i), routeDepartPeriod.get(i))
+                        && departureTime.isAfter(routeDepartureTime)){
+                    result = false;
+                    break;
+                }
+            }
+        } else if (departPeriod.size() == 0){
+            List<Integer> routeArrivePeriod
+                    = parseToIntTrainPeriod(
+                        route.get(0)
+                            .getArrivePeriod()
+                                .split(","));
+            LocalTime routeArrivalTime = route.get(0).getArrivalTime();
+
+            for (int i = 0; i < arrivePeriod.size(); i++) {
+                if(arrivePeriod.get(i) < arrivePeriod.get(i)
+                        && arrivalTime.isBefore(routeArrivalTime)){
+                    result = false;
+                    break;
+                } else if(Objects.equals(arrivePeriod.get(i), routeArrivePeriod.get(i))
+                        && arrivalTime.isBefore(routeArrivalTime)){
+                    result = false;
+                    break;
+                }
+            }
+        } else {
+            for (int i = 0; i < route.size()-2; i++) {
+                List<Integer> routeArrivePeriod
+                        = parseToIntTrainPeriod(
+                        route.get(i)
+                                .getArrivePeriod()
+                                    .split(","));
+                LocalTime routeArrivalTime = route.get(i).getArrivalTime();
+
+                List<Integer> routeDepartPeriod
+                        = parseToIntTrainPeriod(
+                        route.get(i)
+                                .getDepartPeriod()
+                                    .split(","));
+                LocalTime routeDepartureTime = route.get(i).getDepartureTime();
+
+                LocalTime nextArrivalTime = route.get(i+1).getArrivalTime();
+                LocalTime nextDepartureTime = route.get(i+1).getDepartureTime();
+
+                for (int j = 0; j < departPeriod.size(); j++) {
+                    if(arrivePeriod.get(i) < routeDepartPeriod.get(i)
+                            && arrivePeriod.get(i) > routeArrivePeriod.get(i+1)
+                            && departPeriod.get(i) > routeArrivePeriod.get(i+1)){
                         result = false;
                         break;
-                    } else {result = true;}
-                }
-                if(result) break;
-
-            } else if(i == route.size() - 1
-                    && depTime != null
-                    && depPeriod.size() != 0){
-                for (int j = 0; j < depPeriod.size(); j++) {
-                    if(departPeriod.get(j) < depPeriod.get(j)
-                            || arrivePeriod.get(j) < arrPeriod.get(j)
-                            || arrivalTime.isBefore(arrTime)
-                            || departureTime.isBefore(depTime)){
+                    } else if(Objects.equals(arrivePeriod.get(i), routeDepartPeriod.get(i))
+                        && arrivalTime.isBefore(routeArrivalTime)){
                         result = false;
                         break;
-                    } else {result = true;}
-                }
-                if(result) break;
-
-            } else {
-                for (int j = 0; j < depPeriod.size(); j++) {
-                    if(departPeriod.get(j) >= depPeriod.get(j)
-                            && departPeriod.get(j) <= depPeriod.get(j+1)
-                            && arrivePeriod.get(j) >= arrPeriod.get(j)
-                            && arrivePeriod.get(j) <= arrPeriod.get(j+1)
-                            && arrivalTime.isAfter(arrTime)
-                            && departureTime.isAfter(depTime)){
-                        result = true;
+                    } else if(Objects.equals(arrivePeriod.get(i), routeArrivePeriod.get(i + 1))
+                            && arrivalTime.isAfter(nextArrivalTime)){
+                        result = false;
+                        break;
+                    } else if(Objects.equals(departPeriod.get(i), routeArrivePeriod.get(i + 1))
+                            && departureTime.isAfter(nextArrivalTime)){
+                        result = false;
                         break;
                     }
                 }
