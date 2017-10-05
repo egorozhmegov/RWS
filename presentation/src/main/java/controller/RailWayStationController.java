@@ -25,14 +25,7 @@ public class RailWayStationController {
 
     @RequestMapping(value="/view/add_station",method = RequestMethod.POST)
     public boolean addStation(@RequestBody RailWayStation station) {
-        if(railWayStationService.existStation(station.getTitle())){
-            LOG.info(String.format("Station with name: %s exist already.", station.getTitle()));
-            return false;
-        } else {
-            LOG.info(String.format("Create station with name: %s", station.getTitle()));
-            railWayStationService.create(station);
-            return true;
-        }
+        return true;
     }
 
     @RequestMapping(value="/view/remove_station/{stationId}",method = RequestMethod.DELETE)

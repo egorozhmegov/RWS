@@ -13,6 +13,4 @@ public interface RailWayStationService extends GenericService<RailWayStation> {
      * @return RailWayStation.
      */
     RailWayStation getStationByName(String name);
-
-    boolean existStation(String title);
 }

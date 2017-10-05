@@ -35,22 +35,6 @@ public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation
     }
 
     @Override
-    public boolean existStation(String stationName) {
-        if(stationName == null || stationName.isEmpty()){
-            throw new RailWayStationServiceException("Method: existStation. Null or empty station name.");
-        } else {
-            boolean exist = false;
-            for(RailWayStation station : getDao().getAll()){
-                if(stationName.equals(station.getTitle())){
-                    exist = true;
-                    break;
-                }
-            }
-            return exist;
-        }
-    }
-
-    @Override
     GenericDao<RailWayStation> getDao() {
         return railWayStationDao;
     }

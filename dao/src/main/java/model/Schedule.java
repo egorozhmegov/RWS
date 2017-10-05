@@ -137,12 +137,14 @@ public class Schedule implements Serializable {
     public String toString() {
         return "Schedule{" +
                 "id=" + id +
-                ", departureTime='" + departureTime + '\'' +
-                ", arrivalTime='" + arrivalTime + '\'' +
+                ", departureTime=" + departureTime +
+                ", arrivalTime=" + arrivalTime +
                 ", departureDay=" + departureDay +
                 ", arrivalDay=" + arrivalDay +
                 ", departPeriod='" + departPeriod + '\'' +
                 ", arrivePeriod='" + arrivePeriod + '\'' +
+                ", train=" + train +
+                ", station=" + station +
                 '}';
     }
 }
