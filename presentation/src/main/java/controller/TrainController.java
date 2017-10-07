@@ -68,4 +68,10 @@ public class TrainController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+
+    @RequestMapping(value="/deleteRoutePoint/{id}",method = RequestMethod.DELETE)
+    public ResponseEntity<Long> deleteRoutePoint(@PathVariable("id") long id){
+        trainService.removeRoutePoint(id);
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
 }

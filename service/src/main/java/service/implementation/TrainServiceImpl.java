@@ -81,12 +81,30 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     @Transactional
     @Override
     public void addTrain(Train train){
-        Train checkTrain = trainDao.getTrainByNumber(train.getNumber());
-
-        if(checkTrain != null)
+        if(train.getTariff() == 0
+                || train.getNumber() == null
+                || train.getNumber().trim().isEmpty()
+                || trainDao.getTrainByNumber(train.getNumber()) != null)
             throw new TrainServiceException("Not valid train data");
 
         trainDao.create(train);
+    }
+
+    /**
+     * Remove route point of train.
+     *
+     * @param scheduleId long.
+     */
+    @Transactional
+    @Override
+    public void removeRoutePoint(long scheduleId){
+        Schedule schedule = scheduleService.read(scheduleId);
+        long trainId = schedule.getTrain().getId();
+        long stationId = schedule.getStation().getId();
+        scheduleService.deleteByStationAndTrainId(stationId, trainId);
+        LOG.info(String
+                .format("Schedule: '%s' with train id = '%s' and station id = '%s' deleted.",
+                        schedule, trainId, stationId));
     }
 
     /**
@@ -147,31 +165,48 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
             throw new TrainServiceException("Departure time is before arrival time.");
         }
 
-        List<Integer> days = intListArriveDays.size() == 0
+        List<Integer> days
+                = intListArriveDays.size() == 0
                 ? intListDepartDays
                 : intListArriveDays;
 
         for(int i = 0; i < days.size(); i++){
-            Schedule schedule = new Schedule();
-            schedule.setStation(station);
-            schedule.setTrain(train);
-            schedule.setDepartureTime(departureTime);
-            schedule.setArrivalTime(arrivalTime);
-            schedule.setDepartPeriod(departPeriod);
-            schedule.setArrivePeriod(arrivePeriod);
-            if(intListArriveDays.size() == 0){
+            if(listArriveDays[0].trim().isEmpty()){
                 for(Integer depDay: intListDepartDays){
+                    Schedule schedule = new Schedule();
+                    schedule.setStation(station);
+                    schedule.setTrain(train);
+                    schedule.setDepartureTime(departureTime);
+                    schedule.setArrivalTime(arrivalTime);
+                    schedule.setDepartPeriod(departPeriod);
+                    schedule.setArrivePeriod(arrivePeriod);
                     schedule.setArrivalDay(0);
                     schedule.setDepartureDay(depDay);
                     scheduleService.create(schedule);
                 }
-            } else if(intListDepartDays.size() == 0){
+                break;
+            } else if(listDepartDays[0].trim().isEmpty()){
                 for(Integer arrDay: intListArriveDays){
+                    Schedule schedule = new Schedule();
+                    schedule.setStation(station);
+                    schedule.setTrain(train);
+                    schedule.setDepartureTime(departureTime);
+                    schedule.setArrivalTime(arrivalTime);
+                    schedule.setDepartPeriod(departPeriod);
+                    schedule.setArrivePeriod(arrivePeriod);
                     schedule.setArrivalDay(arrDay);
                     schedule.setDepartureDay(0);
                     scheduleService.create(schedule);
                 }
+                break;
             } else {
+                Schedule schedule = new Schedule();
+                schedule.setStation(station);
+                schedule.setTrain(train);
+                schedule.setDepartureTime(departureTime);
+                schedule.setArrivalTime(arrivalTime);
+                schedule.setDepartPeriod(departPeriod);
+                schedule.setArrivePeriod(arrivePeriod);
                 schedule.setArrivalDay(intListArriveDays.get(i));
                 schedule.setDepartureDay(intListDepartDays.get(i));
                 scheduleService.create(schedule);
@@ -312,7 +347,11 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 int departureDay = departPeriod.get(i);
                 int routeDepartureDay = routeDepartPeriod.get(i);
 
-                if(departureDay > routeDepartureDay){
+                if(departureDay > routeDepartureDay
+                        && departureDay == 7
+                        && routeDepartureDay == 1){
+                    result = true;
+                } else if(departureDay > routeDepartureDay){
                     result = false; break;
                 } else if(Objects.equals(departureDay, routeDepartureDay)
                         && departureTime.isAfter(routeDepartureTime)){
@@ -332,7 +371,11 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 int arrivalDay = arrivePeriod.get(i);
                 int routeArrivalDay = routeArrivePeriod.get(i);
 
-                if(arrivalDay < routeArrivalDay){
+                if(arrivalDay < routeArrivalDay
+                        && arrivalDay == 1
+                        && routeArrivalDay == 7){
+                    result = true;
+                } else if(arrivalDay < routeArrivalDay){
                     result = false; break;
                 } else if(Objects.equals(arrivalDay, routeArrivalDay)
                         && arrivalTime.isBefore(routeArrivalTime)){
@@ -340,7 +383,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 }
             }
         } else {
-            for (int i = 1; i < route.size()-2; i++) {
+            for (int i = 1; i < route.size(); i++) {
                 List<Integer> routeArrivePeriod
                         = parseToIntTrainPeriod(route
                         .get(i)
@@ -348,52 +391,64 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                         .split(","));
                 LocalTime routeArrivalTime = route.get(i).getArrivalTime();
 
-                List<Integer> routeDepartPeriod
+                List<Integer> prevDepartPeriod
                         = parseToIntTrainPeriod(route
-                        .get(i)
+                        .get(i-1)
                         .getDepartPeriod()
                         .split(","));
-                LocalTime routeDepartureTime = route.get(i).getDepartureTime();
 
                 LocalTime prevDepartureTime = route.get(i-1).getDepartureTime();
-                int prevDepartureDay = routeDepartPeriod.get(i-1);
+
+                boolean containsFreeRow = true;
+
 
                 for (int j = 0; j < departPeriod.size(); j++) {
                     int arrivalDay = arrivePeriod.get(j);
                     int departureDay = departPeriod.get(j);
                     int routeArrivalDay = routeArrivePeriod.get(j);
+                    int prevDepartureDay = prevDepartPeriod.get(j);
 
-                    if(arrivalDay < prevDepartureDay) {
-                        result = false; break;
+                    if(arrivalDay < prevDepartureDay
+                            && arrivalDay == 1
+                            && prevDepartureDay == 7
+                            && ((arrivalDay < routeArrivalDay
+                            || (Objects.equals(arrivalDay, routeArrivalDay)
+                            && arrivalTime.isBefore(routeArrivalTime))))
+                            && (departureDay < routeArrivalDay
+                            || (Objects.equals(departureDay, routeArrivalDay)
+                                && departureTime.isBefore(routeArrivalTime)))) {
+                        containsFreeRow = true;
+                    } else if(arrivalDay < prevDepartureDay) {
+                        containsFreeRow = false; break;
                     } else if(Objects.equals(arrivalDay, prevDepartureDay)
                             && arrivalTime.isBefore(prevDepartureTime)){
-                        result = false; break;
+                        containsFreeRow = false; break;
                     } else if(Objects.equals(arrivalDay, prevDepartureDay)
                             && arrivalTime.isAfter(prevDepartureTime)
                             && arrivalDay > routeArrivalDay){
-                        result = false; break;
+                        containsFreeRow = false; break;
                     } else if(Objects.equals(arrivalDay, prevDepartureDay)
                             && arrivalTime.isAfter(prevDepartureTime)
                             && Objects.equals(arrivalDay, routeArrivalDay)
                             && arrivalTime.isAfter(routeArrivalTime)){
-                        result = false; break;
+                        containsFreeRow = false; break;
                     } else if(arrivalDay > prevDepartureDay
                             && Objects.equals(arrivalDay, routeArrivalDay)
                             && arrivalTime.isAfter(routeArrivalTime)){
-                        result = false; break;
+                        containsFreeRow = false; break;
                     } else if(arrivalDay > routeArrivalDay){
-                        result = false; break;
+                        containsFreeRow = false; break;
                     } else if(departureDay > routeArrivalDay){
-                        result = false; break;
+                        containsFreeRow = false; break;
                     } else if(Objects.equals(departureDay, routeArrivalDay)
                             && departureTime.isAfter(routeArrivalTime)){
-                        result = false; break;
+                        containsFreeRow = false; break;
                     }
                 }
-                if(!result) break;
+                if(containsFreeRow) return true;
             }
+            return false;
         }
-
         return result;
     }
 

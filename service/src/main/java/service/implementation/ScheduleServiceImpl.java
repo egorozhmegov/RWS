@@ -82,6 +82,18 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
         return scheduleDao.getStationArriveSchedule(stationId, weekDay);
     }
 
+    /**
+     * Delete all schedules by train id and station id.
+     *
+     * @param stationId long.
+     * @param trainId long.
+     */
+    @Transactional
+    @Override
+    public void deleteByStationAndTrainId(long stationId, long trainId) {
+        scheduleDao.deleteByStationAndTrainId(stationId, trainId);
+    }
+
     @Override
     GenericDao<Schedule> getDao() {
         return scheduleDao;

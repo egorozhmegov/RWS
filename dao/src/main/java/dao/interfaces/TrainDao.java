@@ -29,7 +29,7 @@ public interface TrainDao extends GenericDao<Train>{
     /**
      * Get train by number.
      *
-     * @param trainNumber String
+     * @param number String
      * @return Train
      */
     Train getTrainByNumber(String number);

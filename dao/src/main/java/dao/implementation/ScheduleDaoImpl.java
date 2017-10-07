@@ -79,7 +79,6 @@ public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements Schedul
         try{
             return query.getResultList();
         } catch (Exception e){
-            LOG.info("No trains for this request");
             return null;
         }
     }
@@ -102,7 +101,6 @@ public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements Schedul
         try{
             return query.getResultList();
         } catch (Exception e){
-            LOG.info("No schedule for this request");
             return null;
         }
     }
@@ -125,9 +123,24 @@ public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements Schedul
         try{
             return query.getResultList();
         } catch (Exception e){
-            LOG.info("No schedule for this request");
             return null;
         }
+    }
+
+    /**
+     * Delete all schedules by train id and station id.
+     *
+     * @param stationId long.
+     * @param trainId long.
+     */
+    @Override
+    public void deleteByStationAndTrainId(long stationId, long trainId) {
+        getEntityManager()
+                .createQuery(String
+                        .format("DELETE FROM Schedule AS s " +
+                                "WHERE s.station.id = '%s' " +
+                                "AND s.train.id = '%s'", stationId, trainId))
+                .executeUpdate();
     }
 
     @Override

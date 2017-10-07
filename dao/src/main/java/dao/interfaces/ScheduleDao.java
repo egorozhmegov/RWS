@@ -51,4 +51,13 @@ public interface ScheduleDao extends GenericDao<Schedule> {
      * @return List<Schedule>
      */
     List<Schedule> getStationArriveSchedule(long stationId, int weekDay);
+
+
+    /**
+     * Delete all schedules by train id and station id.
+     *
+     * @param stationId long.
+     * @param trainId long.
+     */
+    void deleteByStationAndTrainId(long stationId, long trainId);
 }
