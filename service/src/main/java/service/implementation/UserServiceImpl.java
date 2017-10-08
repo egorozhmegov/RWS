@@ -32,6 +32,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     @Override
     @Transactional
     public User getUserByLogin(String login) {
+        LOG.info(String.format("Loaded user with login: '%s'.", login));
         return userDao.getUserByLogin(login);
     }
 
@@ -54,13 +55,14 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
                 || user.getLogin().isEmpty()
                 || user.getPassword() == null
                 || user.getPassword().isEmpty()){
-            LOG.info("Null field in registration.");
-            throw new UserServiceException("Null entity.");
+            LOG.info("Invalid registration data.");
+            throw new UserServiceException("Invalid registration data.");
         } else if(getUserByLogin(user.getLogin()) != null
                 || getEmployeeByFirstNameAndLastName(user.getFirstName(), user.getLastName()) == null){
-            LOG.info("Employee or login exist already");
+            LOG.info("Employee or login exist already.");
             throw new UserServiceException("Employee or login exist already.");
         } else {
+            LOG.info(String.format("Created user: '%s'.", user));
             userDao.create(user);
         }
     }
@@ -95,6 +97,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     @Transactional
     @Override
     public Employee getEmployeeByFirstNameAndLastName(String firstName, String lastName){
+        LOG.info(String.format("Employee: '%s' '%s' loaded.", firstName, lastName));
         return userDao.getEmployeeByFirstNameAndLastName(firstName, lastName);
     }
 

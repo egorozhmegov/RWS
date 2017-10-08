@@ -1,8 +1,6 @@
 package dao.implementation;
 
 import dao.interfaces.GenericDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
@@ -11,8 +9,6 @@ import java.util.List;
 Generic dao implementation.
  */
 abstract class GenericDaoImpl<T> implements GenericDao<T> {
-
-    private final static Logger LOG = LoggerFactory.getLogger(GenericDaoImpl.class);
 
     /**
      * Get entity manager.
@@ -41,7 +37,6 @@ abstract class GenericDaoImpl<T> implements GenericDao<T> {
     @Override
     public void create(T entity) {
         getEntityManager().persist(entity);
-        LOG.info(String.format("Entity successfully created. Entity details: %s", entity));
     }
 
     /**
@@ -52,7 +47,6 @@ abstract class GenericDaoImpl<T> implements GenericDao<T> {
      */
     @Override
     public T read(long id) {
-        LOG.info("Entity successfully loaded.");
         return getEntityManager().find(genericClass, id);
     }
 
@@ -67,7 +61,6 @@ abstract class GenericDaoImpl<T> implements GenericDao<T> {
             getEntityManager().merge(entity);
         }
         getEntityManager().flush();
-        LOG.info(String.format("Entity successfully updated. Entity details: %s", entity));
     }
 
     /**
@@ -79,7 +72,6 @@ abstract class GenericDaoImpl<T> implements GenericDao<T> {
     public void delete(long id) {
         T entity = getEntityManager().find(genericClass, id);
         getEntityManager().remove(entity);
-        LOG.info(String.format("Entity successfully deleted. Entity details: %s", entity));
     }
 
     /**
@@ -91,7 +83,6 @@ abstract class GenericDaoImpl<T> implements GenericDao<T> {
     public List<T> getAll() {
         Query query = getEntityManager()
                 .createQuery(String.format("SELECT e FROM %s e", genericClass.getSimpleName()));
-        LOG.info("List successfully loaded.");
         return query.getResultList();
     }
 }

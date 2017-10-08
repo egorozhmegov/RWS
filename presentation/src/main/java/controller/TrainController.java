@@ -1,24 +1,13 @@
 package controller;
 
 import exception.TrainServiceException;
-import model.Passenger;
-import model.RailWayStation;
 import model.Schedule;
 import model.Train;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.interfaces.PassengerService;
-import service.interfaces.RailWayStationService;
-import service.interfaces.ScheduleService;
 import service.interfaces.TrainService;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -26,8 +15,6 @@ import java.util.List;
  */
 @RestController
 public class TrainController {
-
-    private final static Logger LOG = LoggerFactory.getLogger(TrainController.class);
 
     @Autowired
     private TrainService trainService;

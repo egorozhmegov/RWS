@@ -3,8 +3,6 @@ package dao.implementation;
 import dao.interfaces.UserDao;
 import model.Employee;
 import model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -13,8 +11,6 @@ import javax.persistence.Query;
  User dao implementation.
  */
 public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
-
-    private final static Logger LOG = LoggerFactory.getLogger(UserDaoImpl.class);
 
     public UserDaoImpl() {
         super(User.class);

@@ -10,8 +10,8 @@ public interface RailWayStationDao extends GenericDao<RailWayStation>{
     /**
      * Gets RailWayStation by name.
      *
-     * @param name station name.
+     * @param title String.
      * @return RailWayStation.
      */
-    RailWayStation getStationByName(String name);
+    RailWayStation getStationByTitle(String title);
 }

@@ -1,11 +1,7 @@
 package dao.implementation;
 
 import dao.interfaces.ScheduleDao;
-import model.Employee;
 import model.Schedule;
-import model.Train;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,8 +12,6 @@ import java.util.List;
  * Schedule dao implementation.
  */
 public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements ScheduleDao {
-
-    private final static Logger LOG = LoggerFactory.getLogger(ScheduleDaoImpl.class);
 
     /**
      * Injected instance of entity manager.

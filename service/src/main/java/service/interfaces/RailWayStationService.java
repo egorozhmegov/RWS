@@ -7,10 +7,24 @@ import model.RailWayStation;
  */
 public interface RailWayStationService extends GenericService<RailWayStation> {
     /**
-     * Gets RailWayStation by name.
+     * Gets RailWayStation by title.
      *
-     * @param name station name.
+     * @param title String.
      * @return RailWayStation.
      */
-    RailWayStation getStationByName(String name);
+    RailWayStation getStationByTitle(String title);
+
+    /**
+     * Add new station.
+     *
+     * @param station RailWayStation
+     */
+    void addStation(RailWayStation station);
+
+    /**
+     * Delete station.
+     *
+     * @param id long.
+     */
+    void removeStation(long id);
 }

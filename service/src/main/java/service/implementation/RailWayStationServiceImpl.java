@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.RailWayStationService;
+import service.interfaces.ScheduleService;
 
 /**
  * Railway station service implementation.
@@ -22,16 +23,63 @@ public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation
     @Autowired
     private RailWayStationDao railWayStationDao;
 
+    @Autowired
+    private ScheduleService scheduleService;
+
     /**
-     * Gets RailWayStation by name.
+     * Delete station.
      *
-     * @param name station name.
+     * @param id long.
+     */
+    @Transactional
+    @Override
+    public void removeStation(long id) {
+        scheduleService.deleteByStationId(id);
+        LOG.info(String.format("All schedules with station (id = '%s') deleted", id));
+
+        railWayStationDao.delete(id);
+        LOG.info(String.format("Station with (id = '%s') deleted", id));
+    }
+
+    /**
+     * Gets RailWayStation by title.
+     *
+     * @param title String.
      * @return RailWayStation.
      */
-    @Override
     @Transactional
-    public RailWayStation getStationByName(String name) {
-        return railWayStationDao.getStationByName(name);
+    @Override
+    public RailWayStation getStationByTitle(String title) {
+        LOG.info(String.format("Station '%s' loaded.", title));
+        return railWayStationDao.getStationByTitle(title);
+    }
+
+    /**
+     * Add new station.
+     *
+     * @param station RailWayStation
+     */
+    @Transactional
+    @Override
+    public void addStation(RailWayStation station) {
+        if(station == null
+                || station.getTitle().trim().isEmpty()
+                || isExistStation(station.getTitle())){
+            LOG.info("Invalid add train data.");
+            throw new RailWayStationServiceException("Invalid add train data.");
+        }
+        railWayStationDao.create(station);
+        LOG.info(String.format("Created station '%s'.", station));
+    }
+
+    /**
+     * Check exist station.
+     *
+     * @param title String
+     * @return boolean
+     */
+    public boolean isExistStation(String title){
+        return railWayStationDao.getStationByTitle(title) != null;
     }
 
     @Override

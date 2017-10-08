@@ -2,8 +2,6 @@ package dao.implementation;
 
 import dao.interfaces.RailWayStationDao;
 import model.RailWayStation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -12,8 +10,6 @@ import javax.persistence.Query;
  Railway station dao implementation.
  */
 class RailWayStationDaoImpl extends GenericDaoImpl<RailWayStation> implements RailWayStationDao {
-
-    private final static Logger LOG = LoggerFactory.getLogger(RailWayStationDaoImpl.class);
 
     /**
      * Injected instance of entity manager.
@@ -35,21 +31,19 @@ class RailWayStationDaoImpl extends GenericDaoImpl<RailWayStation> implements Ra
     }
 
     /**
-     * Get RailWayStation by name.
+     * Get RailWayStation by title.
      *
-     * @param name station name.
+     * @param title String.
      * @return RailWayStation.
      */
     @Override
-    public RailWayStation getStationByName(String name) {
+    public RailWayStation getStationByTitle(String title) {
         try{
-            String sqlQuery = String.format("SELECT r FROM RailWayStation AS r WHERE r.title = '%s'", name);
+            String sqlQuery = String.format("SELECT r FROM RailWayStation AS r WHERE r.title = '%s'", title);
             Query query = getEntityManager().createQuery(sqlQuery);
             RailWayStation station = (RailWayStation) query.getSingleResult();
-            LOG.info(String.format("Found station with name: %s.", name));
             return station;
         } catch (Throwable e){
-            LOG.info(String.format("No found station with name: %s.", name));
             return null;
         }
     }

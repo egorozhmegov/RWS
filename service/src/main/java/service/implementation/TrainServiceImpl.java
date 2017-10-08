@@ -56,6 +56,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     @Transactional
     @Override
     public List<Schedule> getRoute(long trainId){
+        LOG.info(String.format("Route of train (id = '%s') loaded.", trainId));
         return trainDao.getRoute(trainId);
     }
 
@@ -70,6 +71,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     @Transactional
     @Override
     public String getDepartureTime(long trainId, long stationId, int weekDay){
+        LOG.info("Departure time loaded.");
         return trainDao.getDepartureTime(trainId, stationId, weekDay);
     }
 
@@ -84,10 +86,12 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         if(train.getTariff() == 0
                 || train.getNumber() == null
                 || train.getNumber().trim().isEmpty()
-                || trainDao.getTrainByNumber(train.getNumber()) != null)
+                || trainDao.getTrainByNumber(train.getNumber()) != null){
+            LOG.info("Invalid add train data.");
             throw new TrainServiceException("Not valid train data");
-
+        }
         trainDao.create(train);
+        LOG.info(String.format("Created train: '%s'", train));
     }
 
     /**
@@ -103,7 +107,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         long stationId = schedule.getStation().getId();
         scheduleService.deleteByStationAndTrainId(stationId, trainId);
         LOG.info(String
-                .format("Schedule: '%s' with train id = '%s' and station id = '%s' deleted.",
+                .format("Schedule: '%s' with train (id = '%s') and station (id = '%s') deleted.",
                         schedule, trainId, stationId));
     }
 
@@ -116,10 +120,10 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     @Override
     public void removeTrain(long id){
         scheduleService.deleteByTrainId(id);
-        LOG.info(String.format("All schedules with train id = '%s' removed", id));
+        LOG.info(String.format("All schedules with train (id = '%s') deleted", id));
 
         trainDao.delete(id);
-        LOG.info(String.format("Train with id = '%s' removed", id));
+        LOG.info(String.format("Train with (id = '%s') deleted", id));
     }
 
     /**
@@ -133,7 +137,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
 
         List<Schedule> route = trainDao.getRoute(trainId);
         RailWayStation station = railWayStationService
-                .getStationByName(routePoint.getStation().getTitle());
+                .getStationByTitle(routePoint.getStation().getTitle());
         Train train = trainDao.read(trainId);
 
         LocalTime departureTime = routePoint.getDepartureTime();
@@ -183,6 +187,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                     schedule.setArrivalDay(0);
                     schedule.setDepartureDay(depDay);
                     scheduleService.create(schedule);
+                    LOG.info(String.format("Created schedule: '%s'", schedule));
                 }
                 break;
             } else if(listDepartDays[0].trim().isEmpty()){
@@ -197,6 +202,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                     schedule.setArrivalDay(arrDay);
                     schedule.setDepartureDay(0);
                     scheduleService.create(schedule);
+                    LOG.info(String.format("Created schedule: '%s'", schedule));
                 }
                 break;
             } else {
@@ -210,6 +216,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 schedule.setArrivalDay(intListArriveDays.get(i));
                 schedule.setDepartureDay(intListDepartDays.get(i));
                 scheduleService.create(schedule);
+                LOG.info(String.format("Created schedule: '%s'", schedule));
             }
         }
     }

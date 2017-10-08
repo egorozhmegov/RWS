@@ -2,8 +2,6 @@ package dao.implementation;
 
 import dao.interfaces.PassengerDao;
 import model.Passenger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -13,8 +11,6 @@ import java.util.List;
  Passenger dao implementation.
  */
 public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements PassengerDao {
-
-    private final static Logger LOG = LoggerFactory.getLogger(PassengerDaoImpl.class);
 
     /**
      * Injected instance of entity manager.
@@ -50,7 +46,6 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
                 , trainId, departDate, departStationId, arriveStationId);
         Query query = getEntityManager().createQuery(sqlQuery);
         try{
-            LOG.info("No passengers for this request");
             return query.getResultList();
         } catch(Exception e){
             return null;
@@ -92,7 +87,6 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
         try{
             return (Passenger) query.getSingleResult();
         } catch(Exception e){
-            LOG.info("No passengers for this request");
             return null;
         }
     }

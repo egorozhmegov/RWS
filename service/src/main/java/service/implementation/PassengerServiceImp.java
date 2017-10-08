@@ -3,12 +3,12 @@ package service.implementation;
 import dao.interfaces.GenericDao;
 import dao.interfaces.PassengerDao;
 import model.Passenger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.PassengerService;
-
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -17,6 +17,8 @@ import java.util.List;
  */
 @Service("passengerServiceImpl")
 public class PassengerServiceImp extends GenericServiceImpl<Passenger> implements PassengerService {
+
+    private final static Logger LOG = LoggerFactory.getLogger(PassengerServiceImp.class);
 
     @Autowired
     private PassengerDao passengerDao;
@@ -36,6 +38,7 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
                                                   long departStationId,
                                                   long arriveStationId,
                                                   String departDate){
+        LOG.info("List of registered passengers loaded.");
         return passengerDao.getRegisteredPassengers(trainId,departStationId,arriveStationId,departDate);
     }
 
@@ -56,6 +59,7 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
                                             long arriveStationId,
                                             String departDate,
                                             Passenger passenger){
+        LOG.info("Registered passenger loaded.");
         return passengerDao.getRegisteredPassenger(
                 trainId
                 ,departStationId

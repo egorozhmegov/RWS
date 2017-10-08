@@ -3,8 +3,6 @@ package controller;
 import exception.ServiceException;
 import exception.UserServiceException;
 import model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +16,6 @@ import java.util.Objects;
 @RestController
 public class UserController {
 
-    private final static Logger LOG = LoggerFactory.getLogger(UserController.class);
     private final static String COOKIE = "RWS_COOKIE";
 
     @Autowired

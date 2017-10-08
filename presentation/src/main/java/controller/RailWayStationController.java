@@ -1,9 +1,10 @@
 package controller;
 
+import exception.RailWayStationServiceException;
 import model.RailWayStation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.interfaces.RailWayStationService;
 
@@ -12,31 +13,29 @@ import java.util.List;
 @RestController
 public class RailWayStationController {
 
-    private final static Logger LOG = LoggerFactory.getLogger(RailWayStationController.class);
-
     @Autowired
     private RailWayStationService railWayStationService;
 
-    @RequestMapping(value="/view/list_stations",method = RequestMethod.GET)
-    public List<RailWayStation> getAllStations() {
-        LOG.info("Stations list loaded.");
-        return railWayStationService.getAll();
+
+    @RequestMapping(value="/getStations",method = RequestMethod.GET)
+    public ResponseEntity<List<RailWayStation>> getStations() {
+        return new ResponseEntity<>(railWayStationService.getAll(), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/view/add_station",method = RequestMethod.POST)
-    public boolean addStation(@RequestBody RailWayStation station) {
-        return true;
+    @RequestMapping(value="/addStation",method = RequestMethod.POST)
+    public ResponseEntity<RailWayStation> addStation(@RequestBody RailWayStation station) {
+        try{
+            railWayStationService.addStation(station);
+            return new ResponseEntity<>(station, HttpStatus.CREATED);
+        } catch (RailWayStationServiceException e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
-    @RequestMapping(value="/view/remove_station/{stationId}",method = RequestMethod.DELETE)
-    public void removeStation(@PathVariable("stationId") int stationId) {
-        LOG.info(String.format("Remove station: %s", railWayStationService.read(stationId).getTitle()));
-        railWayStationService.delete(stationId);
+    @RequestMapping(value="/deleteStation/{id}",method = RequestMethod.DELETE)
+    public ResponseEntity<Long> deleteStation(@PathVariable("id") long id){
+        railWayStationService.removeStation(id);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
-    @RequestMapping(value="/view/update_station",method = RequestMethod.PUT)
-    public void updateStation(@RequestBody RailWayStation station) {
-        LOG.info(String.format("Station %s updated.", station.getTitle()));
-        railWayStationService.update(station);
-    }
 }

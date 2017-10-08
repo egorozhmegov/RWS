@@ -3,8 +3,6 @@ package dao.implementation;
 import dao.interfaces.TrainDao;
 import model.Schedule;
 import model.Train;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -14,8 +12,6 @@ import java.util.List;
  Train dao implementation.
  */
 public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
-
-    private final static Logger LOG = LoggerFactory.getLogger(TrainDaoImpl.class);
 
     /**
      * Injected instance of entity manager.
@@ -48,7 +44,6 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
         try{
             return query.getResultList();
         } catch (Exception e){
-            LOG.info("No schedule for this request");
             return null;
         }
     }
@@ -72,7 +67,6 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
         try{
             return (String) query.getSingleResult();
         } catch (Exception e){
-            LOG.info("No departure time for this request");
             return null;
         }
     }
@@ -93,7 +87,6 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
         try{
             return (Train) query.getSingleResult();
         } catch (Exception e){
-            LOG.info("No train for this request");
             return null;
         }
     }
