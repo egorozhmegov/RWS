@@ -82,5 +82,11 @@
             <version>${t-systems.java.school.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.faces</artifactId>
+            <version>2.2.10</version>
+        </dependency>
+
     </dependencies>
 </project>
