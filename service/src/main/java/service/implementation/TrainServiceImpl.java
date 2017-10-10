@@ -28,7 +28,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
 
     private final static Logger LOG = LoggerFactory.getLogger(TrainServiceImpl.class);
 
-    private final static List<String> WEEK_DAYS = Arrays
+    public final static List<String> WEEK_DAYS = Arrays
             .asList("sun",
                     "mon",
                     "tue",

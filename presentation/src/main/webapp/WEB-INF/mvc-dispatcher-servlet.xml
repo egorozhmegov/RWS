@@ -63,6 +63,9 @@
         <property name="userRoleDao" ref="userRoleDao"/>
     </bean>
 
+    <bean id="clientService" class="service.implementation.ClientServiceImpl" />
+
+
     <tx:annotation-driven transaction-manager="transactionManager" />
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

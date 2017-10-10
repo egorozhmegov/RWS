@@ -16,7 +16,6 @@ public class RailWayStationController {
     @Autowired
     private RailWayStationService railWayStationService;
 
-
     @RequestMapping(value="/getStations",method = RequestMethod.GET)
     public ResponseEntity<List<RailWayStation>> getStations() {
         return new ResponseEntity<>(railWayStationService.getAll(), HttpStatus.OK);

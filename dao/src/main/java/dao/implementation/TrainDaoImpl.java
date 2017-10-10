@@ -91,7 +91,6 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
         }
     }
 
-
     @Override
     EntityManager getEntityManager() {
         return entityManager;
