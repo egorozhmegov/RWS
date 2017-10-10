@@ -29,10 +29,10 @@ public class ClientIndexController {
                                     @RequestParam String station2,
                                     @RequestParam String date
                                     ){
-        List<Schedule> trains = clientService.searchTrains(station1, station2, date);
-        System.out.println(trains);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("index");
+        List<Schedule> trains = clientService.searchTrains(station1, station2, date);
+        modelAndView.addObject("trains", trains);
+        modelAndView.setViewName("trains");
         return modelAndView;
     }
 }

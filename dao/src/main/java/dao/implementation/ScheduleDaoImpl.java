@@ -55,20 +55,28 @@ public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements Schedul
      */
     @Override
     public List<Schedule> searchTrain(long departStationId, long arriveStationId, int departDay) {
+
         String sqlQuery =
                 "SELECT s FROM Schedule AS s " +
-                        "WHERE s.station.id in (" + departStationId + "," + arriveStationId + ") " +
-                        "AND s.train.id IN (" +
-                        "SELECT s.train.id FROM Schedule AS s " +
-                        "WHERE (s.departureDay = " + departDay + " " +
-                        "AND s.station.id = " +  departStationId + ") " +
-                        "OR (s.station.id = " + arriveStationId + ") " +
-                        "GROUP BY s.train.id HAVING COUNT(s.train.id) > 1 " +
+                        "WHERE s IN " +
+                        "(SELECT s FROM Schedule AS s " +
+                        "WHERE s.station.id IN (" + arriveStationId + "," + departStationId + ") " +
+                        "AND s.train.id IN " +
+                        "(SELECT s.train.id FROM Schedule AS s " +
+                        "WHERE (s.departureDay = " + departDay + " AND s.station.id = " + departStationId + ") " +
+                        "OR s.station.id = "+ arriveStationId + "  " +
+                        "GROUP BY s.train.id HAVING count(s.train.id) > 1) " +
                         "ORDER BY s.departureDay, s.departureTime) " +
-                "AND s.departureDay = " + departDay + " " +
-                "GROUP BY s.train.id " +
-                "HAVING s.station.id = " + departStationId + " " +
-                "AND COUNT(s.train.id) > 1";
+                        "AND s IN (SELECT s " +
+                        "FROM Schedule AS s " +
+                        "WHERE s.departureTime IN" +
+                        "(SELECT min(s.departureTime) " +
+                        "FROM Schedule AS s " +
+                        "WHERE s.departureDay = " + departDay + " " +
+                        "AND s.station.id IN (" + arriveStationId + "," + departStationId + ") " +
+                        "GROUP BY s.train.id)) " +
+                        "AND s.station.id = " + departStationId;;
+
         Query query = getEntityManager().createQuery(sqlQuery);
         try{
             return query.getResultList();

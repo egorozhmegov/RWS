@@ -18,6 +18,7 @@
         <com.fasterxml.jackson.core.version>2.4.1</com.fasterxml.jackson.core.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <t-systems.java.school.version>1.0-SNAPSHOT</t-systems.java.school.version>
+        <jstl.version>1.2</jstl.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -86,6 +87,12 @@
             <groupId>org.glassfish</groupId>
             <artifactId>javax.faces</artifactId>
             <version>2.2.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
         </dependency>
 
     </dependencies>
