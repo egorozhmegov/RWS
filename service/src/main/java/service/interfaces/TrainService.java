@@ -52,7 +52,7 @@ public interface TrainService extends GenericService<Train> {
     /**
      * Remove route point of train.
      *
-     * @param scheduleId long.
+     * @param routePoint Schedule.
      */
-    void removeRoutePoint(long scheduleId);
+    void removeRoutePoint(Schedule routePoint);
 }

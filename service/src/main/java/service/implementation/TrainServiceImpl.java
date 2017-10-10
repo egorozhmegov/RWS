@@ -97,18 +97,21 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     /**
      * Remove route point of train.
      *
-     * @param scheduleId long.
+     * @param routePoint Schedule.
      */
     @Transactional
     @Override
-    public void removeRoutePoint(long scheduleId){
-        Schedule schedule = scheduleService.read(scheduleId);
-        long trainId = schedule.getTrain().getId();
-        long stationId = schedule.getStation().getId();
+    public void removeRoutePoint(Schedule routePoint){
+        long trainId = routePoint.getTrain().getId();
+        long stationId = railWayStationService
+                .getStationByTitle(routePoint
+                        .getStation()
+                        .getTitle())
+                .getId();
         scheduleService.deleteByStationAndTrainId(stationId, trainId);
         LOG.info(String
-                .format("Schedule: '%s' with train (id = '%s') and station (id = '%s') deleted.",
-                        schedule, trainId, stationId));
+                .format("Schedule with train (id = '%s') and station (id = '%s') deleted.",
+                        trainId, stationId));
     }
 
     /**

@@ -31,6 +31,9 @@ public class ClientIndexController {
                                     ){
         ModelAndView modelAndView = new ModelAndView();
         List<Schedule> trains = clientService.searchTrains(station1, station2, date);
+
+        System.out.println(trains);
+
         modelAndView.addObject("trains", trains);
         modelAndView.setViewName("trains");
         return modelAndView;

@@ -75,7 +75,8 @@ public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements Schedul
                         "WHERE s.departureDay = " + departDay + " " +
                         "AND s.station.id IN (" + arriveStationId + "," + departStationId + ") " +
                         "GROUP BY s.train.id)) " +
-                        "AND s.station.id = " + departStationId;;
+                        "AND s.station.id = " + departStationId + " " +
+                        "AND s.departureDay = " + departDay;
 
         Query query = getEntityManager().createQuery(sqlQuery);
         try{
