@@ -2,9 +2,15 @@ package dao.implementation;
 
 import dao.interfaces.PassengerDao;
 import model.Passenger;
+import util.LocalDateAttributeConverter;
+
+import javax.persistence.Convert;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -26,24 +32,19 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
      * Get list of registered passengers on train.
      *
      * @param trainId long
-     * @param departStationId long
-     * @param arriveStationId long
-     * @param departDate String
+     * @param departDate LocalDate
      * @return List<Passenger>
      */
     @Override
     public List<Passenger> getRegisteredPassengers(long trainId,
-                                                  long departStationId,
-                                                  long arriveStationId,
-                                                  String departDate) {
+                                                   LocalDate departDate) {
 
         String sqlQuery =
-                String.format(
-                        "SELECT p FROM Passenger AS p " +
-                        "WHERE p.train.id = '%s' " +
-                        "AND p.trainDate = '%s' " +
-                        "AND p.station.id IN('%s','%s')"
-                , trainId, departDate, departStationId, arriveStationId);
+                "SELECT p FROM Passenger AS p " +
+                        "WHERE p.train.id = " + trainId + " " +
+                        "AND p.trainDate = '" + Date.valueOf(LocalDate.of(2017, 10, 18)) + "' " +
+                        "GROUP BY p.firstName, p.lastName, p.birthday";
+
         Query query = getEntityManager().createQuery(sqlQuery);
         try{
             return query.getResultList();

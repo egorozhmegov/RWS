@@ -50,9 +50,9 @@ public class UserController {
     public ResponseEntity<Boolean> registerEmployee(@RequestBody User user, HttpServletResponse response) {
         try{
             userService.registerUser(user);
-            return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+            return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (ServiceException ex){
-            return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+            return new ResponseEntity<>(false, HttpStatus.OK);
         }
     }
 }

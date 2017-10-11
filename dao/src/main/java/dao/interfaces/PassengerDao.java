@@ -1,6 +1,8 @@
 package dao.interfaces;
 
 import model.Passenger;
+
+import java.time.LocalDate;
 import java.util.List;
 
 /*
@@ -11,15 +13,11 @@ public interface PassengerDao extends GenericDao<Passenger> {
      * Get list of registered passengers on train.
      *
      * @param trainId long
-     * @param departStationId long
-     * @param arriveStationId long
-     * @param departDate String
+     * @param departDate LocalDate
      * @return List<Passenger>
      */
     List<Passenger> getRegisteredPassengers(long trainId,
-                                           long departStationId,
-                                           long arriveStationId,
-                                           String departDate);
+                                           LocalDate departDate);
 
 
     /**

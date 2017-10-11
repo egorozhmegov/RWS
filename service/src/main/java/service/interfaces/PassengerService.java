@@ -15,13 +15,13 @@ public interface PassengerService extends GenericService<Passenger> {
      * @param trainId long
      * @param departStationId long
      * @param arriveStationId long
-     * @param departDate String
+     * @param departDate LocalDate
      * @return List<Passenger>
      */
     List<Passenger> getRegisteredPassengers(long trainId,
                                            long departStationId,
                                            long arriveStationId,
-                                           String departDate);
+                                           LocalDate departDate);
 
     /**
      * Get registered passenger on train.

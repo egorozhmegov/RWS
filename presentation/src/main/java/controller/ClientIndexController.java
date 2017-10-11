@@ -46,8 +46,11 @@ public class ClientIndexController {
                                   @PathVariable String year){
         List<Schedule> currentRoute =
                 clientService.getCurrentRoute(id, station1, station2);
-        int ticketPrice = clientService.getTicketPrice(currentRoute);
-        int freeSeats = clientService.getFreeSeats(month, day, year);
+        int ticketPrice = clientService.getTicketPrice(id, currentRoute);
+        int freeSeats = clientService.getFreeSeats(month, day, year, id, station1, station2);
+        System.out.println(currentRoute);
+        System.out.println(ticketPrice);
+        System.out.println(freeSeats);
         return null;
     }
 }

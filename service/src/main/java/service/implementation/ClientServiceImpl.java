@@ -3,18 +3,16 @@ package service.implementation;
 import exception.ClientServiceException;
 import model.RailWayStation;
 import model.Schedule;
+import model.Train;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import service.interfaces.ClientService;
-import service.interfaces.RailWayStationService;
-import service.interfaces.ScheduleService;
-import service.interfaces.TrainService;
-
+import service.interfaces.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *Client service implementation.
@@ -32,6 +30,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private TrainService trainService;
+
+    @Autowired
+    private PassengerService passengerService;
 
     @Override
     public List<Schedule> searchTrains(String station1,
@@ -93,21 +94,34 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public List<Schedule> getCurrentRoute(long trainId, String station1, String station2) {
-        //TODO
+        List<Schedule> trainRoute = trainService.getRoute(trainId);
+        List<Schedule> currentRoute = new ArrayList<>();
 
-        return null;
+        boolean isCurrentRoute = false;
+        for (Schedule routePoint: trainRoute){
+            if(Objects.equals(routePoint.getStation().getTitle(), station1)){
+                isCurrentRoute = true;
+            } else if(Objects.equals(routePoint.getStation().getTitle(), station2)){
+                currentRoute.add(routePoint);
+                isCurrentRoute = false;
+            }
+            if(isCurrentRoute) currentRoute.add(routePoint);
+        }
+        return currentRoute;
     }
 
     /**
      * Get ticket price.
      *
      * @param currentRoute List<Schedule>.
+     * @param trainId long.
      * @return int.
      */
     @Override
-    public int getTicketPrice(List<Schedule> currentRoute) {
-        //TODO
-        return 0;
+    public int getTicketPrice(long trainId, List<Schedule> currentRoute) {
+        return trainService
+                .read(trainId)
+                .getTariff()*currentRoute.size();
     }
 
     /**
@@ -116,11 +130,32 @@ public class ClientServiceImpl implements ClientService {
      * @param month String
      * @param day String
      * @param year String
+     * @param id long
+     * @param station1 String
+     * @param station2 String
      * @return int
      */
     @Override
-    public int getFreeSeats(String month, String day, String year) {
-        //TODO
-        return 0;
+    public int getFreeSeats(String month,
+                     String day,
+                     String year,
+                     long id,
+                     String station1,
+                     String station2) {
+        long departStationId = stationService.getStationByTitle(station1).getId();
+        long arriveStationId = stationService.getStationByTitle(station2).getId();
+        LocalDate departDay = LocalDate
+                    .of(Integer.parseInt(year),
+                        Integer.parseInt(month),
+                        Integer.parseInt(day));
+
+
+        return Train.SEATS - passengerService
+                .getRegisteredPassengers(
+                    id,
+                    departStationId,
+                    arriveStationId,
+                    departDay)
+                .size();
     }
 }

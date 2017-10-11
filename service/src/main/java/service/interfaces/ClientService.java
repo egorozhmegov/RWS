@@ -22,7 +22,7 @@ public interface ClientService {
     /**
      * Get train route for client request.
      *
-     * @param id long
+     * @param trainId long
      * @param station1 String
      * @param station2 String
      * @return List<Schedule>
@@ -33,9 +33,10 @@ public interface ClientService {
      * Get ticket price.
      *
      * @param currentRoute List<Schedule>.
+     * @param trainId long.
      * @return int.
      */
-    int getTicketPrice(List<Schedule> currentRoute);
+    int getTicketPrice(long trainId, List<Schedule> currentRoute);
 
     /**
      * Get count of free seats in train.
@@ -43,7 +44,15 @@ public interface ClientService {
      * @param month String
      * @param day String
      * @param year String
+     * @param id long
+     * @param station1 String
+     * @param station2 String
      * @return int
      */
-    int getFreeSeats(String month, String day, String year);
+    int getFreeSeats(String month,
+                     String day,
+                     String year,
+                     long id,
+                     String station1,
+                     String station2);
 }

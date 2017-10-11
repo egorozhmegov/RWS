@@ -12,7 +12,7 @@ public class Train implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static int SEATS = 92;
+    public static int SEATS = 92;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

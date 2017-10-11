@@ -37,10 +37,10 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
     public List<Schedule> getRoute(long trainId){
         String sqlQuery =
                 "SELECT s FROM Schedule AS s " +
-                        "WHERE s.train.id = 7 " +
+                        "WHERE s.train.id = " + trainId + " " +
                         "AND s.arrivalDay IN (SELECT min(s1.arrivalDay) " +
                         "FROM Schedule AS s1 " +
-                        "WHERE s1.train.id = 7 " +
+                        "WHERE s1.train.id = " + trainId + " " +
                         "AND s1.station.id = s.station.id) " +
                         "GROUP BY s.station.id " +
                         "ORDER BY s.arrivalDay, s.arrivalTime";

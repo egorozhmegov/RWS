@@ -3,13 +3,20 @@ package service.implementation;
 import dao.interfaces.GenericDao;
 import dao.interfaces.PassengerDao;
 import model.Passenger;
+import model.Schedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import service.interfaces.ClientService;
 import service.interfaces.PassengerService;
+import service.interfaces.RailWayStationService;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -23,13 +30,19 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
     @Autowired
     private PassengerDao passengerDao;
 
+    @Autowired
+    private ClientService clientService;
+
+    @Autowired
+    private RailWayStationService railWayStationService;
+
     /**
      * Get list of registered passengers on train.
      *
      * @param trainId long
      * @param departStationId long
      * @param arriveStationId long
-     * @param departDate String
+     * @param departDate LocalDate
      * @return List<Passenger>
      */
     @Transactional
@@ -37,9 +50,32 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
     public List<Passenger> getRegisteredPassengers(long trainId,
                                                   long departStationId,
                                                   long arriveStationId,
-                                                  String departDate){
+                                                  LocalDate departDate){
         LOG.info("List of registered passengers loaded.");
-        return passengerDao.getRegisteredPassengers(trainId,departStationId,arriveStationId,departDate);
+        List<Passenger> allTrainPassengers =
+                passengerDao.getRegisteredPassengers(trainId, departDate);
+
+        List<Passenger> registeredPassengers = new ArrayList<>();
+
+        List<Schedule> route = clientService.getCurrentRoute(
+                trainId,
+                        railWayStationService
+                        .read(departStationId).
+                        getTitle(),
+                                    railWayStationService
+                                    .read(departStationId)
+                                    .getTitle());
+
+        for(Passenger passenger: allTrainPassengers){
+            for(Schedule routePoint: route){
+                if(Objects.equals(passenger.getStation(), routePoint.getStation())){
+                    registeredPassengers.add(passenger);
+                    break;
+                }
+            }
+        }
+
+        return registeredPassengers;
     }
 
     /**

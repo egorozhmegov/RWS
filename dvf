@@ -1,0 +1,167 @@
+[33mcommit d5bc00f3e5b346ab58b02cdd254b91d44dca259b[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Wed Oct 11 14:34:27 2017 +0300
+
+    create train info service
+
+[33mcommit 52ae7fcf6f594a251f227b7ea938e5def6eb66fe[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Wed Oct 11 01:29:15 2017 +0300
+
+    refactored delete route point
+
+[33mcommit 9d5d7e98a1dea39dec2b034a917175de404be3a2[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Tue Oct 10 17:57:41 2017 +0300
+
+    edit jpql search trains
+
+[33mcommit 509edba398eec6d2e39588fc47b0551afc91a811[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Tue Oct 10 08:14:46 2017 +0300
+
+    created client service
+
+[33mcommit f7652dcdfd28a5eeef217990562517952271745e[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Mon Oct 9 15:24:43 2017 +0300
+
+    added client jsp
+
+[33mcommit c773be42825bf2ced536717be0dcd540b22dc126[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Sun Oct 8 20:34:45 2017 +0300
+
+    created add station service and controller
+
+[33mcommit 45e2b4f3f765aa6cc63f05b5d1bb25b5d3cf4a61[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Sun Oct 8 02:18:51 2017 +0300
+
+    created delete route point method
+
+[33mcommit e0bc2bdef58693a13fb7aaaa3ef19818b21f4b6e[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Fri Oct 6 16:43:17 2017 +0300
+
+    added train unit tests
+
+[33mcommit 2a068119b18fd25b5aa8f26f668251f320caacdb[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Fri Oct 6 01:47:39 2017 +0300
+
+    check method addRpoutePoint
+
+[33mcommit e128c7ba039a231f4235bbc51bf0feed34170a62[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Thu Oct 5 15:21:45 2017 +0300
+
+    continue add route point service
+
+[33mcommit 779a471c38946d49a97b3dd034eee78fafa2df22[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Thu Oct 5 00:48:12 2017 +0300
+
+    create validate for addRoutePoint method
+
+[33mcommit ff531861a32227cbabb985de1a70993a482b6667[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Wed Oct 4 17:12:12 2017 +0300
+
+    create add route point service
+
+[33mcommit 91428de0d83f8c861329b13870012f25f79c5757[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Wed Oct 4 00:37:14 2017 +0300
+
+    passed json local-time-date
+
+[33mcommit 63201da606276fce7da01199937a7eee3847084e[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Mon Oct 2 17:53:26 2017 +0300
+
+    add route point method
+
+[33mcommit 08c28a0f8852f3719190e243b89096ed1a4911c4[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Mon Oct 2 14:13:18 2017 +0300
+
+    edit date format
+
+[33mcommit 1cfd37f45f2525b9f1dbe1460fe07609e29667f4[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Mon Oct 2 01:16:36 2017 +0300
+
+    completed dao
+
+[33mcommit f3d0cce85bb5180484b018e836ff9d548dfac39f[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Sun Oct 1 12:05:05 2017 +0300
+
+    sreated passenger dao
+
+[33mcommit 4df8d911ff8940eefa3bdce2e7e1d18dab8bdef1[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Sat Sep 30 18:51:37 2017 +0300
+
+    completed searchTrain method
+
+[33mcommit 9260a288e6676797ba8e652b650d88bd5bce232d[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Fri Sep 29 16:25:09 2017 +0300
+
+    ceated hgl request searchTrain methods
+
+[33mcommit ab013ef09e54429346d78015c4eada4936a9f233[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Fri Sep 29 08:16:18 2017 +0300
+
+    started created schedule dao impl
+
+[33mcommit 7071945bee4b04d0cc1e5906be0b545e6bec0050[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Thu Sep 28 14:37:15 2017 +0300
+
+    created methods of schedule dao
+
+[33mcommit 9572375084ab910304ebec12fb826aae179b3940[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Thu Sep 28 01:26:02 2017 +0300
+
+    created service for authenticate
+
+[33mcommit 946a7c248dfc45bd3babb188944db1cb5f7b82cc[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Wed Sep 27 18:01:03 2017 +0300
+
+    edited data base
+
+[33mcommit b0fe2be6871d4e91535b9318ac44b9b86f1591ea[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Wed Sep 27 01:48:57 2017 +0300
+
+    created service for login
+
+[33mcommit e8474999edab27eec331a15ed3bb2549d9b93f9f[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Tue Sep 26 18:31:00 2017 +0300
+
+    create data base
+
+[33mcommit 0b7e2c77636a1518fa1e322081f9b4b5355758f2[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Tue Sep 26 08:10:05 2017 +0300
+
+    bind train, station and schedule entities
+
+[33mcommit a7b931acbc1ed99932ee9045a4f7fcb27db439f8[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Mon Sep 25 14:12:55 2017 +0300
+
+    edit entity mapping
+
+[33mcommit 2a5102334bb86ac1615f42ec1305956c8ffe95bb[m
+Author: Ozhmegov Egor <egor-ozhmegov@mail.ru>
+Date:   Fri Sep 22 23:50:36 2017 +0300
+
+    create dao
