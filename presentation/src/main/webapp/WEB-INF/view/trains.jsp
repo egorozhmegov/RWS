@@ -11,23 +11,23 @@
 <body>
 
 <table class="table table-striped">
-    <c:forEach items="${trains}" var="item">
-        <thead>
-            <tr>
-                <th>Train</th>
-                <th>Departure time</th>
-                <th>Departure days</th>
-            </tr>
-        </thead>
+    <thead>
+    <tr>
+        <th>Train</th>
+        <th>Departure time</th>
+    </tr>
+    </thead>
 
-        <tbody>
-            <tr>
-                <td>${item.train.number}</td>
-                <td>${item.departureTime}</td>
-                <td>${item.departPeriod}</td>
-            </tr>
-        </tbody>
+    <tbody>
+    <c:forEach items="${trains}" var="item">
+        <tr>
+            <td>${item.train.number}</td>
+            <td>${item.departureTime}</td>
+            <td><a href="/trainInfo/${item.train.id}/${station1}/${station2}/${date}">Info</a></td>
+        </tr>
     </c:forEach>
+    </tbody>
+
 </table>
 
 

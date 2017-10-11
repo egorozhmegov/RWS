@@ -1,15 +1,18 @@
 package service.implementation;
 
-import dao.interfaces.RailWayStationDao;
-import dao.interfaces.ScheduleDao;
 import exception.ClientServiceException;
 import model.RailWayStation;
 import model.Schedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import service.interfaces.ClientService;
+import service.interfaces.RailWayStationService;
+import service.interfaces.ScheduleService;
+import service.interfaces.TrainService;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,10 +25,13 @@ public class ClientServiceImpl implements ClientService {
     private final static Logger LOG = LoggerFactory.getLogger(ClientServiceImpl.class);
 
     @Autowired
-    private ScheduleDao scheduleDao;
+    private ScheduleService scheduleService;
 
     @Autowired
-    private RailWayStationDao stationDao;
+    private RailWayStationService stationService;
+
+    @Autowired
+    private TrainService trainService;
 
     @Override
     public List<Schedule> searchTrains(String station1,
@@ -40,11 +46,11 @@ public class ClientServiceImpl implements ClientService {
             LOG.info("Not valid search data.");
             throw new ClientServiceException("Not valid search data.");
         }
-        RailWayStation departStation = stationDao.getStationByTitle(station1);
-        RailWayStation arriveStation = stationDao.getStationByTitle(station2);
+        RailWayStation departStation = stationService.getStationByTitle(station1);
+        RailWayStation arriveStation = stationService.getStationByTitle(station2);
         int day = dayOfWeek(parseDate(date));
 
-        return scheduleDao.searchTrain(departStation.getId(), arriveStation.getId(), day);
+        return scheduleService.searchTrain(departStation.getId(), arriveStation.getId(), day);
     }
 
 
@@ -75,5 +81,46 @@ public class ClientServiceImpl implements ClientService {
                 Integer.parseInt(date.split("/")[2]),
                 Integer.parseInt(date.split("/")[0]),
                 Integer.parseInt(date.split("/")[1]));
+    }
+
+    /**
+     * Get train route for client request.
+     *
+     * @param trainId long
+     * @param station1 String
+     * @param station2 String
+     * @return List<Schedule>
+     */
+    @Override
+    public List<Schedule> getCurrentRoute(long trainId, String station1, String station2) {
+        //TODO
+
+        return null;
+    }
+
+    /**
+     * Get ticket price.
+     *
+     * @param currentRoute List<Schedule>.
+     * @return int.
+     */
+    @Override
+    public int getTicketPrice(List<Schedule> currentRoute) {
+        //TODO
+        return 0;
+    }
+
+    /**
+     * Get count of free seats in train.
+     *
+     * @param month String
+     * @param day String
+     * @param year String
+     * @return int
+     */
+    @Override
+    public int getFreeSeats(String month, String day, String year) {
+        //TODO
+        return 0;
     }
 }
