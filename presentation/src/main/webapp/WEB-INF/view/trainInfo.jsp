@@ -3,35 +3,38 @@
 
 <html>
 <head>
-    <title>Trains</title>
+    <title>Info</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"/>
-    <link rel="stylesheet" href="css/index.css"/>
 </head>
 <body>
+Train <h4>${currentRoute.get(0).train.number}</h4>
+Price <h4>${ticketPrice} $</h4>
+Seats <h4>${freeSeats}</h4>
+Departure time
+<h4>Day: ${departDay}</h4>
+<h4>Time: ${departTime}</h4>
+Arrival time
+<h4>Day: ${arriveDay}</h4>
+<h4>Time: ${arriveTime}</h4>
 
 <table class="table table-striped">
     <thead>
     <tr>
-        <th>Train</th>
-        <th>Departure time</th>
-        <th>Price, $</th>
+        <th>Route</th>
         <th></th>
-    </tr>
     </thead>
 
     <tbody>
-    <c:forEach items="${trains}" var="item">
+    <c:forEach items="${currentRoute}" var="item">
         <tr>
-            <td>${item.key.train.number}</td>
-            <td>${item.key.departureTime}</td>
-            <td>${item.value}</td>
-            <td><a href="/client/trainInfo/${item.key.train.id}/${station1}/${station2}/${date}">Info</a></td>
+            <td>${item.station.title}</td>
+        </tr>
+        <tr>
+            <td><h3>|</h3></td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
-
-
 </body>
 </html>

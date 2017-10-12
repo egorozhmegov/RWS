@@ -58,13 +58,11 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
         List<Passenger> registeredPassengers = new ArrayList<>();
 
         List<Schedule> route = clientService.getCurrentRoute(
-                trainId,
-                        railWayStationService
-                        .read(departStationId).
-                        getTitle(),
-                                    railWayStationService
-                                    .read(departStationId)
-                                    .getTitle());
+                trainId, railWayStationService
+                         .read(departStationId).
+                         getTitle(), railWayStationService
+                                     .read(arriveStationId)
+                                     .getTitle());
 
         for(Passenger passenger: allTrainPassengers){
             for(Schedule routePoint: route){

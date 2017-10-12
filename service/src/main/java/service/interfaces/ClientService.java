@@ -3,6 +3,7 @@ package service.interfaces;
 import model.Schedule;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *Client service interface.
@@ -15,9 +16,9 @@ public interface ClientService {
      * @param station1 String
      * @param station2 String
      * @param date String
-     * @return List<Schedule>
+     * @return Map<Schedule,Integer>
      */
-    List<Schedule> searchTrains(String station1, String station2, String date);
+    Map<Schedule, Integer> searchTrains(String station1, String station2, String date);
 
     /**
      * Get train route for client request.

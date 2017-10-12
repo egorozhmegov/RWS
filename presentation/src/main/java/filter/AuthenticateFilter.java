@@ -24,7 +24,8 @@ public class AuthenticateFilter implements Filter {
                 && !Objects.equals(req.getRequestURI(),"/logoutEmployee")
                 && !Objects.equals(req.getRequestURI(),"/registerEmployee")
                 && !Objects.equals(req.getRequestURI(),"/client")
-                && !Objects.equals(req.getRequestURI(),"/client/search")){
+                && !Objects.equals(req.getRequestURI(),"/client/search")
+                && !Objects.equals(req.getRequestURI(),"/client/trainInfo")){
 
             Cookie[] cookies = req.getCookies();
             boolean foundCookie = false;
@@ -41,10 +42,10 @@ public class AuthenticateFilter implements Filter {
             if(foundCookie) {
                 chain.doFilter(req, res);
             } else {
-                res.setStatus(401);
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
         } else {
-            res.setStatus(401);
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             chain.doFilter(req, res);
         }
     }

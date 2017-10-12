@@ -2,15 +2,11 @@ package dao.implementation;
 
 import dao.interfaces.PassengerDao;
 import model.Passenger;
-import util.LocalDateAttributeConverter;
-
-import javax.persistence.Convert;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -42,8 +38,8 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
         String sqlQuery =
                 "SELECT p FROM Passenger AS p " +
                         "WHERE p.train.id = " + trainId + " " +
-                        "AND p.trainDate = '" + Date.valueOf(LocalDate.of(2017, 10, 18)) + "' " +
-                        "GROUP BY p.firstName, p.lastName, p.birthday";
+                        "AND p.trainDate = '" + Date.valueOf(departDate) + "' " +
+                        "GROUP BY p.birthday, p.firstName, p.lastName";
 
         Query query = getEntityManager().createQuery(sqlQuery);
         try{

@@ -20,10 +20,6 @@ public class RailWayStationController {
     @Autowired
     private RailWayStationService railWayStationService;
 
-    @Autowired
-    private PassengerService passengerDao;
-
-
     @RequestMapping(value="/getStations",method = RequestMethod.GET)
     public ResponseEntity<List<RailWayStation>> getStations() {
         return new ResponseEntity<>(railWayStationService.getAll(), HttpStatus.OK);
@@ -32,12 +28,6 @@ public class RailWayStationController {
     @RequestMapping(value="/addStation",method = RequestMethod.POST)
     public ResponseEntity<RailWayStation> addStation(@RequestBody RailWayStation station) {
         try{
-            System.out.println(
-                    passengerDao
-                            .getRegisteredPassengers(1,
-                                    2,
-                                    9,
-                                    LocalDate.of(2017,10,18)));;
             railWayStationService.addStation(station);
             return new ResponseEntity<>(station, HttpStatus.CREATED);
         } catch (RailWayStationServiceException e){

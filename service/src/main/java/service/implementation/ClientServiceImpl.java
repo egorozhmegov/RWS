@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.interfaces.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  *Client service implementation.
@@ -34,10 +32,21 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private PassengerService passengerService;
 
+    /**
+     * Get list of schedule trains by two station and date.
+     *
+     * @param station1 String
+     * @param station2 String
+     * @param date String
+     * @return Map<Schedule,Integer>
+     */
     @Override
-    public List<Schedule> searchTrains(String station1,
-                                       String station2,
-                                       String date){
+    public Map<Schedule, Integer> searchTrains(String station1,
+                                               String station2,
+                                               String date){
+
+        Map<Schedule, Integer> searchResult = new HashMap<>();
+
         if(station1 == null
                 || station1.trim().isEmpty()
                 || station2 == null
@@ -51,7 +60,18 @@ public class ClientServiceImpl implements ClientService {
         RailWayStation arriveStation = stationService.getStationByTitle(station2);
         int day = dayOfWeek(parseDate(date));
 
-        return scheduleService.searchTrain(departStation.getId(), arriveStation.getId(), day);
+        List<Schedule> trains = scheduleService
+                .searchTrain(departStation.getId(), arriveStation.getId(), day);
+
+        for(Schedule schedule: trains){
+            Train train = schedule.getTrain();
+            searchResult.put(schedule,
+                    getTicketPrice(train.getId(),
+                            getCurrentRoute(train.getId(),
+                                    station1, station2)));
+        }
+
+        return searchResult;
     }
 
 
