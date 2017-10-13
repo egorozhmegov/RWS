@@ -26,7 +26,11 @@
             <td>${item.key.train.number}</td>
             <td>${item.key.departureTime}</td>
             <td>${item.value}</td>
-            <td><a href="/client/trainInfo/${item.key.train.id}/${station1}/${station2}/${date}">Info</a></td>
+
+            <td><a href="/client/buy/${item.key.train.id}/${station1}/${station2}/${date}">
+                    <input type="button" value="Buy" />
+                </a>
+            </td>
         </tr>
     </c:forEach>
     </tbody>

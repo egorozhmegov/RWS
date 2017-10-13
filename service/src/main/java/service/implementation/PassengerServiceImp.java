@@ -82,7 +82,6 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
      * @param trainId long
      * @param departStationId long
      * @param arriveStationId long
-     * @param departDate String
      * @param passenger Passenger
      * @return Passenger
      */
@@ -91,14 +90,12 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
     public Passenger getRegisteredPassenger(long trainId,
                                             long departStationId,
                                             long arriveStationId,
-                                            String departDate,
                                             Passenger passenger){
         LOG.info("Registered passenger loaded.");
         return passengerDao.getRegisteredPassenger(
                 trainId
                 ,departStationId
                 ,arriveStationId
-                ,departDate
                 ,passenger);
     }
 

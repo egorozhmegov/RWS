@@ -24,16 +24,16 @@
             <div class="row">
                 <form method="post" action="/client/search">
                     <div class="col-md-3 col-sm-3 col-xs-6">
-                        <input class="form-control" type="text" id="station1" name="station1" placeholder="From"/>
+                        <input class="form-control" type="text" id="station1" name="station1" placeholder="From" required/>
                     </div>
 
                     <div class="col-md-3 col-sm-3 col-xs-6">
-                        <input class="form-control" type="text" id="station2" name="station2" placeholder="To"/>
+                        <input class="form-control" type="text" id="station2" name="station2" placeholder="To" required/>
                     </div>
 
 
                     <div class="col-md-3 col-sm-3 col-xs-6">
-                        <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text"/>
+                        <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text" required/>
                     </div>
 
                     <div class="col-md-3 col-sm-3 col-xs-6">

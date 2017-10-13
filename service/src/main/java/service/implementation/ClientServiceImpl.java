@@ -3,7 +3,9 @@ package service.implementation;
 import exception.ClientServiceException;
 import model.RailWayStation;
 import model.Schedule;
+import model.Ticket;
 import model.Train;
+import model.Passenger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +34,16 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private PassengerService passengerService;
 
+    @Autowired
+    private TicketService ticketService;
+
     /**
      * Get list of schedule trains by two station and date.
      *
      * @param station1 String
      * @param station2 String
      * @param date String
-     * @return Map<Schedule,Integer>
+     * @return Map
      */
     @Override
     public Map<Schedule, Integer> searchTrains(String station1,
@@ -71,6 +76,7 @@ public class ClientServiceImpl implements ClientService {
                                     station1, station2)));
         }
 
+        LOG.info(String.format("Search trains: '%s'", searchResult));
         return searchResult;
     }
 
@@ -102,6 +108,13 @@ public class ClientServiceImpl implements ClientService {
                 Integer.parseInt(date.split("/")[2]),
                 Integer.parseInt(date.split("/")[0]),
                 Integer.parseInt(date.split("/")[1]));
+    }
+
+    public LocalDate parseDashDate(String date){
+        return LocalDate.of(
+                Integer.parseInt(date.split("-")[0]),
+                Integer.parseInt(date.split("-")[1]),
+                Integer.parseInt(date.split("-")[2]));
     }
 
     /**
@@ -177,5 +190,132 @@ public class ClientServiceImpl implements ClientService {
                     arriveStationId,
                     departDay)
                 .size();
+    }
+
+    /**
+     * Buy ticket and return registered passenger with ticket.
+     *
+     * @param firstName String
+     * @param lastName String
+     * @param date String
+     * @param trainId long
+     * @param departDay String
+     * @param arriveDay String
+     * @param departStation String
+     * @param arriveStation String
+     * @param ticketPrice int
+     */
+    @Override
+    public void buyTicket(
+            String firstName,
+            String lastName,
+            String date,
+            long trainId,
+            String departDay,
+            String arriveDay,
+            String departStation,
+            String arriveStation,
+            int ticketPrice) {
+        if(firstName.isEmpty()
+                || lastName.isEmpty()
+                || date.isEmpty()
+                || trainId == 0
+                || departDay.isEmpty()
+                || arriveDay.isEmpty()
+                || departStation.isEmpty()
+                || ticketPrice == 0){
+            LOG.info("Invalid payment data.");
+            throw new ClientServiceException("Invalid payment data.");
+        }
+
+        long departStationId = stationService.getStationByTitle(departStation).getId();
+        long arriveStationId = stationService.getStationByTitle(arriveStation).getId();
+        LocalDate depDay = parseDashDate(departDay);
+
+        Passenger passenger = new Passenger(firstName, lastName, parseDate(date));
+        passenger.setTrain(trainService.read(trainId));
+
+        if(passengerService
+                .getRegisteredPassenger(
+                        trainId,
+                        departStationId,
+                        arriveStationId,
+                        passenger) != null){
+            LOG.info("Passengers registered already.");
+            throw new ClientServiceException("Passengers registered already.");
+        }
+
+        Ticket ticket = new Ticket(ticketPrice);
+        ticketService.create(ticket);
+        passenger.setTicket(ticket);
+
+        for(Schedule schedule: getCurrentRoute(trainId, departStation, arriveStation)){
+            if(schedule.getArrivalDay() == 0){
+                passenger.setTrainDate(depDay);
+            } else {
+                passenger.setTrainDate(getRoutePointDate(depDay, schedule));
+            }
+            passenger.setStation(schedule.getStation());
+            passengerService.create(passenger);
+        }
+
+    }
+
+    /**
+     * Get route point date.
+     *
+     * @param departDay LocalDate
+     * @param routePoint Schedule
+     * @return LocalDate
+     */
+    public LocalDate getRoutePointDate (LocalDate departDay, Schedule routePoint){
+        int depYear = departDay.getYear();
+        int depMonth = departDay.getMonthValue();
+        int depDay = departDay.getDayOfMonth();
+        int weekDay = TrainServiceImpl
+                .WEEK_DAYS.indexOf(departDay
+                        .getDayOfWeek()
+                        .toString()
+                        .substring(0,3)
+                        .toLowerCase()) + 1;
+
+        int routePointDay;
+        int routePointMonth = depMonth;
+        int routePointYear = depYear;
+
+        int diffDays = routePoint.getArrivalDay() - weekDay;
+        if(diffDays < 0) routePointDay = 7 + diffDays + depDay;
+        else routePointDay = depDay + diffDays;
+
+        if(routePointDay > 31
+                && (routePointMonth == 1
+                || routePointMonth == 2
+                || routePointMonth == 3
+                || routePointMonth == 5
+                || routePointMonth == 7
+                || routePointMonth == 8
+                || routePointMonth == 10
+                || routePointMonth == 12)){
+            routePointDay -= 31;
+            routePointMonth++;
+        } else if(routePointDay > 30
+                && (routePointMonth == 4
+                || routePointMonth == 6
+                || routePointMonth == 9
+                || routePointMonth == 11)){
+            routePointDay -= 30;
+            routePointMonth++;
+        } else if(routePointDay > 28
+                && (routePointMonth == 2)){
+            routePointDay -= 28;
+            routePointMonth++;
+        }
+
+        if(routePointMonth > 12){
+            routePointMonth -= 12;
+            routePointYear++;
+        }
+
+        return LocalDate.of(routePointYear, routePointMonth, routePointDay);
     }
 }

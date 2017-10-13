@@ -1,12 +1,13 @@
 package service.interfaces;
 
+import model.Passenger;
 import model.Schedule;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- *Client service interface.
+ * Client service interface.
  */
 public interface ClientService {
 
@@ -15,7 +16,7 @@ public interface ClientService {
      *
      * @param station1 String
      * @param station2 String
-     * @param date String
+     * @param date     String
      * @return Map<Schedule,Integer>
      */
     Map<Schedule, Integer> searchTrains(String station1, String station2, String date);
@@ -23,7 +24,7 @@ public interface ClientService {
     /**
      * Get train route for client request.
      *
-     * @param trainId long
+     * @param trainId  long
      * @param station1 String
      * @param station2 String
      * @return List<Schedule>
@@ -34,7 +35,7 @@ public interface ClientService {
      * Get ticket price.
      *
      * @param currentRoute List<Schedule>.
-     * @param trainId long.
+     * @param trainId      long.
      * @return int.
      */
     int getTicketPrice(long trainId, List<Schedule> currentRoute);
@@ -42,10 +43,10 @@ public interface ClientService {
     /**
      * Get count of free seats in train.
      *
-     * @param month String
-     * @param day String
-     * @param year String
-     * @param id long
+     * @param month    String
+     * @param day      String
+     * @param year     String
+     * @param id       long
      * @param station1 String
      * @param station2 String
      * @return int
@@ -56,4 +57,29 @@ public interface ClientService {
                      long id,
                      String station1,
                      String station2);
+
+    /**
+     * Buy ticket and return registered passenger with ticket.
+     *
+     * @param firstName String
+     * @param lastName String
+     * @param date String
+     * @param trainId long
+     * @param departDay String
+     * @param arriveDay String
+     * @param departStation String
+     * @param arriveStation String
+     * @param ticketPrice int
+     */
+    void buyTicket(
+            String firstName,
+            String lastName,
+            String date,
+            long trainId,
+            String departDay,
+            String arriveDay,
+            String departStation,
+            String arriveStation,
+            int ticketPrice
+    );
 }

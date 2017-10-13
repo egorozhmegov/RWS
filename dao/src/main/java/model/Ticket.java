@@ -14,15 +14,11 @@ public class Ticket implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "TICKET_ID")
     private long id;
 
     @Column(name = "PRICE")
     private int ticketPrice;
-
-    @OneToOne
-    @JoinColumn(name = "PASSENGER_ID")
-    private Passenger passenger;
 
     public Ticket(){
     }
@@ -47,20 +43,11 @@ public class Ticket implements Serializable {
         this.ticketPrice = ticketPrice;
     }
 
-    public Passenger getPassenger() {
-        return passenger;
-    }
-
-    public void setPassenger(Passenger passenger) {
-        this.passenger = passenger;
-    }
-
     @Override
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
                 ", ticketPrice=" + ticketPrice +
-                ", passenger=" + passenger +
                 '}';
     }
 }

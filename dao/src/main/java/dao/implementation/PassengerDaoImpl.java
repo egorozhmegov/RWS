@@ -55,31 +55,32 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
      * @param trainId long
      * @param departStationId long
      * @param arriveStationId long
-     * @param departDate String
      * @param passenger Passenger
      * @return Passenger
      */
     public Passenger getRegisteredPassenger(long trainId,
                                      long departStationId,
                                      long arriveStationId,
-                                     String departDate,
                                      Passenger passenger){
         String sqlQuery =
-                String.format(
-                        "SELECT p FROM Passenger AS p " +
-                                "WHERE p.train.id = '%s' " +
-                                "AND p.trainDate = '%s' " +
-                                "AND p.station.id IN('%s','%s') " +
-                                "AND p.firstName = '%s' " +
-                                "AND p.lastName = '%s' " +
-                                "AND p.birthday = '%s' "
-                        , trainId
-                        , departDate
-                        , departStationId
-                        , arriveStationId
-                        , passenger.getFirstName()
-                        , passenger.getLastName()
-                        , passenger.getBirthday());
+                "SELECT p FROM Passenger AS p " +
+                        "WHERE p.train.id = " + trainId + " " +
+                        "AND p.firstName = '" + passenger.getFirstName() + "' " +
+                        "AND p.lastName = '" + passenger.getLastName() + "' " +
+                        "AND p.birthday = '" + Date.valueOf(passenger.getBirthday()) + "' " +
+                        "AND (p.trainDate BETWEEN " +
+                            "(SELECT p.trainDate " +
+                            "FROM Passenger AS p " +
+                            "WHERE p.train.id = " + trainId + " " +
+                            "AND p.station.id = " + departStationId + " " +
+                            "GROUP BY p.station.id) " +
+                            "AND (SELECT p.trainDate " +
+                            "FROM Passenger AS p " +
+                            "WHERE p.train.id = " + trainId + " " +
+                            "AND p.station.id = " + arriveStationId + " " +
+                            "GROUP BY p.station.id)) " +
+                        "GROUP BY p.firstName";
+
         Query query = getEntityManager().createQuery(sqlQuery);
         try{
             return (Passenger) query.getSingleResult();

@@ -26,13 +26,11 @@ public interface PassengerDao extends GenericDao<Passenger> {
      * @param trainId long
      * @param departStationId long
      * @param arriveStationId long
-     * @param departDate String
      * @param passenger Passenger
      * @return Passenger
      */
     Passenger getRegisteredPassenger(long trainId,
                                      long departStationId,
                                      long arriveStationId,
-                                     String departDate,
                                      Passenger passenger);
 }

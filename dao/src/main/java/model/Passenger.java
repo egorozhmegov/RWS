@@ -42,6 +42,10 @@ public class Passenger implements Serializable {
     @JoinColumn(name = "STATION_ID")
     private RailWayStation station;
 
+    @OneToOne
+    @JoinColumn(name = "TICKET_ID")
+    private Ticket ticket;
+
     public Passenger(){
     }
 
@@ -108,6 +112,14 @@ public class Passenger implements Serializable {
         this.station = station;
     }
 
+    public Ticket getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
+    }
+
     @Override
     public String toString() {
         return "Passenger{" +
@@ -115,6 +127,10 @@ public class Passenger implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
+                ", trainDate=" + trainDate +
+                ", train=" + train +
+                ", station=" + station +
+                ", ticket=" + ticket +
                 '}';
     }
 }
