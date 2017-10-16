@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import service.interfaces.PassengerService;
 import service.interfaces.RailWayStationService;
 import service.interfaces.ScheduleService;
 import service.interfaces.TrainService;
@@ -46,6 +47,9 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
 
     @Autowired
     private TrainDao trainDao;
+
+    @Autowired
+    private PassengerService passengerService;
 
     /**
      * Get train route
@@ -125,6 +129,9 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         scheduleService.deleteByTrainId(id);
         LOG.info(String.format("All schedules with train (id = '%s') deleted", id));
 
+        passengerService.deleteByTrainId(id);
+        LOG.info(String.format("All passengers with train (id = '%s') deleted", id));
+
         trainDao.delete(id);
         LOG.info(String.format("Train with (id = '%s') deleted", id));
     }
@@ -158,7 +165,14 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 || (listArriveDays[0].trim().isEmpty()
                         && listDepartDays[0].trim().isEmpty())
                 || (arrivalTime == null
-                        && departureTime == null)){
+                        && departureTime == null)
+                || ((arrivalTime != null && departureTime != null)
+                    && (listArriveDays[0].trim().isEmpty()
+                    || listDepartDays[0].trim().isEmpty()))
+                || ((!listArriveDays[0].trim().isEmpty()
+                    && !listDepartDays[0].trim().isEmpty())
+                    && (arrivalTime == null || departureTime == null))
+                ){
             LOG.info("Invalid add route point data.");
             throw new TrainServiceException("Invalid add route point data.");
         }

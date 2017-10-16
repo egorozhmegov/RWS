@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.ClientService;
 import service.interfaces.PassengerService;
 import service.interfaces.RailWayStationService;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +51,6 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
                                                   long arriveStationId,
                                                   LocalDate departDate){
         LOG.info("List of registered passengers loaded.");
-        List<Passenger> allTrainPassengers =
-                passengerDao.getRegisteredPassengers(trainId, departDate);
 
         List<Passenger> registeredPassengers = new ArrayList<>();
 
@@ -63,6 +60,11 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
                          getTitle(), railWayStationService
                                      .read(arriveStationId)
                                      .getTitle());
+
+        LocalDate arriveDate = clientService.getRoutePointDate(departDate, route.get(route.size() - 1));
+
+        List<Passenger> allTrainPassengers = passengerDao.getRegisteredPassengers(trainId, departDate, arriveDate);
+
 
         for(Passenger passenger: allTrainPassengers){
             for(Schedule routePoint: route){
@@ -97,6 +99,37 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
                 ,departStationId
                 ,arriveStationId
                 ,passenger);
+    }
+
+    /**
+     * Get all passengers.
+     *
+     * @return List<Passenger>
+     */
+    @Override
+    public List<Passenger> getAllPassengers(){
+        return passengerDao.getAllPassengers();
+    }
+
+
+    /**
+     * Delete all passengers by train id.
+     *
+     * @param trainId long.
+     */
+    @Override
+    public void deleteByTrainId(long trainId){
+        passengerDao.deleteByTrainId(trainId);
+    }
+
+    /**
+     * Delete all passengers by station id.
+     *
+     * @param stationId long.
+     */
+    @Override
+    public void deleteByStationId(long stationId){
+        passengerDao.deleteByStationId(stationId);
     }
 
     @Override

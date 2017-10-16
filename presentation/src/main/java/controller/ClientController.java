@@ -1,14 +1,14 @@
 package controller;
 
-import exception.ClientServiceException;
+import exception.ServiceException;
+import model.Passenger;
 import model.Schedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import service.interfaces.ClientService;
-import service.interfaces.PassengerService;
-import service.interfaces.TicketService;
+import service.interfaces.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -25,14 +25,21 @@ public class ClientController {
     private ClientService clientService;
 
     @Autowired
+    private RailWayStationService railWayStationService;
+
+    @Autowired
     private PassengerService passengerService;
 
     @Autowired
     private TicketService ticketService;
 
+    @Autowired
+    private ScheduleService scheduleService;
+
     @RequestMapping(value = "/client", method = RequestMethod.GET)
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("stations", railWayStationService.getAll());
         modelAndView.setViewName("index");
         return modelAndView;
     }
@@ -104,7 +111,7 @@ public class ClientController {
                                   @RequestParam String date,
                                   @RequestParam long trainId,
                                   @RequestParam String departDay,
-                                  @RequestParam String arriveDay,
+                                  @RequestParam int freeSeats,
                                   @RequestParam String departStation,
                                   @RequestParam String arriveStation,
                                   @RequestParam int ticketPrice
@@ -119,15 +126,32 @@ public class ClientController {
                     date,
                     trainId,
                     departDay,
-                    arriveDay,
+                    freeSeats,
                     departStation,
                     arriveStation,
                     ticketPrice);
+            Passenger passenger = new Passenger(firstName, lastName, clientService.parseDate(date));
+            modelAndView.addObject("passenger", passenger);
             modelAndView.setViewName("successBuy");
-        } catch (ClientServiceException e){
+        } catch (ServiceException e){
             modelAndView.setViewName("unSuccessBuy");
         }
 
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/client/schedule", method = RequestMethod.POST)
+    public ModelAndView getSchedule(@RequestParam String station, @RequestParam String date) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("arriveSchedule",
+                scheduleService.getStationArriveSchedule(station, date));
+        modelAndView.addObject("departSchedule",
+                scheduleService.getStationDepartSchedule(station, date));
+        modelAndView.addObject("station", station);
+        modelAndView.addObject("date", date);
+
+        modelAndView.setViewName("schedule");
         return modelAndView;
     }
 }

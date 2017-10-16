@@ -1,6 +1,9 @@
 package service.implementation;
 
 import exception.ClientServiceException;
+import exception.ClientServiceNoSeatsException;
+import exception.ClientServiceRegisteredPassengerException;
+import exception.ClientServiceTimeOutException;
 import model.RailWayStation;
 import model.Schedule;
 import model.Ticket;
@@ -10,8 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import static java.time.temporal.ChronoUnit.MINUTES;
 import java.util.*;
 
 /**
@@ -87,6 +93,7 @@ public class ClientServiceImpl implements ClientService {
      * @param date LocalDate
      * @return int
      */
+    @Override
     public int dayOfWeek(LocalDate date){
         return TrainServiceImpl
                 .WEEK_DAYS
@@ -103,6 +110,7 @@ public class ClientServiceImpl implements ClientService {
      * @param date String
      * @return LocalDate
      */
+    @Override
     public LocalDate parseDate(String date){
         return LocalDate.of(
                 Integer.parseInt(date.split("/")[2]),
@@ -192,6 +200,7 @@ public class ClientServiceImpl implements ClientService {
                 .size();
     }
 
+
     /**
      * Buy ticket and return registered passenger with ticket.
      *
@@ -200,11 +209,12 @@ public class ClientServiceImpl implements ClientService {
      * @param date String
      * @param trainId long
      * @param departDay String
-     * @param arriveDay String
+     * @param freeSeats String
      * @param departStation String
      * @param arriveStation String
      * @param ticketPrice int
      */
+    @Transactional
     @Override
     public void buyTicket(
             String firstName,
@@ -212,7 +222,7 @@ public class ClientServiceImpl implements ClientService {
             String date,
             long trainId,
             String departDay,
-            String arriveDay,
+            int freeSeats,
             String departStation,
             String arriveStation,
             int ticketPrice) {
@@ -221,44 +231,60 @@ public class ClientServiceImpl implements ClientService {
                 || date.isEmpty()
                 || trainId == 0
                 || departDay.isEmpty()
-                || arriveDay.isEmpty()
                 || departStation.isEmpty()
                 || ticketPrice == 0){
             LOG.info("Invalid payment data.");
             throw new ClientServiceException("Invalid payment data.");
         }
 
+        List<Schedule> currentRoute = getCurrentRoute(trainId, departStation, arriveStation);
         long departStationId = stationService.getStationByTitle(departStation).getId();
         long arriveStationId = stationService.getStationByTitle(arriveStation).getId();
         LocalDate depDay = parseDashDate(departDay);
-
-        Passenger passenger = new Passenger(firstName, lastName, parseDate(date));
-        passenger.setTrain(trainService.read(trainId));
+        LocalTime depTime = currentRoute.get(0).getDepartureTime();
 
         if(passengerService
                 .getRegisteredPassenger(
                         trainId,
                         departStationId,
                         arriveStationId,
-                        passenger) != null){
+                        new Passenger(firstName, lastName, parseDate(date))) != null
+                ){
             LOG.info("Passengers registered already.");
-            throw new ClientServiceException("Passengers registered already.");
+            throw new ClientServiceRegisteredPassengerException("Passengers registered already.");
+        }
+
+        if(depDay.isBefore(LocalDate.now())){
+            LOG.info("Invalid departure date.");
+            throw new ClientServiceTimeOutException("Invalid departure date.");
+        }
+
+        if(depDay == LocalDate.now()
+                && MINUTES.between(depTime, LocalTime.now()) < 10){
+            LOG.info("To depart train less 10 minutes.");
+            throw new ClientServiceTimeOutException("To depart train less 10 min.");
+        }
+
+        if(freeSeats == 0) {
+            LOG.info("No free seats.");
+            throw new ClientServiceNoSeatsException("No free seats.");
         }
 
         Ticket ticket = new Ticket(ticketPrice);
         ticketService.create(ticket);
-        passenger.setTicket(ticket);
 
-        for(Schedule schedule: getCurrentRoute(trainId, departStation, arriveStation)){
+        for(Schedule schedule: currentRoute){
+            Passenger passenger = new Passenger(firstName, lastName, parseDate(date));
             if(schedule.getArrivalDay() == 0){
                 passenger.setTrainDate(depDay);
             } else {
                 passenger.setTrainDate(getRoutePointDate(depDay, schedule));
             }
+            passenger.setTrain(trainService.read(trainId));
             passenger.setStation(schedule.getStation());
+            passenger.setTicket(ticket);
             passengerService.create(passenger);
         }
-
     }
 
     /**
@@ -268,6 +294,7 @@ public class ClientServiceImpl implements ClientService {
      * @param routePoint Schedule
      * @return LocalDate
      */
+    @Override
     public LocalDate getRoutePointDate (LocalDate departDay, Schedule routePoint){
         int depYear = departDay.getYear();
         int depMonth = departDay.getMonthValue();

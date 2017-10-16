@@ -3,6 +3,7 @@ package service.interfaces;
 import model.Passenger;
 import model.Schedule;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public interface ClientService {
      * @param date String
      * @param trainId long
      * @param departDay String
-     * @param arriveDay String
+     * @param freeSeats String
      * @param departStation String
      * @param arriveStation String
      * @param ticketPrice int
@@ -77,9 +78,33 @@ public interface ClientService {
             String date,
             long trainId,
             String departDay,
-            String arriveDay,
+            int freeSeats,
             String departStation,
             String arriveStation,
             int ticketPrice
     );
+
+    /**
+     * Get route point date.
+     *
+     * @param departDay LocalDate
+     * @param routePoint Schedule
+     * @return LocalDate
+     */
+    LocalDate getRoutePointDate (LocalDate departDay, Schedule routePoint);
+
+    /**
+     * Parse string date to object LocalDate.
+     *
+     * @param date String
+     * @return LocalDate
+     */
+    LocalDate parseDate(String date);
+
+    /**
+     *Get number of week day.
+     *
+     * @param date LocalDate
+     * @return int
+     */int dayOfWeek(LocalDate date);
 }

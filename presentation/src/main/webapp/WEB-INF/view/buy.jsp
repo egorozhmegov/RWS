@@ -12,39 +12,52 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"/>
-    <link rel="stylesheet" href="css/index.css"/>
-    <link rel="stylesheet" href="css/buy.css"/>
 </head>
 <body>
 
 <div class="row">
+    <div class="col-md-1"></div>
+
+    <div class="col-md-3"></div>
+
+    <div class="col-md-5">
+        <h1>Train ${currentRoute.get(0).train.number}</h1>
+    </div>
+
+    <div class="col-md-1">
+        <h3><p><a href="http://localhost:8080/client/"><span class="glyphicon glyphicon-home"></span></a></p></h3>
+    </div>
+
+    <div class="col-md-2"></div>
+</div>
+
+<div class="row">
+    <div class="col-md-1"></div>
+
     <div class="col-md-3">
         <h2>Info</h2>
-        <h4>Train ${currentRoute.get(0).train.number}</h4>
         <h4>Price: ${ticketPrice} $</h4>
         <h4>Seats: ${freeSeats}</h4>
-        <h4> Departure  ${departDay}     ${departTime}</h4>
-        <h4>Arrival  ${arriveDay}     ${arriveTime}</h4>
+        <h4> Departure  ${departDay.toString().split('-')[2]}.${departDay.toString().split('-')[1]}.${departDay.toString().split('-')[0]}     ${departTime}</h4>
+        <h4> Arrival  ${arriveDay.toString().split('-')[2]}.${arriveDay.toString().split('-')[1]}.${arriveDay.toString().split('-')[0]}     ${arriveTime}</h4>
     </div>
 
     <div class="col-md-3">
         <h2>Route</h2>
-        <table class="table table-striped">
+        <table class="table table-striped text-center">
             <c:forEach items="${currentRoute}" var="item">
                 <tr>
                     <td>${item.station.title}</td>
-                </tr>
-                <tr>
-                    <td><h3>|</h3></td>
                 </tr>
             </c:forEach>
         </table>
     </div>
 
-    <div class="col-md-6">
-        <h2>Payment</h2>
+    <div class="col-md-5">
 
         <div class="col-xs-6">
+            <h2>Payment</h2>
+
             <form method="post" action="/client/payment">
                 <div class="form-group">
                     <input class="form-control" type="text" id="firstName" name="firstName" placeholder="First Name" required/>
@@ -55,7 +68,7 @@
                 </div>
 
                 <div class="form-group" >
-                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text" required/>
+                    <input class="form-control" id="date" name="date" placeholder="Birthday" type="text" required/>
                 </div>
 
                 <div>
@@ -67,7 +80,7 @@
                 </div>
 
                 <div>
-                    <input value="${arriveDay}" id="arriveDay" name="arriveDay" type="hidden"/>
+                    <input value="${freeSeats}" id="freeSeats" name="freeSeats" type="hidden"/>
                 </div>
 
                 <div>

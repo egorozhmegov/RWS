@@ -38,11 +38,11 @@ public class Passenger implements Serializable {
     @JoinColumn(name = "TRAIN_ID")
     private Train train;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "STATION_ID")
     private RailWayStation station;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "TICKET_ID")
     private Ticket ticket;
 

@@ -35,22 +35,22 @@ public interface ScheduleService extends GenericService<Schedule> {
     List<Schedule> searchTrain(long departStationId, long arriveStationId, int departDay);
 
     /**
-     * Get station departure schedule by id.
+     * Get station departure schedule.
      *
-     * @param stationId long
-     * @param weekDay int
+     * @param station String
+     * @param date String
      * @return List<Schedule>
      */
-    List<Schedule> getStationDepartSchedule(long stationId, int weekDay);
+    List<Schedule> getStationDepartSchedule(String station, String date);
 
     /**
-     * Get station arrival schedule by id.
+     * Get station arrival schedule.
      *
-     * @param stationId long
-     * @param weekDay int
+     * @param station String
+     * @param date String
      * @return List<Schedule>
      */
-    List<Schedule> getStationArriveSchedule(long stationId, int weekDay);
+    List<Schedule> getStationArriveSchedule(String station, String date);
 
     /**
      * Delete all schedules by train id and station id.

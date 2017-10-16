@@ -1,7 +1,6 @@
 package dao.interfaces;
 
 import model.Passenger;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,10 +13,10 @@ public interface PassengerDao extends GenericDao<Passenger> {
      *
      * @param trainId long
      * @param departDate LocalDate
+     * @param arriveDate LocalDate
      * @return List<Passenger>
      */
-    List<Passenger> getRegisteredPassengers(long trainId,
-                                           LocalDate departDate);
+    List<Passenger> getRegisteredPassengers(long trainId, LocalDate departDate, LocalDate arriveDate);
 
 
     /**
@@ -33,4 +32,25 @@ public interface PassengerDao extends GenericDao<Passenger> {
                                      long departStationId,
                                      long arriveStationId,
                                      Passenger passenger);
-}
+
+    /**
+     * Get all passengers.
+     *
+     * @return List<Passenger>
+     */
+    List<Passenger> getAllPassengers();
+
+    /**
+     * Delete all passengers by train id.
+     *
+     * @param trainId long.
+     */
+    void deleteByTrainId(long trainId);
+
+    /**
+     * Delete all passengers by station id.
+     *
+     * @param stationId long.
+     */
+    void deleteByStationId(long stationId);
+ }

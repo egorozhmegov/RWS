@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import service.interfaces.PassengerService;
 import service.interfaces.RailWayStationService;
 import service.interfaces.ScheduleService;
 
@@ -26,6 +27,9 @@ public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation
     @Autowired
     private ScheduleService scheduleService;
 
+    @Autowired
+    private PassengerService passengerService;
+
     /**
      * Delete station.
      *
@@ -36,6 +40,9 @@ public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation
     public void removeStation(long id) {
         scheduleService.deleteByStationId(id);
         LOG.info(String.format("All schedules with station (id = '%s') deleted", id));
+
+        passengerService.deleteByStationId(id);
+        LOG.info(String.format("All passengers with station (id = '%s') deleted", id));
 
         railWayStationDao.delete(id);
         LOG.info(String.format("Station with (id = '%s') deleted", id));

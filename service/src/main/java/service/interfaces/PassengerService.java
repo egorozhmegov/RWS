@@ -36,4 +36,25 @@ public interface PassengerService extends GenericService<Passenger> {
                                             long departStationId,
                                             long arriveStationId,
                                             Passenger passenger);
+
+    /**
+     * Get all passengers.
+     *
+     * @return List<Passenger>
+     */
+    List<Passenger> getAllPassengers();
+
+    /**
+     * Delete all passengers by train id.
+     *
+     * @param trainId long.
+     */
+    void deleteByTrainId(long trainId);
+
+    /**
+     * Delete all passengers by station id.
+     *
+     * @param stationId long.
+     */
+    void deleteByStationId(long stationId);
 }

@@ -29,16 +29,16 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
      *
      * @param trainId long
      * @param departDate LocalDate
+     * @param arriveDate LocalDate
      * @return List<Passenger>
      */
     @Override
-    public List<Passenger> getRegisteredPassengers(long trainId,
-                                                   LocalDate departDate) {
-
+    public List<Passenger> getRegisteredPassengers(long trainId, LocalDate departDate, LocalDate arriveDate) {
         String sqlQuery =
                 "SELECT p FROM Passenger AS p " +
                         "WHERE p.train.id = " + trainId + " " +
-                        "AND p.trainDate = '" + Date.valueOf(departDate) + "' " +
+                        "AND (p.trainDate BETWEEN '" + Date.valueOf(departDate) + "' " +
+                            "AND '" + Date.valueOf(arriveDate) + "')" +
                         "GROUP BY p.birthday, p.firstName, p.lastName";
 
         Query query = getEntityManager().createQuery(sqlQuery);
@@ -48,6 +48,7 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
             return null;
         }
     }
+
 
     /**
      * Get registered passenger on train.
@@ -89,8 +90,46 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
         }
     }
 
+    /**
+     * Get all passengers.
+     *
+     * @return List<Passenger>
+     */
+    @Override
+    public List<Passenger> getAllPassengers(){
+        String sqlQuery =
+                "SELECT p FROM Passenger AS p " +
+                        "GROUP BY p.firstName, p.lastName, p.birthday";
 
+        Query query = getEntityManager().createQuery(sqlQuery);
 
+        return query.getResultList();
+    }
+
+    /**
+     * Delete all passengers by train id.
+     *
+     * @param trainId long.
+     */
+    @Override
+    public void deleteByTrainId(long trainId){
+        getEntityManager()
+                .createQuery(String
+                        .format("DELETE FROM Passenger AS p WHERE p.train.id = '%s'", trainId))
+                .executeUpdate();
+    }
+
+    /**
+     * Delete all passengers by station id.
+     *
+     * @param stationId long.
+     */
+    public void deleteByStationId(long stationId){
+        getEntityManager()
+                .createQuery(String
+                        .format("DELETE FROM Passenger AS p WHERE p.station.id = '%s'", stationId))
+                .executeUpdate();
+    }
 
     @Override
     EntityManager getEntityManager() {

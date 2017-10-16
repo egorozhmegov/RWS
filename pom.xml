@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>t-systems.java.school</groupId>
-    <artifactId>t-systems.java.school.rws</artifactId>
+    <artifactId>t-systems.java.school.RWS</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
