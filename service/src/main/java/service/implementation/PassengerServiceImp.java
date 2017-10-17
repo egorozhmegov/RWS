@@ -84,6 +84,7 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
      * @param trainId long
      * @param departStationId long
      * @param arriveStationId long
+     * @param departDay LocalDate
      * @param passenger Passenger
      * @return Passenger
      */
@@ -92,23 +93,23 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
     public Passenger getRegisteredPassenger(long trainId,
                                             long departStationId,
                                             long arriveStationId,
+                                            LocalDate departDay,
                                             Passenger passenger){
+
+        List<Schedule> route = clientService.getCurrentRoute(
+                trainId, railWayStationService
+                        .read(departStationId).
+                                getTitle(), railWayStationService
+                        .read(arriveStationId)
+                        .getTitle());
+
+        LocalDate arrivalDay = clientService.getRoutePointDate(departDay, route.get(route.size() - 1));
         LOG.info("Registered passenger loaded.");
         return passengerDao.getRegisteredPassenger(
                 trainId
-                ,departStationId
-                ,arriveStationId
+                ,departDay
+                ,arrivalDay
                 ,passenger);
-    }
-
-    /**
-     * Get all passengers.
-     *
-     * @return List<Passenger>
-     */
-    @Override
-    public List<Passenger> getAllPassengers(){
-        return passengerDao.getAllPassengers();
     }
 
 

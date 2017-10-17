@@ -54,14 +54,14 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
      * Get registered passenger on train.
      *
      * @param trainId long
-     * @param departStationId long
-     * @param arriveStationId long
+     * @param departDate LocalDate
+     * @param arriveDate LocalDate
      * @param passenger Passenger
      * @return Passenger
      */
     public Passenger getRegisteredPassenger(long trainId,
-                                     long departStationId,
-                                     long arriveStationId,
+                                     LocalDate departDate,
+                                     LocalDate arriveDate,
                                      Passenger passenger){
         String sqlQuery =
                 "SELECT p FROM Passenger AS p " +
@@ -69,17 +69,8 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
                         "AND p.firstName = '" + passenger.getFirstName() + "' " +
                         "AND p.lastName = '" + passenger.getLastName() + "' " +
                         "AND p.birthday = '" + Date.valueOf(passenger.getBirthday()) + "' " +
-                        "AND (p.trainDate BETWEEN " +
-                            "(SELECT p.trainDate " +
-                            "FROM Passenger AS p " +
-                            "WHERE p.train.id = " + trainId + " " +
-                            "AND p.station.id = " + departStationId + " " +
-                            "GROUP BY p.station.id) " +
-                            "AND (SELECT p.trainDate " +
-                            "FROM Passenger AS p " +
-                            "WHERE p.train.id = " + trainId + " " +
-                            "AND p.station.id = " + arriveStationId + " " +
-                            "GROUP BY p.station.id)) " +
+                        "AND (p.trainDate BETWEEN '" + Date.valueOf(departDate) + "' " +
+                        "AND '" + Date.valueOf(arriveDate) + "')" +
                         "GROUP BY p.firstName";
 
         Query query = getEntityManager().createQuery(sqlQuery);
@@ -88,22 +79,6 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
         } catch(Exception e){
             return null;
         }
-    }
-
-    /**
-     * Get all passengers.
-     *
-     * @return List<Passenger>
-     */
-    @Override
-    public List<Passenger> getAllPassengers(){
-        String sqlQuery =
-                "SELECT p FROM Passenger AS p " +
-                        "GROUP BY p.firstName, p.lastName, p.birthday";
-
-        Query query = getEntityManager().createQuery(sqlQuery);
-
-        return query.getResultList();
     }
 
     /**

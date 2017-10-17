@@ -19,6 +19,6 @@ public class PassengerController {
 
     @RequestMapping(value="/getPassengers",method = RequestMethod.GET)
     public ResponseEntity<List<Passenger>> getStations() {
-        return new ResponseEntity<>(passengerService.getAllPassengers(), HttpStatus.OK);
+        return new ResponseEntity<>(passengerService.getAll(), HttpStatus.OK);
     }
 }

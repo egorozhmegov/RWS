@@ -29,20 +29,15 @@ public interface PassengerService extends GenericService<Passenger> {
      * @param trainId long
      * @param departStationId long
      * @param arriveStationId long
+     * @param departDay LocalDate
      * @param passenger Passenger
      * @return Passenger
      */
     public Passenger getRegisteredPassenger(long trainId,
                                             long departStationId,
                                             long arriveStationId,
+                                            LocalDate departDay,
                                             Passenger passenger);
-
-    /**
-     * Get all passengers.
-     *
-     * @return List<Passenger>
-     */
-    List<Passenger> getAllPassengers();
 
     /**
      * Delete all passengers by train id.

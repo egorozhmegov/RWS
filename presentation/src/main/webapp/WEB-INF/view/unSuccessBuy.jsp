@@ -23,10 +23,13 @@
 
     <div class="col-md-6">
         <h2>Unsuccessfully payment!</h2>
-
     </div>
 
-    <div class="col-md-3"></div>
+    <div class="col-md-1">
+        <h3><p><a href="http://localhost:8080/client/"><span class="glyphicon glyphicon-home"></span></a></p></h3>
+    </div>
+
+    <div class="col-md-2"></div>
 </div>
 
 <div class="row">

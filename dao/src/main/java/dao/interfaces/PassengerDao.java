@@ -23,22 +23,15 @@ public interface PassengerDao extends GenericDao<Passenger> {
      * Get registered passenger on train.
      *
      * @param trainId long
-     * @param departStationId long
-     * @param arriveStationId long
+     * @param departDate LocalDate
+     * @param arriveDate LocalDate
      * @param passenger Passenger
      * @return Passenger
      */
     Passenger getRegisteredPassenger(long trainId,
-                                     long departStationId,
-                                     long arriveStationId,
+                                     LocalDate departDate,
+                                     LocalDate arriveDate,
                                      Passenger passenger);
-
-    /**
-     * Get all passengers.
-     *
-     * @return List<Passenger>
-     */
-    List<Passenger> getAllPassengers();
 
     /**
      * Delete all passengers by train id.

@@ -240,6 +240,7 @@ public class ClientServiceImpl implements ClientService {
         List<Schedule> currentRoute = getCurrentRoute(trainId, departStation, arriveStation);
         long departStationId = stationService.getStationByTitle(departStation).getId();
         long arriveStationId = stationService.getStationByTitle(arriveStation).getId();
+
         LocalDate depDay = parseDashDate(departDay);
         LocalTime depTime = currentRoute.get(0).getDepartureTime();
 
@@ -248,6 +249,7 @@ public class ClientServiceImpl implements ClientService {
                         trainId,
                         departStationId,
                         arriveStationId,
+                        depDay,
                         new Passenger(firstName, lastName, parseDate(date))) != null
                 ){
             LOG.info("Passengers registered already.");
