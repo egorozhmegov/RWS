@@ -44,6 +44,16 @@ public class ClientServiceImpl implements ClientService {
     private TicketService ticketService;
 
     /**
+     * Get all stations.
+     *
+     * @return List<RailWayStation>.
+     */
+    @Override
+    public List<RailWayStation> getAllStations(){
+        return stationService.getAll();
+    }
+
+    /**
      * Get list of schedule trains by two station and date.
      *
      * @param station1 String

@@ -1,6 +1,7 @@
 package service.interfaces;
 
 import model.Passenger;
+import model.RailWayStation;
 import model.Schedule;
 
 import java.time.LocalDate;
@@ -107,4 +108,11 @@ public interface ClientService {
      * @param date LocalDate
      * @return int
      */int dayOfWeek(LocalDate date);
+
+    /**
+     * Get all stations.
+     *
+     * @return List<RailWayStation>.
+     */
+    List<RailWayStation> getAllStations();
 }
