@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.*;
+import util.ScheduleWrapper;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import static java.time.temporal.ChronoUnit.MINUTES;
@@ -42,6 +44,21 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private TicketService ticketService;
+
+    /**
+     *Get two lists: first - list of arrival schedule, second - list of departure schedule.
+     *
+     * @param station String
+     * @param date String
+     * @return ScheduleWrapper
+     */
+    @Override
+    public ScheduleWrapper getSchedule(String station, String date){
+        ScheduleWrapper schedule = new ScheduleWrapper();
+        schedule.setArrivalSchedule(scheduleService.getStationArriveSchedule(station, date));
+        schedule.setDepartureSchedule(scheduleService.getStationDepartSchedule(station, date));
+        return schedule;
+    }
 
     /**
      * Get all stations.

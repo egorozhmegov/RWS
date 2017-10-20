@@ -12,6 +12,7 @@ import java.util.List;
 /**
  Passenger dao implementation.
  */
+@SuppressWarnings("EqualsOnSuspiciousObject")
 public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements PassengerDao {
 
     /**

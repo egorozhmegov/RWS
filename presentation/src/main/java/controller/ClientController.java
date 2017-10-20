@@ -28,12 +28,6 @@ public class ClientController {
     private RailWayStationService railWayStationService;
 
     @Autowired
-    private PassengerService passengerService;
-
-    @Autowired
-    private TicketService ticketService;
-
-    @Autowired
     private ScheduleService scheduleService;
 
     @RequestMapping(value = "/client", method = RequestMethod.GET)

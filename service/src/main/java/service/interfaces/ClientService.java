@@ -3,6 +3,7 @@ package service.interfaces;
 import model.Passenger;
 import model.RailWayStation;
 import model.Schedule;
+import util.ScheduleWrapper;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -115,4 +116,14 @@ public interface ClientService {
      * @return List<RailWayStation>.
      */
     List<RailWayStation> getAllStations();
+
+    /**
+     *Get two lists: first - list of arrival schedule, second - list of departure schedule.
+     *
+     * @param station String
+     * @param date String
+     * @return ScheduleWrapper
+     */
+    ScheduleWrapper getSchedule(String station, String date);
+
 }
