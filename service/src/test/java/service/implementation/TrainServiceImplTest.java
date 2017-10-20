@@ -2,22 +2,25 @@ package service.implementation;
 
 import model.RailWayStation;
 import model.Schedule;
+import org.junit.Before;
 import org.junit.Test;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.Assert.*;
 
 public class TrainServiceImplTest {
 
     private TrainServiceImpl trainService = new TrainServiceImpl();
 
-    private List<Schedule> getRoute1(){
-        List<Schedule> route = new ArrayList<>();
+    private List<Schedule> route1 = new ArrayList<>();
+    private List<Schedule> route2 = new ArrayList<>();
+    private List<Schedule> route3 = new ArrayList<>();
+    private List<Schedule> route4 = new ArrayList<>();
 
-        Schedule point1 = new Schedule();
+    @Before
+    public void initRoute1(){
+                Schedule point1 = new Schedule();
         point1.setDepartPeriod("mon,tue,fri");
         point1.setDepartureTime(LocalTime.of(1,30));
 
@@ -43,18 +46,16 @@ public class TrainServiceImplTest {
         point5.setArrivePeriod("tue,wed,sat");
         point5.setArrivalTime(LocalTime.of(19,30));
 
-        route.add(point1);
-        route.add(point2);
-        route.add(point3);
-        route.add(point4);
-        route.add(point5);
-
-        return route;
+        route1.add(point1);
+        route1.add(point2);
+        route1.add(point3);
+        route1.add(point4);
+        route1.add(point5);
     }
 
-    private List<Schedule> getRoute2(){
-        List<Schedule> route = new ArrayList<>();
 
+    @Before
+    public void initRoute2(){
         Schedule point1 = new Schedule();
         point1.setDepartPeriod("sat,sun,mon");
         point1.setDepartureTime(LocalTime.of(1,30));
@@ -69,16 +70,13 @@ public class TrainServiceImplTest {
         point3.setArrivePeriod("mon,tue,wed");
         point3.setArrivalTime(LocalTime.of(19,30));
 
-        route.add(point1);
-        route.add(point2);
-        route.add(point3);
-
-        return route;
+        route2.add(point1);
+        route2.add(point2);
+        route2.add(point3);
     }
 
-    private List<Schedule> getRoute3(){
-        List<Schedule> route = new ArrayList<>();
-
+    @Before
+    public void initRoute3(){
         Schedule point1 = new Schedule();
         point1.setDepartPeriod("fri,sat,sun");
         point1.setDepartureTime(LocalTime.of(1,30));
@@ -93,16 +91,13 @@ public class TrainServiceImplTest {
         point3.setArrivePeriod("fri,sat,sun");
         point3.setArrivalTime(LocalTime.of(19,30));
 
-        route.add(point1);
-        route.add(point2);
-        route.add(point3);
-
-        return route;
+        route3.add(point1);
+        route3.add(point2);
+        route3.add(point3);
     }
 
-    private List<Schedule> getRoute4(){
-        List<Schedule> route = new ArrayList<>();
-
+    @Before
+    public void initRoute4(){
         Schedule point1 = new Schedule();
         point1.setDepartPeriod("fri,sat,sun");
         point1.setDepartureTime(LocalTime.of(1,30));
@@ -117,12 +112,11 @@ public class TrainServiceImplTest {
         point3.setArrivePeriod("sun,mon,tue");
         point3.setArrivalTime(LocalTime.of(19,30));
 
-        route.add(point1);
-        route.add(point2);
-        route.add(point3);
-
-        return route;
+        route4.add(point1);
+        route4.add(point2);
+        route4.add(point3);
     }
+
 
     @Test
     public void isExistRoutePoint0() throws Exception {
@@ -149,6 +143,7 @@ public class TrainServiceImplTest {
 
         assertTrue(trainService.isExistRoutePoint(route, checkStation));
     }
+
 
     @Test
     public void isExistRoutePoint1() throws Exception {
@@ -344,7 +339,7 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("mon,tue,fri");
         routePoint.setDepartureTime(LocalTime.of(0,30));
 
-        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -355,7 +350,7 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("mon,tue,fri");
         routePoint.setDepartureTime(LocalTime.of(5,30));
 
-        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -366,7 +361,7 @@ public class TrainServiceImplTest {
         routePoint.setArrivalTime(LocalTime.of(19,50));
         routePoint.setDepartPeriod("");
 
-        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -377,7 +372,7 @@ public class TrainServiceImplTest {
         routePoint.setArrivalTime(LocalTime.of(19,20));
         routePoint.setDepartPeriod("");
 
-        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -388,7 +383,7 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("tue,tue,fri");
         routePoint.setDepartureTime(LocalTime.of(0,30));
 
-        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -399,7 +394,7 @@ public class TrainServiceImplTest {
         routePoint.setArrivalTime(LocalTime.of(19,50));
         routePoint.setDepartPeriod("");
 
-        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -445,7 +440,7 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("mon,tue,fri");
         routePoint.setDepartureTime(LocalTime.of(2,35));
 
-        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -457,7 +452,7 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("mon,tue,fri");
         routePoint.setDepartureTime(LocalTime.of(7,35));
 
-        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -469,7 +464,7 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("tue,wed,sat");
         routePoint.setDepartureTime(LocalTime.of(5,50));
 
-        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -481,7 +476,7 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("tue,wed,sat");
         routePoint.setDepartureTime(LocalTime.of(15,15));
 
-        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -493,7 +488,7 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("mon,tue,fri");
         routePoint.setDepartureTime(LocalTime.of(2,35));
 
-        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -505,7 +500,7 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("tue,tue,fri");
         routePoint.setDepartureTime(LocalTime.of(2,35));
 
-        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, getRoute1()));
+        assertFalse(trainService.isPossibleAddRoutePoint(routePoint, route1));
     }
 
     @Test
@@ -516,7 +511,7 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("fri,sat,sun");
         routePoint.setDepartureTime(LocalTime.of(5,30));
 
-        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, getRoute2()));
+        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, route2));
     }
 
     @Test
@@ -527,7 +522,7 @@ public class TrainServiceImplTest {
         routePoint.setArrivalTime(LocalTime.of(19,50));
         routePoint.setDepartPeriod("");
 
-        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, getRoute3()));
+        assertTrue(trainService.isPossibleAddRoutePoint(routePoint,route3));
     }
 
     @Test
@@ -539,7 +534,8 @@ public class TrainServiceImplTest {
         routePoint.setDepartPeriod("sat,sun,mon");
         routePoint.setDepartureTime(LocalTime.of(7,35));
 
-        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, getRoute4()));
+        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, route4));
     }
+
 
 }
