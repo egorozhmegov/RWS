@@ -30,9 +30,10 @@ public class ClientRestController {
 
     @RequestMapping(value="/client/getSchedule",method = RequestMethod.POST)
     public ResponseEntity<ScheduleWrapper> getSchedule(@RequestBody StationWrapper station) {
-        System.out.println(station);
-        ScheduleWrapper schedule = clientService.getSchedule("", "");
+        ScheduleWrapper schedule = clientService.getSchedule(station);
+        System.out.println(schedule.getArrivalSchedule());
+        System.out.println(schedule.getDepartureSchedule());
         return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
-    
+
 }

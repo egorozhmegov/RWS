@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.*;
 import util.ScheduleWrapper;
+import util.StationWrapper;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -48,15 +49,14 @@ public class ClientServiceImpl implements ClientService {
     /**
      *Get two lists: first - list of arrival schedule, second - list of departure schedule.
      *
-     * @param station String
-     * @param date String
+     * @param stationWrapper StationWrapper
      * @return ScheduleWrapper
      */
     @Override
-    public ScheduleWrapper getSchedule(String station, String date){
+    public ScheduleWrapper getSchedule(StationWrapper stationWrapper){
         ScheduleWrapper schedule = new ScheduleWrapper();
-        schedule.setArrivalSchedule(scheduleService.getStationArriveSchedule(station, date));
-        schedule.setDepartureSchedule(scheduleService.getStationDepartSchedule(station, date));
+        schedule.setArrivalSchedule(scheduleService.getArriveSchedule(stationWrapper));
+        schedule.setDepartureSchedule(scheduleService.getDepartSchedule(stationWrapper));
         return schedule;
     }
 

@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.ClientService;
 import service.interfaces.RailWayStationService;
 import service.interfaces.ScheduleService;
+import util.StationWrapper;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -74,15 +76,17 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     /**
      * Get station departure schedule.
      *
-     * @param station String
-     * @param date String
+     * @param stationWrapper StationWrapper
      * @return List<Schedule>
      */
     @Transactional
     @Override
-    public List<Schedule> getStationDepartSchedule(String station, String date){
-        long stationId = railWayStationService.getStationByTitle(station).getId();
-        int weekDay = clientService.dayOfWeek(clientService.parseDate(date));
+    public List<Schedule> getDepartSchedule(StationWrapper stationWrapper){
+        long stationId =
+                railWayStationService
+                .getStationByTitle(stationWrapper.getStation())
+                .getId();
+        int weekDay = clientService.dayOfWeek(stationWrapper.getDate());
         LOG.info("Departure station schedule loaded.");
         return scheduleDao.getStationDepartSchedule(stationId, weekDay);
     }
@@ -90,15 +94,17 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     /**
      * Get station arrival schedule.
      *
-     * @param station String
-     * @param date String
+     * @param stationWrapper StationWrapper
      * @return List<Schedule>
      */
     @Transactional
     @Override
-    public List<Schedule> getStationArriveSchedule(String station, String date){
-        long stationId = railWayStationService.getStationByTitle(station).getId();
-        int weekDay = clientService.dayOfWeek(clientService.parseDate(date));
+    public List<Schedule> getArriveSchedule(StationWrapper stationWrapper){
+        long stationId =
+                railWayStationService
+                .getStationByTitle(stationWrapper.getStation())
+                .getId();
+        int weekDay = clientService.dayOfWeek(stationWrapper.getDate());
         LOG.info("Arrival station schedule loaded.");
         return scheduleDao.getStationArriveSchedule(stationId, weekDay);
     }
