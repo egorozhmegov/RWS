@@ -3,6 +3,7 @@ package dao.implementation;
 import dao.interfaces.UserDao;
 import model.Employee;
 import model.User;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;

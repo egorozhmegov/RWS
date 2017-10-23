@@ -1,17 +1,17 @@
 package controller;
 
-import model.Passenger;
 import model.RailWayStation;
-import model.Schedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import service.interfaces.ClientService;
 import util.ScheduleWrapper;
 import util.StationWrapper;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -20,8 +20,12 @@ import java.util.List;
 @RestController
 public class ClientRestController {
 
-    @Autowired
     private ClientService clientService;
+
+    @Autowired
+    public ClientRestController(ClientService clientService) {
+        this.clientService = clientService;
+    }
 
     @RequestMapping(value="/client/getStations",method = RequestMethod.GET)
     public ResponseEntity<List<RailWayStation>> getStations() {
@@ -31,8 +35,6 @@ public class ClientRestController {
     @RequestMapping(value="/client/getSchedule",method = RequestMethod.POST)
     public ResponseEntity<ScheduleWrapper> getSchedule(@RequestBody StationWrapper station) {
         ScheduleWrapper schedule = clientService.getSchedule(station);
-        System.out.println(schedule.getArrivalSchedule());
-        System.out.println(schedule.getDepartureSchedule());
         return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
 

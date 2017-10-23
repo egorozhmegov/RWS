@@ -1,6 +1,5 @@
 package service.interfaces;
 
-import model.Passenger;
 import model.RailWayStation;
 import model.Schedule;
 import util.ScheduleWrapper;

@@ -3,6 +3,7 @@ package dao.implementation;
 import dao.interfaces.TrainDao;
 import model.Schedule;
 import model.Train;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
