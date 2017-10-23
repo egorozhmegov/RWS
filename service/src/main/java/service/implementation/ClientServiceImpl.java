@@ -5,6 +5,7 @@ import exception.ClientServiceNoSeatsException;
 import exception.ClientServiceRegisteredPassengerException;
 import exception.ClientServiceTimeOutException;
 import model.*;
+import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,6 @@ import static java.time.temporal.ChronoUnit.MINUTES;
  */
 @Service("clientService")
 public class ClientServiceImpl implements ClientService {
-
-
-
 
     private final static Logger LOG = LoggerFactory.getLogger(ClientServiceImpl.class);
 
@@ -58,6 +56,9 @@ public class ClientServiceImpl implements ClientService {
         ScheduleWrapper schedule = new ScheduleWrapper();
         schedule.setArrivalSchedule(scheduleService.getStationArriveSchedule(station, date));
         schedule.setDepartureSchedule(scheduleService.getStationDepartSchedule(station, date));
+        LOG.info(String.format("Loaded arrival trains: %s and departure trains: %s",
+                schedule.getArrivalSchedule(),
+                schedule.getDepartureSchedule()));
         return schedule;
     }
 
@@ -68,6 +69,7 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public List<RailWayStation> getAllStations(){
+        LOG.info("All stations loaded");
         return stationService.getAll();
     }
 
@@ -92,7 +94,7 @@ public class ClientServiceImpl implements ClientService {
                 || station2.trim().isEmpty()
                 || date == null
                 || date.trim().isEmpty()){
-            LOG.info("Not valid search data.");
+            LOG.error("Not valid search data.");
             throw new ClientServiceException("Not valid search data.");
         }
         RailWayStation departStation = stationService.getStationByTitle(station1);
@@ -183,6 +185,10 @@ public class ClientServiceImpl implements ClientService {
             }
             if(isCurrentRoute) currentRoute.add(routePoint);
         }
+        LOG.info(String.format("Route from %s to %s of train (id = %s) loaded",
+                station1,
+                station2,
+                trainId));
         return currentRoute;
     }
 
@@ -268,7 +274,7 @@ public class ClientServiceImpl implements ClientService {
                 || departDay.isEmpty()
                 || departStation.isEmpty()
                 || ticketPrice == 0){
-            LOG.info("Invalid payment data.");
+            LOG.error("Invalid payment data.");
             throw new ClientServiceException("Invalid payment data.");
         }
 
@@ -287,23 +293,23 @@ public class ClientServiceImpl implements ClientService {
                         depDay,
                         new Passenger(firstName, lastName, parseDate(date))) != null
                 ){
-            LOG.info("Passengers registered already.");
+            LOG.error("Passengers registered already.");
             throw new ClientServiceRegisteredPassengerException("Passengers registered already.");
         }
 
         if(depDay.isBefore(LocalDate.now())){
-            LOG.info("Invalid departure date.");
+            LOG.error("Invalid departure date.");
             throw new ClientServiceTimeOutException("Invalid departure date.");
         }
 
         if(depDay == LocalDate.now()
                 && MINUTES.between(depTime, LocalTime.now()) < 10){
-            LOG.info("To depart train less 10 minutes.");
+            LOG.error("To depart train less 10 minutes.");
             throw new ClientServiceTimeOutException("To depart train less 10 min.");
         }
 
         if(freeSeats == 0) {
-            LOG.info("No free seats.");
+            LOG.error("No free seats.");
             throw new ClientServiceNoSeatsException("No free seats.");
         }
 
@@ -322,6 +328,7 @@ public class ClientServiceImpl implements ClientService {
             passenger.setTicket(ticket);
             passengerService.create(passenger);
         }
+        LOG.info(String.format("Passenger %s %s %s registered", firstName, lastName, date));
     }
 
     /**

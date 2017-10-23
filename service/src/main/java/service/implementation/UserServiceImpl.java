@@ -55,12 +55,13 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
                 || user.getLogin().isEmpty()
                 || user.getPassword() == null
                 || user.getPassword().isEmpty()){
-            LOG.info("Invalid registration data.");
+            LOG.error("Invalid registration data.");
             throw new UserServiceException("Invalid registration data.");
         } else if(getUserByLogin(user.getLogin()) != null
-                || getEmployeeByFirstNameAndLastName(user.getFirstName(), user.getLastName()) == null){
-            LOG.info("Employee or login exist already.");
-            throw new UserServiceException("Employee or login exist already.");
+                || getEmployeeByFirstNameAndLastName(user.getFirstName(), user.getLastName()) == null
+                || getUserByEmail(user.getEmail().toLowerCase()) != null ){
+            LOG.error("Employee exist already.");
+            throw new UserServiceException("Employee exist already.");
         } else {
             LOG.info(String.format("Created user: '%s'.", user));
             userDao.create(user);
@@ -81,7 +82,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
 
         User user = userDao.getUserByLoginAndPassword(login, password);
         if(user == null) {
-            LOG.info("Not valid login or password.");
+            LOG.error("Not valid login or password.");
             throw new UserServiceException("Not valid login or password.");
         }
         return user;
@@ -99,6 +100,19 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     public Employee getEmployeeByFirstNameAndLastName(String firstName, String lastName){
         LOG.info(String.format("Employee: '%s' '%s' loaded.", firstName, lastName));
         return userDao.getEmployeeByFirstNameAndLastName(firstName, lastName);
+    }
+
+    /**
+     * Gets user by email.
+     *
+     * @param email String.
+     * @return User.
+     */
+    @Transactional
+    @Override
+    public User getUserByEmail(String email){
+        LOG.info(String.format("Loaded user with email: '%s'.", email));
+        return userDao.getUserByEmail(email);
     }
 
     public void setUserDao(UserDao userDao) {

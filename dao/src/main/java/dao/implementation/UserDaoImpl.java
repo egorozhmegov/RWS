@@ -68,6 +68,23 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     }
 
     /**
+     * Gets user by email.
+     *
+     * @param email String.
+     * @return User.
+     */
+    @Override
+    public User getUserByEmail(String email){
+        try{
+            String sqlQuery = String.format("SELECT u FROM User AS u WHERE u.email = '%s'", email);
+            Query query = getEntityManager().createQuery(sqlQuery);
+            return (User) query.getSingleResult();
+        } catch (Throwable e){
+            return null;
+        }
+    }
+
+    /**
      * Get employee by Fist Name and Last Name.
      *
      * @param firstName String

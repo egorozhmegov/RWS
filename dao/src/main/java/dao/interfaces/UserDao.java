@@ -24,6 +24,14 @@ public interface UserDao extends GenericDao<User> {
     User getUserByLogin(String login);
 
     /**
+     * Gets user by email.
+     *
+     * @param email String.
+     * @return User.
+     */
+    User getUserByEmail(String email);
+
+    /**
      * Get employee by Fist Name and Last Name.
      *
      * @param firstName String

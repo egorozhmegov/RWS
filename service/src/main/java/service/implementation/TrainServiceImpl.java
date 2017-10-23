@@ -76,7 +76,9 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     @Transactional
     @Override
     public String getDepartureTime(long trainId, long stationId, int weekDay) {
-        LOG.info("Departure time loaded.");
+        LOG.info(String.format("Departure time of train (id = %s) on station (id = %s) loaded.",
+                trainId,
+                stationId));
         return trainDao.getDepartureTime(trainId, stationId, weekDay);
     }
 
@@ -92,7 +94,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 || train.getNumber() == null
                 || train.getNumber().trim().isEmpty()
                 || trainDao.getTrainByNumber(train.getNumber()) != null) {
-            LOG.info("Invalid add train data.");
+            LOG.error("Invalid add train data.");
             throw new TrainServiceException("Not valid train data");
         }
         trainDao.create(train);
@@ -114,9 +116,9 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                         .getTitle())
                 .getId();
         scheduleService.deleteByStationAndTrainId(stationId, trainId);
-        LOG.info(String
-                .format("Schedule with train (id = '%s') and station (id = '%s') deleted.",
-                        trainId, stationId));
+        LOG.info(String.format("Schedule with train (id = '%s') and station (id = '%s') deleted.",
+                trainId,
+                stationId));
     }
 
     /**
@@ -174,7 +176,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 && !listDepartDays[0].trim().isEmpty())
                 && (arrivalTime == null || departureTime == null))
                 ) {
-            LOG.info("Invalid add route point data.");
+            LOG.error("Invalid add route point data.");
             throw new TrainServiceException("Invalid add route point data.");
         }
 
@@ -183,7 +185,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
 
         if (!isValidArriveAndDepartTimes(routePoint)
                 && !isPossibleAddRoutePoint(routePoint, route)) {
-            LOG.info("Departure time is before arrival time.");
+            LOG.error("Departure time is before arrival time.");
             throw new TrainServiceException("Departure time is before arrival time.");
         }
 

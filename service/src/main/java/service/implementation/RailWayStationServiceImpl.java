@@ -19,8 +19,6 @@ import service.interfaces.ScheduleService;
 @Service("railWayStationServiceImpl")
 public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation> implements RailWayStationService {
 
-
-
     private final static Logger LOG = LoggerFactory.getLogger(RailWayStationServiceImpl.class);
 
     @Autowired
@@ -74,7 +72,7 @@ public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation
         if(station == null
                 || station.getTitle().trim().isEmpty()
                 || isExistStation(station.getTitle())){
-            LOG.info("Invalid add train data.");
+            LOG.error("Invalid add train data.");
             throw new RailWayStationServiceException("Invalid add train data.");
         }
         railWayStationDao.create(station);

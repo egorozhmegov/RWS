@@ -51,7 +51,6 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
                                                   long departStationId,
                                                   long arriveStationId,
                                                   LocalDate departDate){
-        LOG.info("List of registered passengers loaded.");
 
         List<Passenger> registeredPassengers = new ArrayList<>();
 
@@ -76,6 +75,7 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
             }
         }
 
+        LOG.info("List of registered passengers loaded.");
         return registeredPassengers;
     }
 
@@ -122,6 +122,7 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
     @Override
     public void deleteByTrainId(long trainId){
         passengerDao.deleteByTrainId(trainId);
+        LOG.info(String.format("Passenger with train (id = %s) deleted", trainId));
     }
 
     /**
@@ -132,6 +133,7 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
     @Override
     public void deleteByStationId(long stationId){
         passengerDao.deleteByStationId(stationId);
+        LOG.info(String.format("Passenger with station (id = %s) deleted", stationId));
     }
 
     @Override

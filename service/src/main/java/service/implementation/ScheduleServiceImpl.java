@@ -39,8 +39,8 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     @Transactional
     @Override
     public void deleteByTrainId(long trainId){
-        LOG.info(String.format("Schedule with trains (id = '%s') deleted", trainId));
         scheduleDao.deleteByTrainId(trainId);
+        LOG.info(String.format("Schedule with trains (id = '%s') deleted", trainId));
     }
 
     /**
@@ -51,8 +51,8 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     @Transactional
     @Override
     public void deleteByStationId(long stationId){
-        LOG.info(String.format("Schedule with stations (id = '%s') deleted", stationId));
         scheduleDao.deleteByStationId(stationId);
+        LOG.info(String.format("Schedule with stations (id = '%s') deleted", stationId));
     }
 
     /**
@@ -66,7 +66,9 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     @Transactional
     @Override
     public List<Schedule> searchTrain(long departStationId, long arriveStationId, int departDay){
-        LOG.info("Schedule by two stations loaded.");
+        LOG.info(String.format("Train from station (id = %s) to station (id = %s) loaded.",
+                departStationId,
+                arriveStationId));
         return scheduleDao.searchTrain(departStationId, arriveStationId, departDay);
     }
 
@@ -82,7 +84,7 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     public List<Schedule> getStationDepartSchedule(String station, String date){
         long stationId = railWayStationService.getStationByTitle(station).getId();
         int weekDay = clientService.dayOfWeek(clientService.parseDate(date));
-        LOG.info("Departure station schedule loaded.");
+        LOG.info(String.format("Departure schedule of station %s in %s loaded.", station, date));
         return scheduleDao.getStationDepartSchedule(stationId, weekDay);
     }
 
@@ -98,7 +100,7 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     public List<Schedule> getStationArriveSchedule(String station, String date){
         long stationId = railWayStationService.getStationByTitle(station).getId();
         int weekDay = clientService.dayOfWeek(clientService.parseDate(date));
-        LOG.info("Arrival station schedule loaded.");
+        LOG.info(String.format("Arrival schedule of station %s in %s loaded.", station, date));
         return scheduleDao.getStationArriveSchedule(stationId, weekDay);
     }
 
@@ -111,8 +113,9 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     @Transactional
     @Override
     public void deleteByStationAndTrainId(long stationId, long trainId) {
-        LOG.info(String
-                .format("Schedule with stations (id = '%s') and trains (id = '%s') deleted", stationId, trainId));
+        LOG.info(String.format("Schedule with stations (id = '%s') and trains (id = '%s') deleted",
+                stationId,
+                trainId));
         scheduleDao.deleteByStationAndTrainId(stationId, trainId);
     }
 

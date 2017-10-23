@@ -12,6 +12,7 @@ import service.interfaces.UserRoleService;
  */
 @Service("userRoleServiceImpl")
 public class UserRoleServiceImpl extends GenericServiceImpl<UserRole> implements UserRoleService {
+
     @Autowired
     private UserRoleDao userRoleDao;
 

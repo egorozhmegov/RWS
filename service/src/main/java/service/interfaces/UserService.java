@@ -24,9 +24,17 @@ public interface UserService extends GenericService<User> {
     User getUserByLogin(String login);
 
     /**
+     * Gets user by email.
+     *
+     * @param email String.
+     * @return User.
+     */
+    User getUserByEmail(String email);
+
+    /**
      * Check login and password of user.
      *
-     * @param authentication
+     * @param authentication User
      * @return User
      */
     User authenticate(User authentication) throws UserServiceException;

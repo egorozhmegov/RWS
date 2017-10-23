@@ -13,6 +13,7 @@ import service.interfaces.TicketService;
  */
 @Service("ticketServiceImpl")
 public class TicketServiceImpl extends GenericServiceImpl<Ticket> implements TicketService {
+
     @Autowired
     private TicketDao ticketDao;
 
