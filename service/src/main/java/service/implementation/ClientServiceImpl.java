@@ -5,7 +5,6 @@ import exception.ClientServiceNoSeatsException;
 import exception.ClientServiceRegisteredPassengerException;
 import exception.ClientServiceTimeOutException;
 import model.*;
-import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.*;
 import util.ScheduleWrapper;
+import util.StationWrapper;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -47,18 +47,17 @@ public class ClientServiceImpl implements ClientService {
     /**
      *Get two lists: first - list of arrival schedule, second - list of departure schedule.
      *
-     * @param station String
-     * @param date String
+     * @param stationWrapper StationWrapper
      * @return ScheduleWrapper
      */
     @Override
-    public ScheduleWrapper getSchedule(String station, String date){
+    public ScheduleWrapper getSchedule(StationWrapper stationWrapper){
         ScheduleWrapper schedule = new ScheduleWrapper();
-        schedule.setArrivalSchedule(scheduleService.getStationArriveSchedule(station, date));
-        schedule.setDepartureSchedule(scheduleService.getStationDepartSchedule(station, date));
         LOG.info(String.format("Loaded arrival trains: %s and departure trains: %s",
                 schedule.getArrivalSchedule(),
                 schedule.getDepartureSchedule()));
+        schedule.setArrivalSchedule(scheduleService.getArriveSchedule(stationWrapper));
+        schedule.setDepartureSchedule(scheduleService.getDepartSchedule(stationWrapper));
         return schedule;
     }
 

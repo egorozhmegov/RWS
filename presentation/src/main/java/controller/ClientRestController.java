@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 public class ClientRestController {
 
+<<<<<<< HEAD
     @Autowired
     public ClientRestController(ClientService clientService) {
         this.clientService = clientService;
@@ -32,6 +33,15 @@ public class ClientRestController {
      *
      * @return ResponseEntity<List<RailWayStation>>
      */
+=======
+    private ClientService clientService;
+
+    @Autowired
+    public ClientRestController(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
+>>>>>>> clientapp
     @RequestMapping(value="/client/getStations",method = RequestMethod.GET)
     public ResponseEntity<List<RailWayStation>> getStations() {
         return new ResponseEntity<>(clientService.getAllStations(), HttpStatus.OK);
@@ -46,9 +56,8 @@ public class ClientRestController {
      */
     @RequestMapping(value="/client/getSchedule",method = RequestMethod.POST)
     public ResponseEntity<ScheduleWrapper> getSchedule(@RequestBody StationWrapper station) {
-        System.out.println(station);
-        ScheduleWrapper schedule = clientService.getSchedule("", "");
+        ScheduleWrapper schedule = clientService.getSchedule(station);
         return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
-    
+
 }

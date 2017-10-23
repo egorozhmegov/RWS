@@ -1,10 +1,10 @@
 package service.implementation;
 
-import dao.interfaces.UserDao;
 import dao.interfaces.GenericDao;
+import dao.interfaces.UserDao;
+import exception.UserServiceException;
 import model.Employee;
 import model.User;
-import exception.UserServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

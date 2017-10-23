@@ -1,7 +1,7 @@
 package service.interfaces;
 
 import model.Schedule;
-
+import util.StationWrapper;
 import java.util.List;
 
 /**
@@ -36,20 +36,18 @@ public interface ScheduleService extends GenericService<Schedule> {
     /**
      * Get station departure schedule.
      *
-     * @param station String
-     * @param date String
+     * @param stationWrapper StationWrapper
      * @return List<Schedule>
      */
-    List<Schedule> getStationDepartSchedule(String station, String date);
+    List<Schedule> getDepartSchedule(StationWrapper stationWrapper);
 
     /**
      * Get station arrival schedule.
      *
-     * @param station String
-     * @param date String
+     * @param stationWrapper StationWrapper
      * @return List<Schedule>
      */
-    List<Schedule> getStationArriveSchedule(String station, String date);
+    List<Schedule> getArriveSchedule(StationWrapper stationWrapper);
 
     /**
      * Delete all schedules by train id and station id.

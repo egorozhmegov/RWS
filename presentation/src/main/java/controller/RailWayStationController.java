@@ -33,6 +33,7 @@ public class RailWayStationController {
         return new ResponseEntity<>(railWayStationService.getAll(), HttpStatus.OK);
     }
 
+
     /**
      * Add new station.
      *
@@ -41,10 +42,10 @@ public class RailWayStationController {
      */
     @RequestMapping(value="/addStation",method = RequestMethod.POST)
     public ResponseEntity<RailWayStation> addStation(@RequestBody RailWayStation station) {
-        try{
+        try {
             railWayStationService.addStation(station);
             return new ResponseEntity<>(station, HttpStatus.CREATED);
-        } catch (RailWayStationServiceException e){
+        } catch (RailWayStationServiceException e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
@@ -55,8 +56,8 @@ public class RailWayStationController {
      * @param id long
      * @return ResponseEntity<Long>
      */
-    @RequestMapping(value="/deleteStation/{id}",method = RequestMethod.DELETE)
-    public ResponseEntity<Long> deleteStation(@PathVariable("id") long id){
+    @RequestMapping(value = "/deleteStation/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Long> deleteStation(@PathVariable("id") long id) {
         railWayStationService.removeStation(id);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
