@@ -2,8 +2,11 @@ package service.implementation;
 
 import model.Schedule;
 import org.junit.Test;
+
 import java.time.LocalDate;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class ClientServiceImplTest {
 

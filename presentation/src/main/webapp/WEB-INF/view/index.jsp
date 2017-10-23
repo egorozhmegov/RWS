@@ -22,29 +22,29 @@
 <body>
 
 <div class="row">
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 
-    <div class="col-md-6">
+    <div class="col-md-8">
         <h1>RWS</h1>
     </div>
 
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 </div>
 
 <div class="row">
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 
-    <div class="col-md-6">
+    <div class="col-md-8">
         <h2>Search train</h2>
     </div>
 
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 </div>
 
 <div class="row">
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="bootstrap-iso">
             <div class="row">
                 <form method="post" action="/client/search">
@@ -68,6 +68,8 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-2"></div>
 </div>
 
 <div class="row">
@@ -75,29 +77,29 @@
 </div>
 
 <div class="row">
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 
-    <div class="col-md-6">
+    <div class="col-md-8">
         <h2>Show schedule</h2>
     </div>
 
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 </div>
 
 <div class="row">
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="bootstrap-iso">
             <div class="row">
                 <form method="post" action="/client/schedule">
                     <div class="col-md-3 col-sm-3 col-xs-6">
                         <select class="form-control" id="station" name="station" required>
-                                <c:forEach items="${stations}" var="item">
-                                    <option>
+                            <c:forEach items="${stations}" var="item">
+                                <option>
                                         ${item.title}
-                                    </option>
-                                </c:forEach>
+                                </option>
+                            </c:forEach>
                         </select>
                     </div>
 
@@ -112,6 +114,8 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-2"></div>
 </div>
 
 

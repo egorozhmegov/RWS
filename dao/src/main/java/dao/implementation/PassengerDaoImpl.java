@@ -2,6 +2,7 @@ package dao.implementation;
 
 import dao.interfaces.PassengerDao;
 import model.Passenger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;

@@ -1,6 +1,7 @@
 package dao.interfaces;
 
 import model.Passenger;
+
 import java.time.LocalDate;
 import java.util.List;
 

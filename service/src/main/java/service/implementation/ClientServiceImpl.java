@@ -4,14 +4,11 @@ import exception.ClientServiceException;
 import exception.ClientServiceNoSeatsException;
 import exception.ClientServiceRegisteredPassengerException;
 import exception.ClientServiceTimeOutException;
-import model.RailWayStation;
-import model.Schedule;
-import model.Ticket;
-import model.Train;
-import model.Passenger;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.*;
@@ -19,14 +16,18 @@ import util.ScheduleWrapper;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import static java.time.temporal.ChronoUnit.MINUTES;
 import java.util.*;
+
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 /**
  *Client service implementation.
  */
 @Service("clientService")
 public class ClientServiceImpl implements ClientService {
+
+
+
 
     private final static Logger LOG = LoggerFactory.getLogger(ClientServiceImpl.class);
 
@@ -145,6 +146,13 @@ public class ClientServiceImpl implements ClientService {
                 Integer.parseInt(date.split("/")[1]));
     }
 
+    /**
+     * Parse string date with dash to LocalDate format.
+     *
+     * @param date String
+     * @return LocalDate
+     */
+    @Override
     public LocalDate parseDashDate(String date){
         return LocalDate.of(
                 Integer.parseInt(date.split("-")[0]),

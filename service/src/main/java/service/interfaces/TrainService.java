@@ -1,5 +1,6 @@
 package service.interfaces;
 
+import model.RailWayStation;
 import model.Schedule;
 import model.Train;
 
@@ -55,4 +56,45 @@ public interface TrainService extends GenericService<Train> {
      * @param routePoint Schedule.
      */
     void removeRoutePoint(Schedule routePoint);
+
+    /**
+     * Find station in route.
+     *
+     * @param route   List<Schedule>
+     * @param station RailWayStation
+     * @return boolean
+     */
+    boolean isExistRoutePoint(List<Schedule> route, RailWayStation station);
+
+    /**
+     * Create list of train periods. The days have number format.
+     * <p>
+     * 1 - Sunday
+     * 2 - Monday
+     * 3 - Tuesday
+     * 4 - Wednesday
+     * 5 - Thursday
+     * 6 - Friday
+     * 7 - Saturday
+     *
+     * @param period String[]
+     * @return List<Integer>
+     */
+    List<Integer> parseToIntTrainPeriod(String[] period);
+
+    /**
+     * Check on valid arrival and departure time in new route.
+     *
+     * @param rootPoint Schedule
+     * @return boolean
+     */
+    boolean isValidArriveAndDepartTimes(Schedule rootPoint);
+
+    /**
+     * Check possibility add route point. Added route point must have time between times
+     * nearest points or before time the first point or after time the last point.
+     *
+     * @return boolean
+     */
+    boolean isPossibleAddRoutePoint(Schedule routePoint, List<Schedule> route);
 }

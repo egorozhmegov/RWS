@@ -56,7 +56,7 @@
     <div class="col-md-5">
 
         <div class="col-xs-6">
-            <h2>Payment</h2>
+            <h2>Passenger</h2>
 
             <form method="post" action="/client/payment">
                 <div class="form-group">

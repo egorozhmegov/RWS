@@ -1,6 +1,7 @@
 package dao.implementation;
 
 import dao.interfaces.GenericDao;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;

@@ -1,6 +1,5 @@
 package service.interfaces;
 
-import model.Passenger;
 import model.RailWayStation;
 import model.Schedule;
 import util.ScheduleWrapper;
@@ -125,5 +124,15 @@ public interface ClientService {
      * @return ScheduleWrapper
      */
     ScheduleWrapper getSchedule(String station, String date);
+
+
+    /**
+     * Parse string date with dash to LocalDate format.
+     *
+     * @param date String
+     * @return LocalDate
+     */
+    LocalDate parseDashDate(String date);
+
 
 }

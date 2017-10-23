@@ -1,7 +1,6 @@
 package service.interfaces;
 
 import model.Schedule;
-import model.Train;
 
 import java.util.List;
 

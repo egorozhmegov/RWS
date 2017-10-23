@@ -11,12 +11,24 @@ import service.interfaces.PassengerService;
 
 import java.util.List;
 
+/**
+ *Passenger rest controller.
+ */
 @RestController
 public class PassengerController {
 
     @Autowired
-    private PassengerService passengerService;
+    public PassengerController(PassengerService passengerService) {
+        this.passengerService = passengerService;
+    }
 
+    private final PassengerService passengerService;
+
+    /**
+     * Get all stations.
+     *
+     * @return ResponseEntity<List<Passenger>>
+     */
     @RequestMapping(value="/getPassengers",method = RequestMethod.GET)
     public ResponseEntity<List<Passenger>> getStations() {
         return new ResponseEntity<>(passengerService.getAll(), HttpStatus.OK);

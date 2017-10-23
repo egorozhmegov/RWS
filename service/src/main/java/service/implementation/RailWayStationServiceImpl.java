@@ -19,6 +19,8 @@ import service.interfaces.ScheduleService;
 @Service("railWayStationServiceImpl")
 public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation> implements RailWayStationService {
 
+
+
     private final static Logger LOG = LoggerFactory.getLogger(RailWayStationServiceImpl.class);
 
     @Autowired

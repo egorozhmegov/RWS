@@ -3,7 +3,6 @@ package service.implementation;
 import dao.interfaces.GenericDao;
 import dao.interfaces.ScheduleDao;
 import model.Schedule;
-import model.Train;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
