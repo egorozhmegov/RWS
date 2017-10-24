@@ -18,30 +18,19 @@ import java.util.List;
  * Rest client controller. Use for bind client API with server. Data transport by json.
  */
 @RestController
-public class ClientRestController {
+public class ClientController {
+    private ClientService clientService;
 
-<<<<<<< HEAD
     @Autowired
-    public ClientRestController(ClientService clientService) {
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
-
-    private final ClientService clientService;
 
     /**
      * Get all stations.
      *
      * @return ResponseEntity<List<RailWayStation>>
      */
-=======
-    private ClientService clientService;
-
-    @Autowired
-    public ClientRestController(ClientService clientService) {
-        this.clientService = clientService;
-    }
-
->>>>>>> clientapp
     @RequestMapping(value="/client/getStations",method = RequestMethod.GET)
     public ResponseEntity<List<RailWayStation>> getStations() {
         return new ResponseEntity<>(clientService.getAllStations(), HttpStatus.OK);
