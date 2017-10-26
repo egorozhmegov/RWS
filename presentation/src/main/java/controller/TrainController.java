@@ -1,6 +1,6 @@
 package controller;
 
-import exception.TrainServiceException;
+import exception.TrainNumberServiceException;
 import model.Schedule;
 import model.Train;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class TrainController {
         try{
             trainService.addTrain(train);
             return new ResponseEntity<>(train, HttpStatus.CREATED);
-        } catch (TrainServiceException e){
+        } catch (TrainNumberServiceException e){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
@@ -84,7 +84,7 @@ public class TrainController {
         try{
             trainService.addRoutePoint(routePoint);
             return new ResponseEntity<>(routePoint, HttpStatus.CREATED);
-        } catch (TrainServiceException e){
+        } catch (TrainNumberServiceException e){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }

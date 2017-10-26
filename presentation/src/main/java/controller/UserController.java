@@ -1,7 +1,6 @@
 package controller;
 
-import exception.ServiceException;
-import exception.UserServiceException;
+import exception.*;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +45,7 @@ public class UserController {
             Cookie cookie = new Cookie(COOKIE, "dF6p");
             response.addCookie(cookie);
             return new ResponseEntity<>(authUser, HttpStatus.OK);
-        } catch (UserServiceException e){
+        } catch (UserServiceInvalidDataException e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
@@ -74,16 +73,21 @@ public class UserController {
      * Register new employee.
      *
      * @param user User
-     * @param response HttpServletResponse
      * @return ResponseEntity<Boolean>
      */
     @RequestMapping(value="/registerEmployee", method = RequestMethod.POST)
-    public ResponseEntity<Boolean> registerEmployee(@RequestBody User user, HttpServletResponse response) {
+    public ResponseEntity<User> registerEmployee(@RequestBody User user) {
         try{
             userService.registerUser(user);
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        } catch (ServiceException ex){
-            return new ResponseEntity<>(false, HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
+        } catch (UserServiceInvalidDataException ex){
+            return new ResponseEntity<>(user, HttpStatus.BAD_REQUEST);
+        } catch (UserServiceLoginException ex){
+            return new ResponseEntity<>(user, HttpStatus.FOUND);
+        } catch (UserServiceEmailException ex){
+            return new ResponseEntity<>(user, HttpStatus.FORBIDDEN);
+        } catch (UserServiceEmployeeException ex){
+            return new ResponseEntity<>(user, HttpStatus.NO_CONTENT);
         }
     }
 }

@@ -2,7 +2,7 @@ package service.implementation;
 
 import dao.interfaces.GenericDao;
 import dao.interfaces.TrainDao;
-import exception.TrainServiceException;
+import exception.TrainNumberServiceException;
 import model.RailWayStation;
 import model.Schedule;
 import model.Train;
@@ -93,9 +93,11 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         if (train.getTariff() == 0
                 || train.getNumber() == null
                 || train.getNumber().trim().isEmpty()
-                || trainDao.getTrainByNumber(train.getNumber()) != null) {
-            LOG.error("Invalid add train data.");
-            throw new TrainServiceException("Not valid train data");
+                ) {
+            LOG.error(String.format("Train number: %s is invalid.", train.getNumber()));
+            throw new TrainNumberServiceException(String.format("Train number: %s is invalid.", train.getNumber()));
+        } else if(trainDao.getTrainByNumber(train.getNumber()) != null){
+            //TODO
         }
         trainDao.create(train);
         LOG.info(String.format("Created train: '%s'", train));
@@ -177,7 +179,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 && (arrivalTime == null || departureTime == null))
                 ) {
             LOG.error("Invalid add route point data.");
-            throw new TrainServiceException("Invalid add route point data.");
+            throw new TrainNumberServiceException("Invalid add route point data.");
         }
 
         List<Integer> intListDepartDays = parseToIntTrainPeriod(listDepartDays);
@@ -186,7 +188,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         if (!isValidArriveAndDepartTimes(routePoint)
                 && !isPossibleAddRoutePoint(routePoint, route)) {
             LOG.error("Departure time is before arrival time.");
-            throw new TrainServiceException("Departure time is before arrival time.");
+            throw new TrainNumberServiceException("Departure time is before arrival time.");
         }
 
         List<Integer> days
