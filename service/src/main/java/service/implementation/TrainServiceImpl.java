@@ -2,6 +2,7 @@ package service.implementation;
 
 import dao.interfaces.GenericDao;
 import dao.interfaces.TrainDao;
+import exception.TrainExistServiceException;
 import exception.TrainNumberServiceException;
 import model.RailWayStation;
 import model.Schedule;
@@ -94,13 +95,16 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 || train.getNumber() == null
                 || train.getNumber().trim().isEmpty()
                 ) {
-            LOG.error(String.format("Train number: %s is invalid.", train.getNumber()));
+            LOG.error(String.format("Train number: %s is invalid or tariff = 0.", train.getNumber()));
             throw new TrainNumberServiceException(String.format("Train number: %s is invalid.", train.getNumber()));
-        } else if(trainDao.getTrainByNumber(train.getNumber()) != null){
-            //TODO
+        } else if (trainDao.getTrainByNumber(train.getNumber()) != null) {
+            LOG.error(String.format("Train: %s is exist already.", train));
+            throw new TrainExistServiceException(String.format("Train: %s is exist already.", train));
+        } else {
+            trainDao.create(train);
+            LOG.info(String.format("Created train: '%s'", train));
         }
-        trainDao.create(train);
-        LOG.info(String.format("Created train: '%s'", train));
+
     }
 
     /**
