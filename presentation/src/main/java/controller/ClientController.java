@@ -33,6 +33,7 @@ public class ClientController {
      */
     @RequestMapping(value="/client/getStations",method = RequestMethod.GET)
     public ResponseEntity<List<RailWayStation>> getStations() {
+        System.out.println("here");
         return new ResponseEntity<>(clientService.getAllStations(), HttpStatus.OK);
     }
 
