@@ -1,5 +1,6 @@
 package controller;
 
+import exception.ClientServiceNoTrainsException;
 import model.RailWayStation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,8 +49,7 @@ public class ClientController {
      */
     @RequestMapping(value="/client/getSchedule",method = RequestMethod.POST)
     public ResponseEntity<ScheduleWrapper> getSchedule(@RequestBody StationWrapper station) {
-        ScheduleWrapper schedule = clientService.getSchedule(station);
-        return new ResponseEntity<>(schedule, HttpStatus.OK);
+        return new ResponseEntity<>(clientService.getSchedule(station), HttpStatus.OK);
     }
 
     /**
@@ -61,8 +61,11 @@ public class ClientController {
      */
     @RequestMapping(value="/client/searchTrains",method = RequestMethod.POST)
     public ResponseEntity<List<TrainWrapper>> searchTrains(@RequestBody SearchTrain request) {
-        System.out.println(request);
-        return new ResponseEntity<>(clientService.searchTrains(request), HttpStatus.OK);
+        try{
+            return new ResponseEntity<>(clientService.searchTrains(request), HttpStatus.OK);
+        } catch(ClientServiceNoTrainsException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }

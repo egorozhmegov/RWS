@@ -1,9 +1,6 @@
 package service.implementation;
 
-import exception.ClientServiceException;
-import exception.ClientServiceNoSeatsException;
-import exception.ClientServiceRegisteredPassengerException;
-import exception.ClientServiceTimeOutException;
+import exception.*;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,6 +113,14 @@ public class ClientServiceImpl implements ClientService {
             trainWrapper.setSeats(getFreeSeats(departDate, train.getId(), stationFrom, stationTo));
 
             searchResult.add(trainWrapper);
+        }
+
+        if(searchResult.size() == 0){
+            LOG.error(String.format("No trains for request: %s - %s on date %s",
+                    stationFrom, stationTo, departDate));
+            throw new ClientServiceNoTrainsException(
+                    String.format("No trains for request: %s - %s on date %s",
+                            stationFrom, stationTo, departDate));
         }
 
         LOG.info(String.format("Search trains: '%s'", searchResult));
