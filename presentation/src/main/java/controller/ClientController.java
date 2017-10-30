@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import service.interfaces.ClientService;
 import util.ScheduleWrapper;
+import util.SearchTrain;
 import util.StationWrapper;
+import util.TrainWrapper;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ import java.util.List;
  */
 @RestController
 public class ClientController {
+
     private ClientService clientService;
 
     @Autowired
@@ -33,7 +36,6 @@ public class ClientController {
      */
     @RequestMapping(value="/client/getStations",method = RequestMethod.GET)
     public ResponseEntity<List<RailWayStation>> getStations() {
-        System.out.println("here");
         return new ResponseEntity<>(clientService.getAllStations(), HttpStatus.OK);
     }
 
@@ -48,6 +50,19 @@ public class ClientController {
     public ResponseEntity<ScheduleWrapper> getSchedule(@RequestBody StationWrapper station) {
         ScheduleWrapper schedule = clientService.getSchedule(station);
         return new ResponseEntity<>(schedule, HttpStatus.OK);
+    }
+
+    /**
+     * Get all trains by selected date and stations,
+     * Using search request wrapper.
+     *
+     * @param request SearchTrain
+     * @return ResponseEntity<List<TrainWrapper>>
+     */
+    @RequestMapping(value="/client/searchTrains",method = RequestMethod.POST)
+    public ResponseEntity<List<TrainWrapper>> searchTrains(@RequestBody SearchTrain request) {
+        System.out.println(request);
+        return new ResponseEntity<>(clientService.searchTrains(request), HttpStatus.OK);
     }
 
 }

@@ -8,12 +8,13 @@ import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.*;
 import util.ScheduleWrapper;
+import util.SearchTrain;
 import util.StationWrapper;
+import util.TrainWrapper;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -75,40 +76,46 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Get list of schedule trains by two station and date.
      *
-     * @param station1 String
-     * @param station2 String
-     * @param date String
-     * @return Map
+     * @param request SearchTrain
+     * @return List<TrainWrapper>
      */
     @Override
-    public Map<Schedule, Integer> searchTrains(String station1,
-                                               String station2,
-                                               String date){
+    public List<TrainWrapper> searchTrains(SearchTrain request){
 
-        Map<Schedule, Integer> searchResult = new HashMap<>();
+        List<TrainWrapper> searchResult = new ArrayList<>();
+        String stationFrom = request.getStationFrom().getTitle();
+        String stationTo = request.getStationTo().getTitle();
+        LocalDate departDate = request.getDepartDate();
 
-        if(station1 == null
-                || station1.trim().isEmpty()
-                || station2 == null
-                || station2.trim().isEmpty()
-                || date == null
-                || date.trim().isEmpty()){
+        if(stationFrom == null
+                || stationFrom.trim().isEmpty()
+                || stationTo == null
+                || stationTo.trim().isEmpty()
+                || departDate == null){
             LOG.error("Not valid search data.");
             throw new ClientServiceException("Not valid search data.");
         }
-        RailWayStation departStation = stationService.getStationByTitle(station1);
-        RailWayStation arriveStation = stationService.getStationByTitle(station2);
-        int day = dayOfWeek(parseDate(date));
+
+        RailWayStation departStation = stationService.getStationByTitle(stationFrom);
+        RailWayStation arriveStation = stationService.getStationByTitle(stationTo);
+        int day = dayOfWeek(departDate);
 
         List<Schedule> trains = scheduleService
                 .searchTrain(departStation.getId(), arriveStation.getId(), day);
 
         for(Schedule schedule: trains){
+            TrainWrapper trainWrapper = new TrainWrapper();
+
             Train train = schedule.getTrain();
-            searchResult.put(schedule,
-                    getTicketPrice(train.getId(),
-                            getCurrentRoute(train.getId(),
-                                    station1, station2)));
+            List<Schedule> route = getCurrentRoute(train.getId(), stationFrom, stationTo);
+
+            trainWrapper.setTrain(train);
+            trainWrapper.setDepartTime(schedule.getDepartureTime());
+            trainWrapper.setPrice(getTicketPrice(train.getId(),route));
+            trainWrapper.setRoute(route);
+            trainWrapper.setSeats(getFreeSeats(departDate, train.getId(), stationFrom, stationTo));
+
+            searchResult.add(trainWrapper);
         }
 
         LOG.info(String.format("Search trains: '%s'", searchResult));
@@ -208,35 +215,26 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Get count of free seats in train.
      *
-     * @param month String
-     * @param day String
-     * @param year String
+     * @param departDate LocalDate
      * @param id long
      * @param station1 String
      * @param station2 String
      * @return int
      */
     @Override
-    public int getFreeSeats(String month,
-                     String day,
-                     String year,
+    public int getFreeSeats(LocalDate departDate,
                      long id,
                      String station1,
                      String station2) {
         long departStationId = stationService.getStationByTitle(station1).getId();
         long arriveStationId = stationService.getStationByTitle(station2).getId();
-        LocalDate departDay = LocalDate
-                    .of(Integer.parseInt(year),
-                        Integer.parseInt(month),
-                        Integer.parseInt(day));
-
 
         return Train.SEATS - passengerService
                 .getRegisteredPassengers(
                     id,
                     departStationId,
                     arriveStationId,
-                    departDay)
+                    departDate)
                 .size();
     }
 

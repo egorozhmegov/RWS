@@ -2,6 +2,9 @@ package util;
 
 import java.time.LocalDate;
 
+/**
+ * Class station wrapper. Use for view data on client api.
+ */
 public class StationWrapper {
 
     private String station;

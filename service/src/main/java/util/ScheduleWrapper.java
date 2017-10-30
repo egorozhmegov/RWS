@@ -4,6 +4,9 @@ import model.Schedule;
 
 import java.util.List;
 
+/**
+ * Class schedule wrapper. Use for view data on client api.
+ */
 public class ScheduleWrapper {
 
     private List<Schedule> arrivalSchedule;

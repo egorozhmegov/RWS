@@ -24,7 +24,8 @@ public class AuthenticateFilter implements Filter {
                 && !Objects.equals(req.getRequestURI(),"/logoutEmployee")
                 && !Objects.equals(req.getRequestURI(),"/registerEmployee")
                 && !Objects.equals(req.getRequestURI(),"/client/getStations")
-                && !Objects.equals(req.getRequestURI(),"/client/getSchedule")){
+                && !Objects.equals(req.getRequestURI(),"/client/getSchedule")
+                && !Objects.equals(req.getRequestURI(),"/client/searchTrains")){
 
             Cookie[] cookies = req.getCookies();
             boolean foundCookie = false;

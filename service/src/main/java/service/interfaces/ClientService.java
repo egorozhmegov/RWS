@@ -3,7 +3,9 @@ package service.interfaces;
 import model.RailWayStation;
 import model.Schedule;
 import util.ScheduleWrapper;
+import util.SearchTrain;
 import util.StationWrapper;
+import util.TrainWrapper;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,12 +19,10 @@ public interface ClientService {
     /**
      * Get list of schedule trains by two station and date.
      *
-     * @param station1 String
-     * @param station2 String
-     * @param date     String
-     * @return Map<Schedule,Integer>
+     * @param request SearchTrain
+     * @return List<TrainWrapper>
      */
-    Map<Schedule, Integer> searchTrains(String station1, String station2, String date);
+    List<TrainWrapper> searchTrains(SearchTrain request);
 
     /**
      * Get train route for client request.
@@ -46,17 +46,13 @@ public interface ClientService {
     /**
      * Get count of free seats in train.
      *
-     * @param month    String
-     * @param day      String
-     * @param year     String
-     * @param id       long
+     * @param departDate LocalDate
+     * @param id long
      * @param station1 String
      * @param station2 String
      * @return int
      */
-    int getFreeSeats(String month,
-                     String day,
-                     String year,
+    int getFreeSeats(LocalDate departDate,
                      long id,
                      String station1,
                      String station2);
