@@ -20,7 +20,7 @@ import java.util.*;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 /**
- *Client service implementation.
+ * Client service implementation.
  */
 @Service("clientService")
 public class ClientServiceImpl implements ClientService {
@@ -43,13 +43,13 @@ public class ClientServiceImpl implements ClientService {
     private TicketService ticketService;
 
     /**
-     *Get two lists: first - list of arrival schedule, second - list of departure schedule.
+     * Get two lists: first - list of arrival schedule, second - list of departure schedule.
      *
      * @param stationWrapper StationWrapper
      * @return ScheduleWrapper
      */
     @Override
-    public ScheduleWrapper getSchedule(StationWrapper stationWrapper){
+    public ScheduleWrapper getSchedule(StationWrapper stationWrapper) {
         ScheduleWrapper schedule = new ScheduleWrapper();
         LOG.info(String.format("Loaded arrival trains: %s and departure trains: %s",
                 schedule.getArrivalSchedule(),
@@ -65,7 +65,7 @@ public class ClientServiceImpl implements ClientService {
      * @return List<RailWayStation>.
      */
     @Override
-    public List<RailWayStation> getAllStations(){
+    public List<RailWayStation> getAllStations() {
         LOG.info("All stations loaded");
         return stationService.getAll();
     }
@@ -77,18 +77,19 @@ public class ClientServiceImpl implements ClientService {
      * @return List<TrainWrapper>
      */
     @Override
-    public List<TrainWrapper> searchTrains(SearchTrain request){
+    public List<TrainWrapper> searchTrains(SearchTrain request) {
 
         List<TrainWrapper> searchResult = new ArrayList<>();
+
         String stationFrom = request.getStationFrom().getTitle();
         String stationTo = request.getStationTo().getTitle();
         LocalDate departDate = request.getDepartDate();
 
-        if(stationFrom == null
+        if (stationFrom == null
                 || stationFrom.trim().isEmpty()
                 || stationTo == null
                 || stationTo.trim().isEmpty()
-                || departDate == null){
+                || departDate == null) {
             LOG.error("Not valid search data.");
             throw new ClientServiceException("Not valid search data.");
         }
@@ -100,7 +101,7 @@ public class ClientServiceImpl implements ClientService {
         List<Schedule> trains = scheduleService
                 .searchTrain(departStation.getId(), arriveStation.getId(), day);
 
-        for(Schedule schedule: trains){
+        for (Schedule schedule : trains) {
             TrainWrapper trainWrapper = new TrainWrapper();
 
             Train train = schedule.getTrain();
@@ -108,14 +109,14 @@ public class ClientServiceImpl implements ClientService {
 
             trainWrapper.setTrain(train);
             trainWrapper.setDepartTime(schedule.getDepartureTime());
-            trainWrapper.setPrice(getTicketPrice(train.getId(),route));
+            trainWrapper.setPrice(getTicketPrice(train.getId(), route));
             trainWrapper.setRoute(route);
             trainWrapper.setSeats(getFreeSeats(departDate, train.getId(), stationFrom, stationTo));
 
             searchResult.add(trainWrapper);
         }
 
-        if(searchResult.size() == 0){
+        if (searchResult.size() == 0) {
             LOG.error(String.format("No trains for request: %s - %s on date %s",
                     stationFrom, stationTo, departDate));
             throw new ClientServiceNoTrainsException(
@@ -129,20 +130,20 @@ public class ClientServiceImpl implements ClientService {
 
 
     /**
-     *Get number of week day.
+     * Get number of week day.
      *
      * @param date LocalDate
      * @return int
      */
     @Override
-    public int dayOfWeek(LocalDate date){
+    public int dayOfWeek(LocalDate date) {
         return TrainServiceImpl
                 .WEEK_DAYS
                 .indexOf(date
                         .getDayOfWeek()
                         .toString()
                         .toLowerCase()
-                        .substring(0,3)) + 1;
+                        .substring(0, 3)) + 1;
     }
 
     /**
@@ -152,7 +153,7 @@ public class ClientServiceImpl implements ClientService {
      * @return LocalDate
      */
     @Override
-    public LocalDate parseDate(String date){
+    public LocalDate parseDate(String date) {
         return LocalDate.of(
                 Integer.parseInt(date.split("/")[2]),
                 Integer.parseInt(date.split("/")[0]),
@@ -166,7 +167,7 @@ public class ClientServiceImpl implements ClientService {
      * @return LocalDate
      */
     @Override
-    public LocalDate parseDashDate(String date){
+    public LocalDate parseDashDate(String date) {
         return LocalDate.of(
                 Integer.parseInt(date.split("-")[0]),
                 Integer.parseInt(date.split("-")[1]),
@@ -176,7 +177,7 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Get train route for client request.
      *
-     * @param trainId long
+     * @param trainId  long
      * @param station1 String
      * @param station2 String
      * @return List<Schedule>
@@ -187,14 +188,14 @@ public class ClientServiceImpl implements ClientService {
         List<Schedule> currentRoute = new ArrayList<>();
 
         boolean isCurrentRoute = false;
-        for (Schedule routePoint: trainRoute){
-            if(Objects.equals(routePoint.getStation().getTitle(), station1)){
+        for (Schedule routePoint : trainRoute) {
+            if (Objects.equals(routePoint.getStation().getTitle(), station1)) {
                 isCurrentRoute = true;
-            } else if(Objects.equals(routePoint.getStation().getTitle(), station2)){
+            } else if (Objects.equals(routePoint.getStation().getTitle(), station2)) {
                 currentRoute.add(routePoint);
                 isCurrentRoute = false;
             }
-            if(isCurrentRoute) currentRoute.add(routePoint);
+            if (isCurrentRoute) currentRoute.add(routePoint);
         }
         LOG.info(String.format("Route from %s to %s of train (id = %s) loaded",
                 station1,
@@ -207,39 +208,39 @@ public class ClientServiceImpl implements ClientService {
      * Get ticket price.
      *
      * @param currentRoute List<Schedule>.
-     * @param trainId long.
+     * @param trainId      long.
      * @return int.
      */
     @Override
     public int getTicketPrice(long trainId, List<Schedule> currentRoute) {
         return trainService
                 .read(trainId)
-                .getTariff()*currentRoute.size();
+                .getTariff() * currentRoute.size();
     }
 
     /**
      * Get count of free seats in train.
      *
      * @param departDate LocalDate
-     * @param id long
-     * @param station1 String
-     * @param station2 String
+     * @param id         long
+     * @param station1   String
+     * @param station2   String
      * @return int
      */
     @Override
     public int getFreeSeats(LocalDate departDate,
-                     long id,
-                     String station1,
-                     String station2) {
+                            long id,
+                            String station1,
+                            String station2) {
         long departStationId = stationService.getStationByTitle(station1).getId();
         long arriveStationId = stationService.getStationByTitle(station2).getId();
 
         return Train.SEATS - passengerService
                 .getRegisteredPassengers(
-                    id,
-                    departStationId,
-                    arriveStationId,
-                    departDate)
+                        id,
+                        departStationId,
+                        arriveStationId,
+                        departDate)
                 .size();
     }
 
@@ -247,15 +248,15 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Buy ticket and return registered passenger with ticket.
      *
-     * @param firstName String
-     * @param lastName String
-     * @param date String
-     * @param trainId long
-     * @param departDay String
-     * @param freeSeats String
+     * @param firstName     String
+     * @param lastName      String
+     * @param date          String
+     * @param trainId       long
+     * @param departDay     String
+     * @param freeSeats     String
      * @param departStation String
      * @param arriveStation String
-     * @param ticketPrice int
+     * @param ticketPrice   int
      */
     @Transactional
     @Override
@@ -269,13 +270,13 @@ public class ClientServiceImpl implements ClientService {
             String departStation,
             String arriveStation,
             int ticketPrice) {
-        if(firstName.isEmpty()
+        if (firstName.isEmpty()
                 || lastName.isEmpty()
                 || date.isEmpty()
                 || trainId == 0
                 || departDay.isEmpty()
                 || departStation.isEmpty()
-                || ticketPrice == 0){
+                || ticketPrice == 0) {
             LOG.error("Invalid payment data.");
             throw new ClientServiceException("Invalid payment data.");
         }
@@ -287,30 +288,30 @@ public class ClientServiceImpl implements ClientService {
         LocalDate depDay = parseDashDate(departDay);
         LocalTime depTime = currentRoute.get(0).getDepartureTime();
 
-        if(passengerService
+        if (passengerService
                 .getRegisteredPassenger(
                         trainId,
                         departStationId,
                         arriveStationId,
                         depDay,
                         new Passenger(firstName, lastName, parseDate(date))) != null
-                ){
+                ) {
             LOG.error("Passengers registered already.");
             throw new ClientServiceRegisteredPassengerException("Passengers registered already.");
         }
 
-        if(depDay.isBefore(LocalDate.now())){
+        if (depDay.isBefore(LocalDate.now())) {
             LOG.error("Invalid departure date.");
             throw new ClientServiceTimeOutException("Invalid departure date.");
         }
 
-        if(depDay == LocalDate.now()
-                && MINUTES.between(depTime, LocalTime.now()) < 10){
+        if (depDay == LocalDate.now()
+                && MINUTES.between(depTime, LocalTime.now()) < 10) {
             LOG.error("To depart train less 10 minutes.");
             throw new ClientServiceTimeOutException("To depart train less 10 min.");
         }
 
-        if(freeSeats == 0) {
+        if (freeSeats == 0) {
             LOG.error("No free seats.");
             throw new ClientServiceNoSeatsException("No free seats.");
         }
@@ -318,9 +319,9 @@ public class ClientServiceImpl implements ClientService {
         Ticket ticket = new Ticket(ticketPrice);
         ticketService.create(ticket);
 
-        for(Schedule schedule: currentRoute){
+        for (Schedule schedule : currentRoute) {
             Passenger passenger = new Passenger(firstName, lastName, parseDate(date));
-            if(schedule.getArrivalDay() == 0){
+            if (schedule.getArrivalDay() == 0) {
                 passenger.setTrainDate(depDay);
             } else {
                 passenger.setTrainDate(getRoutePointDate(depDay, schedule));
@@ -336,12 +337,12 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Get route point date.
      *
-     * @param departDay LocalDate
+     * @param departDay  LocalDate
      * @param routePoint Schedule
      * @return LocalDate
      */
     @Override
-    public LocalDate getRoutePointDate (LocalDate departDay, Schedule routePoint){
+    public LocalDate getRoutePointDate(LocalDate departDay, Schedule routePoint) {
         int depYear = departDay.getYear();
         int depMonth = departDay.getMonthValue();
         int depDay = departDay.getDayOfMonth();
@@ -349,7 +350,7 @@ public class ClientServiceImpl implements ClientService {
                 .WEEK_DAYS.indexOf(departDay
                         .getDayOfWeek()
                         .toString()
-                        .substring(0,3)
+                        .substring(0, 3)
                         .toLowerCase()) + 1;
 
         int routePointDay;
@@ -357,10 +358,10 @@ public class ClientServiceImpl implements ClientService {
         int routePointYear = depYear;
 
         int diffDays = routePoint.getArrivalDay() - weekDay;
-        if(diffDays < 0) routePointDay = 7 + diffDays + depDay;
+        if (diffDays < 0) routePointDay = 7 + diffDays + depDay;
         else routePointDay = depDay + diffDays;
 
-        if(routePointDay > 31
+        if (routePointDay > 31
                 && (routePointMonth == 1
                 || routePointMonth == 2
                 || routePointMonth == 3
@@ -368,23 +369,23 @@ public class ClientServiceImpl implements ClientService {
                 || routePointMonth == 7
                 || routePointMonth == 8
                 || routePointMonth == 10
-                || routePointMonth == 12)){
+                || routePointMonth == 12)) {
             routePointDay -= 31;
             routePointMonth++;
-        } else if(routePointDay > 30
+        } else if (routePointDay > 30
                 && (routePointMonth == 4
                 || routePointMonth == 6
                 || routePointMonth == 9
-                || routePointMonth == 11)){
+                || routePointMonth == 11)) {
             routePointDay -= 30;
             routePointMonth++;
-        } else if(routePointDay > 28
-                && (routePointMonth == 2)){
+        } else if (routePointDay > 28
+                && (routePointMonth == 2)) {
             routePointDay -= 28;
             routePointMonth++;
         }
 
-        if(routePointMonth > 12){
+        if (routePointMonth > 12) {
             routePointMonth -= 12;
             routePointYear++;
         }

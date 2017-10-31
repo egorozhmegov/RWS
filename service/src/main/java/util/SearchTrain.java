@@ -38,4 +38,13 @@ public class SearchTrain {
     public void setDepartDate(LocalDate departDate) {
         this.departDate = departDate;
     }
+
+    @Override
+    public String toString() {
+        return "SearchTrain{" +
+                "stationFrom=" + stationFrom +
+                ", stationTo=" + stationTo +
+                ", departDate=" + departDate +
+                '}';
+    }
 }
