@@ -1,5 +1,6 @@
 package controller;
 
+import exception.ClientServiceException;
 import exception.ClientServiceNoTrainsException;
 import model.RailWayStation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,8 @@ public class ClientController {
             return new ResponseEntity<>(clientService.searchTrains(request), HttpStatus.OK);
         } catch(ClientServiceNoTrainsException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (ClientServiceException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
