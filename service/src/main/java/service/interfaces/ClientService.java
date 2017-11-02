@@ -3,13 +3,12 @@ package service.interfaces;
 import model.RailWayStation;
 import model.Schedule;
 import util.ScheduleWrapper;
-import util.SearchTrain;
 import util.StationWrapper;
+import util.TicketData;
 import util.TrainWrapper;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Client service interface.
@@ -19,10 +18,10 @@ public interface ClientService {
     /**
      * Get list of schedule trains by two station and date.
      *
-     * @param request SearchTrain
+     * @param request TrainWrapper
      * @return List<TrainWrapper>
      */
-    List<TrainWrapper> searchTrains(SearchTrain request);
+    List<TrainWrapper> searchTrains(TrainWrapper request);
 
     /**
      * Get train route for client request.
@@ -60,27 +59,9 @@ public interface ClientService {
     /**
      * Buy ticket and return registered passenger with ticket.
      *
-     * @param firstName String
-     * @param lastName String
-     * @param date String
-     * @param trainId long
-     * @param departDay String
-     * @param freeSeats String
-     * @param departStation String
-     * @param arriveStation String
-     * @param ticketPrice int
+     * @param ticketData TicketData
      */
-    void buyTicket(
-            String firstName,
-            String lastName,
-            String date,
-            long trainId,
-            String departDay,
-            int freeSeats,
-            String departStation,
-            String arriveStation,
-            int ticketPrice
-    );
+    void buyTicket(TicketData ticketData);
 
     /**
      * Get route point date.

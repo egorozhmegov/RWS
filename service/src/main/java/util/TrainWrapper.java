@@ -1,8 +1,10 @@
 package util;
 
+import model.RailWayStation;
 import model.Schedule;
 import model.Train;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -13,7 +15,17 @@ public class TrainWrapper {
 
     private Train train;
 
+    private RailWayStation stationFrom;
+
+    private RailWayStation stationTo;
+
     private LocalTime departTime;
+
+    private LocalTime arriveTime;
+
+    private LocalDate departDate;
+
+    private LocalDate arriveDate;
 
     private int price;
 
@@ -61,11 +73,56 @@ public class TrainWrapper {
         this.route = route;
     }
 
+    public RailWayStation getStationFrom() {
+        return stationFrom;
+    }
+
+    public void setStationFrom(RailWayStation stationFrom) {
+        this.stationFrom = stationFrom;
+    }
+
+    public RailWayStation getStationTo() {
+        return stationTo;
+    }
+
+    public void setStationTo(RailWayStation stationTo) {
+        this.stationTo = stationTo;
+    }
+
+    public LocalDate getDepartDate() {
+        return departDate;
+    }
+
+    public void setDepartDate(LocalDate departDate) {
+        this.departDate = departDate;
+    }
+
+    public LocalDate getArriveDate() {
+        return arriveDate;
+    }
+
+    public void setArriveDate(LocalDate arriveDate) {
+        this.arriveDate = arriveDate;
+    }
+
+    public LocalTime getArriveTime() {
+        return arriveTime;
+    }
+
+    public void setArriveTime(LocalTime arriveTime) {
+        this.arriveTime = arriveTime;
+    }
+
     @Override
     public String toString() {
         return "TrainWrapper{" +
                 "train=" + train +
+                ", stationFrom=" + stationFrom +
+                ", stationTo=" + stationTo +
                 ", departTime=" + departTime +
+                ", arriveTime=" + arriveTime +
+                ", departDate=" + departDate +
+                ", arriveDate=" + arriveDate +
                 ", price=" + price +
                 ", seats=" + seats +
                 ", route=" + route +

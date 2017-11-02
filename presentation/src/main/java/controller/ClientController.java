@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import service.interfaces.ClientService;
-import util.ScheduleWrapper;
-import util.SearchTrain;
-import util.StationWrapper;
-import util.TrainWrapper;
+import util.*;
 
 import java.util.List;
 
@@ -61,7 +58,7 @@ public class ClientController {
      * @return ResponseEntity<List<TrainWrapper>>
      */
     @RequestMapping(value="/client/searchTrains",method = RequestMethod.POST)
-    public ResponseEntity<List<TrainWrapper>> searchTrains(@RequestBody SearchTrain request) {
+    public ResponseEntity<List<TrainWrapper>> searchTrains(@RequestBody TrainWrapper request) {
         try{
             return new ResponseEntity<>(clientService.searchTrains(request), HttpStatus.OK);
         } catch(ClientServiceNoTrainsException e){
@@ -69,6 +66,12 @@ public class ClientController {
         } catch (ClientServiceException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(value="/client/payment",method = RequestMethod.POST)
+    public ResponseEntity<TicketData> searchTrains(@RequestBody TicketData ticketData) {
+        clientService.buyTicket(ticketData);
+        return new ResponseEntity<>(ticketData, HttpStatus.OK);
     }
 
 }

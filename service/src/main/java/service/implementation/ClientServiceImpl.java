@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.*;
 import util.ScheduleWrapper;
-import util.SearchTrain;
 import util.StationWrapper;
+import util.TicketData;
 import util.TrainWrapper;
 
 import java.time.LocalDate;
@@ -73,11 +73,11 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Get list of schedule trains by two station and date.
      *
-     * @param request SearchTrain
+     * @param request TrainWrapper
      * @return List<TrainWrapper>
      */
     @Override
-    public List<TrainWrapper> searchTrains(SearchTrain request) {
+    public List<TrainWrapper> searchTrains(TrainWrapper request) {
 
         List<TrainWrapper> searchResult = new ArrayList<>();
 
@@ -106,9 +106,13 @@ public class ClientServiceImpl implements ClientService {
 
             Train train = schedule.getTrain();
             List<Schedule> route = getCurrentRoute(train.getId(), stationFrom, stationTo);
+            LocalTime arriveTime = route.get(route.size() - 1).getArrivalTime();
 
             trainWrapper.setTrain(train);
             trainWrapper.setDepartTime(schedule.getDepartureTime());
+            trainWrapper.setArriveTime(arriveTime);
+            trainWrapper.setDepartDate(departDate);
+            trainWrapper.setArriveDate(getRoutePointDate(departDate, route.get(route.size() - 1)));
             trainWrapper.setPrice(getTicketPrice(train.getId(), route));
             trainWrapper.setRoute(route);
             trainWrapper.setSeats(getFreeSeats(departDate, train.getId(), stationFrom, stationTo));
@@ -248,33 +252,22 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Buy ticket and return registered passenger with ticket.
      *
-     * @param firstName     String
-     * @param lastName      String
-     * @param date          String
-     * @param trainId       long
-     * @param departDay     String
-     * @param freeSeats     String
-     * @param departStation String
-     * @param arriveStation String
-     * @param ticketPrice   int
+     * @param ticketData TicketData
      */
     @Transactional
     @Override
-    public void buyTicket(
-            String firstName,
-            String lastName,
-            String date,
-            long trainId,
-            String departDay,
-            int freeSeats,
-            String departStation,
-            String arriveStation,
-            int ticketPrice) {
-        if (firstName.isEmpty()
-                || lastName.isEmpty()
-                || date.isEmpty()
+    public void buyTicket(TicketData ticketData) {
+        long trainId = ticketData.getTrainWrapper().getTrain().getId();
+        LocalDate departDate = ticketData.getTrainWrapper().getDepartDate();
+        String departStation = ticketData.getTrainWrapper().getStationFrom().getTitle();
+        String arriveStation = ticketData.getTrainWrapper().getStationTo().getTitle();
+        int ticketPrice = ticketData.getTrainWrapper().getPrice();
+
+        if (ticketData.getPassenger().getFirstName().isEmpty()
+                || ticketData.getPassenger().getLastName().isEmpty()
+                || ticketData.getPassenger().getBirthday() == null
                 || trainId == 0
-                || departDay.isEmpty()
+                || departDate == null
                 || departStation.isEmpty()
                 || ticketPrice == 0) {
             LOG.error("Invalid payment data.");
@@ -285,33 +278,33 @@ public class ClientServiceImpl implements ClientService {
         long departStationId = stationService.getStationByTitle(departStation).getId();
         long arriveStationId = stationService.getStationByTitle(arriveStation).getId();
 
-        LocalDate depDay = parseDashDate(departDay);
         LocalTime depTime = currentRoute.get(0).getDepartureTime();
 
-        if (passengerService
-                .getRegisteredPassenger(
-                        trainId,
-                        departStationId,
-                        arriveStationId,
-                        depDay,
-                        new Passenger(firstName, lastName, parseDate(date))) != null
+        if (passengerService.getRegisteredPassenger(
+                trainId,
+                departStationId,
+                arriveStationId,
+                departDate,
+                ticketData.getPassenger()) != null
                 ) {
-            LOG.error("Passengers registered already.");
-            throw new ClientServiceRegisteredPassengerException("Passengers registered already.");
+            LOG.error(String.format("Passengers: %s registered already.", ticketData.getPassenger()));
+            throw new ClientServiceRegisteredPassengerException(String
+                    .format("Passengers: %s registered already.", ticketData.getPassenger()));
         }
 
-        if (depDay.isBefore(LocalDate.now())) {
-            LOG.error("Invalid departure date.");
-            throw new ClientServiceTimeOutException("Invalid departure date.");
+        if (departDate.isBefore(LocalDate.now())) {
+            LOG.error(String.format("Date: %s is before now.", departDate));
+            throw new ClientServiceTimeOutException(String.format("Date: %s is before now.", departDate));
         }
 
-        if (depDay == LocalDate.now()
-                && MINUTES.between(depTime, LocalTime.now()) < 10) {
-            LOG.error("To depart train less 10 minutes.");
-            throw new ClientServiceTimeOutException("To depart train less 10 min.");
+        if (departDate == LocalDate.now()
+                && (MINUTES.between(depTime, LocalTime.now()) < 10
+                || depTime.isBefore(LocalTime.now()))) {
+            LOG.error(String.format("Time: %s is invalid.", depTime));
+            throw new ClientServiceTimeOutException(String.format("Time: %s is invalid.", depTime));
         }
 
-        if (freeSeats == 0) {
+        if (ticketData.getTrainWrapper().getSeats() == 0) {
             LOG.error("No free seats.");
             throw new ClientServiceNoSeatsException("No free seats.");
         }
@@ -320,18 +313,18 @@ public class ClientServiceImpl implements ClientService {
         ticketService.create(ticket);
 
         for (Schedule schedule : currentRoute) {
-            Passenger passenger = new Passenger(firstName, lastName, parseDate(date));
+            Passenger passenger = ticketData.getPassenger();
             if (schedule.getArrivalDay() == 0) {
-                passenger.setTrainDate(depDay);
+                passenger.setTrainDate(departDate);
             } else {
-                passenger.setTrainDate(getRoutePointDate(depDay, schedule));
+                passenger.setTrainDate(getRoutePointDate(departDate, schedule));
             }
             passenger.setTrain(trainService.read(trainId));
             passenger.setStation(schedule.getStation());
             passenger.setTicket(ticket);
             passengerService.create(passenger);
         }
-        LOG.info(String.format("Passenger %s %s %s registered", firstName, lastName, date));
+        LOG.info(String.format("Passenger %s registered", ticketData.getPassenger()));
     }
 
     /**
