@@ -1,5 +1,8 @@
 package service.implementation;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BarcodeQRCode;
+import com.itextpdf.text.pdf.PdfWriter;
 import exception.*;
 import model.*;
 import org.slf4j.Logger;
@@ -8,14 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.*;
-import util.ScheduleWrapper;
-import util.StationWrapper;
-import util.TicketData;
-import util.TrainWrapper;
+import util.*;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.List;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 
@@ -109,6 +112,8 @@ public class ClientServiceImpl implements ClientService {
             LocalTime arriveTime = route.get(route.size() - 1).getArrivalTime();
 
             trainWrapper.setTrain(train);
+            trainWrapper.setStationFrom(request.getStationFrom());
+            trainWrapper.setStationTo(request.getStationTo());
             trainWrapper.setDepartTime(schedule.getDepartureTime());
             trainWrapper.setArriveTime(arriveTime);
             trainWrapper.setDepartDate(departDate);
@@ -313,7 +318,11 @@ public class ClientServiceImpl implements ClientService {
         ticketService.create(ticket);
 
         for (Schedule schedule : currentRoute) {
-            Passenger passenger = ticketData.getPassenger();
+            Passenger passenger = new Passenger(
+                    ticketData.getPassenger().getFirstName(),
+                    ticketData.getPassenger().getLastName(),
+                    ticketData.getPassenger().getBirthday()
+            );
             if (schedule.getArrivalDay() == 0) {
                 passenger.setTrainDate(departDate);
             } else {
@@ -324,7 +333,68 @@ public class ClientServiceImpl implements ClientService {
             passenger.setTicket(ticket);
             passengerService.create(passenger);
         }
+
+        long ticketNumber = passengerService.getRegisteredPassenger(
+                trainId,
+                departStationId,
+                arriveStationId,
+                departDate,
+                ticketData.getPassenger()).getId();
+
+        sendTicketOnEmail(ticketNumber, ticketData);
         LOG.info(String.format("Passenger %s registered", ticketData.getPassenger()));
+    }
+
+    /**
+     * Send ticket on email of user client.
+     *
+     * @param ticketData TicketData
+     */
+    public void sendTicketOnEmail(long ticketNumber, TicketData ticketData){
+        createQRCode(ticketNumber, ticketData);
+
+        EmailSender sender = new EmailSender(ticketNumber);
+        sender.send(
+                "RWS TICKET SUPPORT",
+                "Thank you for using the services of our company!",
+                ticketData.getUserEmail()
+        );
+    }
+
+    public void createQRCode(long ticketNumber, TicketData ticketData) {
+        try{
+            Document ticket = new Document(new Rectangle(160, 160));
+            PdfWriter writer = PdfWriter
+                    .getInstance(ticket, new FileOutputStream(String
+                            .format("C:/Users/Egor/Desktop/RWS/service/src/main/java/util/tickets/ticket_%s.pdf", ticketNumber)));
+            ticket.open();
+
+            ticket.add(new Paragraph(String.format("Ticket № %s", ticketNumber)));
+
+            String train = String.format("Train: %s", ticketData.getTrainWrapper().getTrain().getNumber());
+            String direction = String.format("Direction: %s - %s",
+                    ticketData.getTrainWrapper().getStationFrom().getTitle(),
+                    ticketData.getTrainWrapper().getStationTo().getTitle());
+            String departure = String.format("Departure: %s  %s",
+                    ticketData.getTrainWrapper().getDepartDate().toString(),
+                    ticketData.getTrainWrapper().getDepartTime().toString());
+            String arrival = String.format("Arrival: %s  %s",
+                    ticketData.getTrainWrapper().getArriveDate().toString(),
+                    ticketData.getTrainWrapper().getArriveTime().toString());
+            String lastName = String.format("Last Name: %s", ticketData.getPassenger().getLastName());
+            String firstName = String.format("First Name: %s", ticketData.getPassenger().getFirstName());
+            String birthday = String.format("Birthday: %s", ticketData.getPassenger().getBirthday());
+            String finala = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
+                    train, direction, departure, arrival, firstName, lastName, birthday);
+
+            BarcodeQRCode ticketCode = new BarcodeQRCode(finala, 1, 1, null);
+            Image qrImage = ticketCode.getImage();
+            ticket.add(qrImage);
+
+            ticket.close();
+        } catch(FileNotFoundException | DocumentException e){
+            LOG.error(e.getMessage());
+        }
     }
 
     /**
