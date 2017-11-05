@@ -9,11 +9,15 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class of email sender. Use gmail smtp server.
  */
 public class EmailSender {
+
+    private final static Logger LOG = LoggerFactory.getLogger(EmailSender.class);
 
     private String username;
     private String password;
@@ -35,11 +39,9 @@ public class EmailSender {
     /**
      * Send email method. Takes mail message parameters and send message.
      *
-     * @param subject String
-     * @param text String
      * @param toEmail String
      */
-    public void send(String subject, String text, String toEmail){
+    public void send(String toEmail){
         Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
@@ -50,17 +52,17 @@ public class EmailSender {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(this.username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject(subject);
+            message.setSubject("RWS TICKET SUPPORT");
 
             BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setText(text);
+            messageBodyPart.setText("Thank you for using the services of our company!");
 
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
             messageBodyPart = new MimeBodyPart();
 
             String filename = String.format(
-                    "C:/Users/Egor/Desktop/RWS/service/src/main/java/util/tickets/ticket_%s.pdf", trainNumber
+                    "C:/Users/Ozhmegov/Desktop/t-systems/RWS/service/src/main/java/util/tickets/ticket_%s.pdf", trainNumber
             );
             DataSource source = new FileDataSource(filename);
             messageBodyPart.setDataHandler(new DataHandler(source));
@@ -70,7 +72,9 @@ public class EmailSender {
             message.setContent(multipart);
 
             Transport.send(message);
+            LOG.info(String.format("Message sended on email: %s", toEmail));
         } catch (MessagingException e) {
+            LOG.error(String.format("Message not sended on email: %s", toEmail));
             throw new RuntimeException(e);
         }
     }

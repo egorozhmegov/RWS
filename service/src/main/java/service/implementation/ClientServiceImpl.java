@@ -302,7 +302,7 @@ public class ClientServiceImpl implements ClientService {
             throw new ClientServiceTimeOutException(String.format("Date: %s is before now.", departDate));
         }
 
-        if (departDate == LocalDate.now()
+        if (Objects.equals(departDate, LocalDate.now())
                 && (MINUTES.between(depTime, LocalTime.now()) < 10
                 || depTime.isBefore(LocalTime.now()))) {
             LOG.error(String.format("Time: %s is invalid.", depTime));
@@ -341,7 +341,15 @@ public class ClientServiceImpl implements ClientService {
                 departDate,
                 ticketData.getPassenger()).getId();
 
-        sendTicketOnEmail(ticketNumber, ticketData);
+        createQRCode(ticketNumber, ticketData);
+
+        try{
+            sendTicketOnEmail(ticketNumber, ticketData);
+        } catch (Exception e) {
+            LOG.error(String.format("Message not send on email: %s", ticketData.getUserEmail()));
+            throw new ClientServiceEmailException(String
+                    .format("Message not send on email: %s", ticketData.getUserEmail()));
+        }
         LOG.info(String.format("Passenger %s registered", ticketData.getPassenger()));
     }
 
@@ -351,14 +359,8 @@ public class ClientServiceImpl implements ClientService {
      * @param ticketData TicketData
      */
     public void sendTicketOnEmail(long ticketNumber, TicketData ticketData){
-        createQRCode(ticketNumber, ticketData);
-
         EmailSender sender = new EmailSender(ticketNumber);
-        sender.send(
-                "RWS TICKET SUPPORT",
-                "Thank you for using the services of our company!",
-                ticketData.getUserEmail()
-        );
+        sender.send(ticketData.getUserEmail());
     }
 
     public void createQRCode(long ticketNumber, TicketData ticketData) {
@@ -366,7 +368,7 @@ public class ClientServiceImpl implements ClientService {
             Document ticket = new Document(new Rectangle(160, 160));
             PdfWriter writer = PdfWriter
                     .getInstance(ticket, new FileOutputStream(String
-                            .format("C:/Users/Egor/Desktop/RWS/service/src/main/java/util/tickets/ticket_%s.pdf", ticketNumber)));
+                            .format("C:/Users/Ozhmegov/Desktop/t-systems/RWS/service/src/main/java/util/tickets/ticket_%s.pdf", ticketNumber)));
             ticket.open();
 
             ticket.add(new Paragraph(String.format("Ticket № %s", ticketNumber)));

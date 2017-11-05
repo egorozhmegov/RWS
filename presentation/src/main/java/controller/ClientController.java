@@ -1,7 +1,6 @@
 package controller;
 
-import exception.ClientServiceException;
-import exception.ClientServiceNoTrainsException;
+import exception.*;
 import model.RailWayStation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,10 +67,26 @@ public class ClientController {
         }
     }
 
+    /**
+     * Send ticket data on in service method.
+     *
+     * @param ticketData TicketData
+     * @return ResponseEntity<TicketData>
+     */
     @RequestMapping(value="/client/payment",method = RequestMethod.POST)
-    public ResponseEntity<TicketData> searchTrains(@RequestBody TicketData ticketData) {
-        clientService.buyTicket(ticketData);
-        return new ResponseEntity<>(ticketData, HttpStatus.OK);
+    public ResponseEntity<TicketData> payment(@RequestBody TicketData ticketData) {
+        try{
+            clientService.buyTicket(ticketData);
+            return new ResponseEntity<>(ticketData, HttpStatus.OK);
+        } catch (ClientServiceException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (ClientServiceRegisteredPassengerException e){
+            return new ResponseEntity<>(HttpStatus.FOUND);
+        } catch (ClientServiceTimeOutException | ClientServiceNoSeatsException e){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } catch (ClientServiceEmailException e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
