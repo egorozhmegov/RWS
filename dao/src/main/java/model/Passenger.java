@@ -1,7 +1,5 @@
 package model;
 
-import util.LocalDateAttributeConverter;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -27,11 +25,9 @@ public class Passenger implements Serializable {
     private String lastName;
 
     @Column(name = "BIRTH_DAY")
-    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate birthday;
 
     @Column(name = "TRAIN_DATE")
-    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate trainDate;
 
     @ManyToOne
