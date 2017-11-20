@@ -11,6 +11,9 @@ import util.TimetableMessage;
 
 import javax.jms.*;
 
+/**
+ * Timetable service implementation.
+ */
 @Service("timetableServiceImpl")
 public class TimetableServiceImpl implements TimetableService {
 
@@ -19,6 +22,7 @@ public class TimetableServiceImpl implements TimetableService {
     private static final String URL = ActiveMQConnection.DEFAULT_BROKER_URL;
 
     private static final String SUBJECT = "RWS_QUEUE";
+
     /**
      * Send message on table.
      *
@@ -40,6 +44,7 @@ public class TimetableServiceImpl implements TimetableService {
                     .createTextMessage(
                             message.getStation() + " " +
                                     message.getTrain() + " " +
+                                    message.getStatus() + " " +
                                     message.getMessage()
                     );
             producer.send(mes);
