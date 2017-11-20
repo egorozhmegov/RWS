@@ -42,9 +42,9 @@ public class TimetableServiceImpl implements TimetableService {
             MessageProducer producer = session.createProducer(destination);
             TextMessage mes = session
                     .createTextMessage(
-                            message.getStation() + " " +
-                                    message.getTrain() + " " +
-                                    message.getStatus() + " " +
+                            message.getStation() + "-" +
+                                    message.getTrain() + "-" +
+                                    message.getStatus() + "-" +
                                     message.getMessage()
                     );
             producer.send(mes);
