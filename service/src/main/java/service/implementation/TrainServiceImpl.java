@@ -29,7 +29,7 @@ import java.util.Objects;
 @Service("trainServiceImpl")
 public class TrainServiceImpl extends GenericServiceImpl<Train> implements TrainService {
 
-    private final static Logger LOG = LoggerFactory.getLogger(TrainServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(TrainServiceImpl.class);
 
     public final static List<String> WEEK_DAYS = Arrays
             .asList("sun",
@@ -62,7 +62,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     @Transactional
     @Override
     public List<Schedule> getRoute(long trainId) {
-        LOG.info(String.format("Route of train (id = '%s') loaded.", trainId));
+        logger.info("Route of train (id = '{}') loaded.", trainId);
         return trainDao.getRoute(trainId);
     }
 
@@ -77,9 +77,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     @Transactional
     @Override
     public String getDepartureTime(long trainId, long stationId, int weekDay) {
-        LOG.info(String.format("Departure time of train (id = %s) on station (id = %s) loaded.",
-                trainId,
-                stationId));
+        logger.info("Departure time of train (id = {}) on station (id = {}) loaded.", trainId, stationId);
         return trainDao.getDepartureTime(trainId, stationId, weekDay);
     }
 
@@ -95,14 +93,14 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 || train.getNumber() == null
                 || train.getNumber().trim().isEmpty()
                 ) {
-            LOG.error(String.format("Train number: %s is invalid or tariff = 0.", train.getNumber()));
+            logger.error("Train number: {} is invalid or tariff = 0.", train.getNumber());
             throw new TrainNumberServiceException(String.format("Train number: %s is invalid.", train.getNumber()));
         } else if (trainDao.getTrainByNumber(train.getNumber()) != null) {
-            LOG.error(String.format("Train: %s is exist already.", train));
+            logger.error("Train: {} is exist already.", train);
             throw new TrainExistServiceException(String.format("Train: %s is exist already.", train));
         } else {
             trainDao.create(train);
-            LOG.info(String.format("Created train: '%s'", train));
+            logger.info("Created train: {}", train);
         }
 
     }
@@ -122,9 +120,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                         .getTitle())
                 .getId();
         scheduleService.deleteByStationAndTrainId(stationId, trainId);
-        LOG.info(String.format("Schedule with train (id = '%s') and station (id = '%s') deleted.",
-                trainId,
-                stationId));
+        logger.info("Schedule with train (id = {}) and station (id = {}) deleted.", trainId, stationId);
     }
 
     /**
@@ -136,13 +132,13 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     @Override
     public void removeTrain(long id) {
         scheduleService.deleteByTrainId(id);
-        LOG.info(String.format("All schedules with train (id = '%s') deleted", id));
+        logger.info("All schedules with train (id = '{}') deleted", id);
 
         passengerService.deleteByTrainId(id);
-        LOG.info(String.format("All passengers with train (id = '%s') deleted", id));
+        logger.info("All passengers with train (id = '{}') deleted", id);
 
         trainDao.delete(id);
-        LOG.info(String.format("Train with (id = '%s') deleted", id));
+        logger.info("Train with (id = '{}') deleted", id);
     }
 
     /**
@@ -166,8 +162,8 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         String departPeriod = routePoint.getDepartPeriod();
         String arrivePeriod = routePoint.getArrivePeriod();
 
-        String[] listDepartDays = listDepartDays = departPeriod.split(",");
-        String[] listArriveDays = listArriveDays = arrivePeriod.split(",");
+        String[] listDepartDays = departPeriod.split(",");
+        String[] listArriveDays = arrivePeriod.split(",");
 
         if (station == null
                 || isExistRoutePoint(route, station)
@@ -182,7 +178,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 && !listDepartDays[0].trim().isEmpty())
                 && (arrivalTime == null || departureTime == null))
                 ) {
-            LOG.error("Invalid add route point data.");
+            logger.error("Invalid add route point data.");
             throw new TrainNumberServiceException("Invalid add route point data.");
         }
 
@@ -191,7 +187,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
 
         if (!isValidArriveAndDepartTimes(routePoint)
                 && !isPossibleAddRoutePoint(routePoint, route)) {
-            LOG.error("Departure time is before arrival time.");
+            logger.error("Departure time is before arrival time.");
             throw new TrainNumberServiceException("Departure time is before arrival time.");
         }
 
@@ -213,7 +209,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                     schedule.setArrivalDay(0);
                     schedule.setDepartureDay(depDay);
                     scheduleService.create(schedule);
-                    LOG.info(String.format("Created schedule: '%s'", schedule));
+                    logger.info("Created schedule: '{}'", schedule);
                 }
                 break;
             } else if (listDepartDays[0].trim().isEmpty()) {
@@ -228,7 +224,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                     schedule.setArrivalDay(arrDay);
                     schedule.setDepartureDay(0);
                     scheduleService.create(schedule);
-                    LOG.info(String.format("Created schedule: '%s'", schedule));
+                    logger.info("Created schedule: '{}'", schedule);
                 }
                 break;
             } else {
@@ -242,7 +238,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
                 schedule.setArrivalDay(intListArriveDays.get(i));
                 schedule.setDepartureDay(intListDepartDays.get(i));
                 scheduleService.create(schedule);
-                LOG.info(String.format("Created schedule: '%s'", schedule));
+                logger.info("Created schedule: '{}'", schedule);
             }
         }
     }

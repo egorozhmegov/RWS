@@ -2,6 +2,7 @@ package service.implementation;
 
 import model.Schedule;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
@@ -10,7 +11,8 @@ import static org.junit.Assert.assertNotEquals;
 
 public class ClientServiceImplTest {
 
-    private ClientServiceImpl clientService = new ClientServiceImpl();
+    @Autowired
+    private ClientServiceImpl clientService;
 
     @Test
     public void parseDate0(){
