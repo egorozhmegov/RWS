@@ -23,7 +23,7 @@
 
     <bean id="passengerDao" class="dao.implementation.PassengerDaoImpl"/>
 
-    <bean id="passengerService" class="service.implementation.PassengerServiceImp" >
+    <bean id="passengerService" class="service.implementation.PassengerServiceImpl" >
         <property name="passengerDao" ref="passengerDao"/>
     </bean>
 

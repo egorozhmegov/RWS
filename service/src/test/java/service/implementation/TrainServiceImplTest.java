@@ -2,19 +2,29 @@ package service.implementation;
 
 import model.RailWayStation;
 import model.Schedule;
+import model.Train;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import service.interfaces.TrainService;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class TrainServiceImplTest {
 
-    private TrainServiceImpl trainService = new TrainServiceImpl();
+    @Mock
+    private TrainService trainServiceMock;
 
+    private TrainServiceImpl trainService = new TrainServiceImpl();
     private List<Schedule> route1 = new ArrayList<>();
     private List<Schedule> route2 = new ArrayList<>();
     private List<Schedule> route3 = new ArrayList<>();
@@ -22,7 +32,7 @@ public class TrainServiceImplTest {
 
     @Before
     public void initRoute1(){
-                Schedule point1 = new Schedule();
+        Schedule point1 = new Schedule();
         point1.setDepartPeriod("mon,tue,fri");
         point1.setDepartureTime(LocalTime.of(1,30));
 
@@ -119,6 +129,51 @@ public class TrainServiceImplTest {
         route4.add(point3);
     }
 
+    @Test
+    public void getRoute0() {
+        long id = 1;
+        List<Schedule> schedule = new ArrayList<>();
+        when(trainServiceMock.getRoute(id)).thenReturn(schedule);
+        assertEquals(schedule,trainServiceMock.getRoute(id));
+    }
+
+    @Test
+    public void getDepartureTime0(){
+        long trainId = 1;
+        long stationId = 1;
+        int weekDay = 1;
+        String departureTime = "12:12";
+        when(trainServiceMock.getDepartureTime(trainId, stationId, weekDay)).thenReturn(departureTime);
+        assertEquals(departureTime,trainServiceMock.getDepartureTime(trainId, stationId, weekDay));
+    }
+
+    @Test
+    public void addTrain0(){
+        Train train = new Train();
+        trainServiceMock.addTrain(train);
+        verify(trainServiceMock).addTrain(train);
+    }
+
+    @Test
+    public void removeRoutePoint0() {
+        Schedule routePoint = new Schedule();
+        trainServiceMock.removeRoutePoint(routePoint);
+        verify(trainServiceMock).removeRoutePoint(routePoint);
+    }
+
+    @Test
+    public void removeTrain0() {
+        long id = 1;
+        trainServiceMock.removeTrain(id);
+        verify(trainServiceMock).removeTrain(id);
+    }
+
+    @Test
+    public void addRoutePoint0() {
+        Schedule schedule = new Schedule();
+        trainServiceMock.addRoutePoint(schedule);
+        verify(trainServiceMock).addRoutePoint(schedule);
+    }
 
     @Test
     public void isExistRoutePoint0() throws Exception {
@@ -145,7 +200,6 @@ public class TrainServiceImplTest {
 
         assertTrue(trainService.isExistRoutePoint(route, checkStation));
     }
-
 
     @Test
     public void isExistRoutePoint1() throws Exception {

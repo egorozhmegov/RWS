@@ -73,14 +73,6 @@ public interface ClientService {
     LocalDate getRoutePointDate (LocalDate departDay, Schedule routePoint);
 
     /**
-     * Parse string date to object LocalDate.
-     *
-     * @param date String
-     * @return LocalDate
-     */
-    LocalDate parseDate(String date);
-
-    /**
      *Get number of week day.
      *
      * @param date LocalDate
@@ -101,15 +93,5 @@ public interface ClientService {
      * @return ScheduleWrapper
      */
     ScheduleWrapper getSchedule(StationWrapper stationWrapper);
-
-
-    /**
-     * Parse string date with dash to LocalDate format.
-     *
-     * @param date String
-     * @return LocalDate
-     */
-    LocalDate parseDashDate(String date);
-
 
 }

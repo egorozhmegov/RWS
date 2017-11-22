@@ -23,9 +23,9 @@ import java.util.Objects;
  * Passenger service implementation/
  */
 @Service("passengerServiceImpl")
-public class PassengerServiceImp extends GenericServiceImpl<Passenger> implements PassengerService {
+public class PassengerServiceImpl extends GenericServiceImpl<Passenger> implements PassengerService {
 
-    private final static Logger LOG = LoggerFactory.getLogger(PassengerServiceImp.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PassengerServiceImpl.class);
 
     @Autowired
     private PassengerDao passengerDao;
@@ -122,7 +122,7 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
     @Override
     public void deleteByTrainId(long trainId){
         passengerDao.deleteByTrainId(trainId);
-        LOG.info(String.format("Passenger with train (id = %s) deleted", trainId));
+        LOG.info("Passenger with train (id = {}) deleted", trainId);
     }
 
     /**
@@ -133,7 +133,7 @@ public class PassengerServiceImp extends GenericServiceImpl<Passenger> implement
     @Override
     public void deleteByStationId(long stationId){
         passengerDao.deleteByStationId(stationId);
-        LOG.info(String.format("Passenger with station (id = %s) deleted", stationId));
+        LOG.info("Passenger with station (id = {}) deleted", stationId);
     }
 
     @Override

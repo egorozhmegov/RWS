@@ -28,7 +28,7 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 @Service("clientService")
 public class ClientServiceImpl implements ClientService {
 
-    private final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClientServiceImpl.class);
 
     @Autowired
     private ScheduleService scheduleService;
@@ -56,7 +56,7 @@ public class ClientServiceImpl implements ClientService {
         ScheduleWrapper schedule = new ScheduleWrapper();
         schedule.setArrivalSchedule(scheduleService.getArriveSchedule(stationWrapper));
         schedule.setDepartureSchedule(scheduleService.getDepartSchedule(stationWrapper));
-        logger.info("Loaded arrival trains: {} and departure trains: %s",
+        LOG.info("Loaded arrival trains: {} and departure trains: {}",
                 schedule.getArrivalSchedule(),
                 schedule.getDepartureSchedule());
         return schedule;
@@ -69,7 +69,7 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public List<RailWayStation> getAllStations() {
-        logger.info("All stations loaded");
+        LOG.info("All stations loaded");
         return stationService.getAll();
     }
 
@@ -93,7 +93,7 @@ public class ClientServiceImpl implements ClientService {
                 || stationTo == null
                 || stationTo.trim().isEmpty()
                 || departDate == null) {
-            logger.error("Not valid search data.");
+            LOG.error("Not valid search data.");
             throw new ClientServiceException("Not valid search data.");
         }
 
@@ -126,14 +126,13 @@ public class ClientServiceImpl implements ClientService {
         }
 
         if (searchResult.size() == 0) {
-            logger.error(String.format("No trains for request: %s - %s on date %s",
-                    stationFrom, stationTo, departDate));
+            LOG.error("No trains for request: {} - {} on date {}", stationFrom, stationTo, departDate);
             throw new ClientServiceNoTrainsException(
                     String.format("No trains for request: %s - %s on date %s",
                             stationFrom, stationTo, departDate));
         }
 
-        logger.info(String.format("Search trains: '%s'", searchResult));
+        LOG.info("Search trains: '{}'", searchResult);
         return searchResult;
     }
 
@@ -153,34 +152,6 @@ public class ClientServiceImpl implements ClientService {
                         .toString()
                         .toLowerCase()
                         .substring(0, 3)) + 1;
-    }
-
-    /**
-     * Parse string date to object LocalDate.
-     *
-     * @param date String
-     * @return LocalDate
-     */
-    @Override
-    public LocalDate parseDate(String date) {
-        return LocalDate.of(
-                Integer.parseInt(date.split("/")[2]),
-                Integer.parseInt(date.split("/")[0]),
-                Integer.parseInt(date.split("/")[1]));
-    }
-
-    /**
-     * Parse string date with dash to LocalDate format.
-     *
-     * @param date String
-     * @return LocalDate
-     */
-    @Override
-    public LocalDate parseDashDate(String date) {
-        return LocalDate.of(
-                Integer.parseInt(date.split("-")[0]),
-                Integer.parseInt(date.split("-")[1]),
-                Integer.parseInt(date.split("-")[2]));
     }
 
     /**
@@ -206,7 +177,7 @@ public class ClientServiceImpl implements ClientService {
             }
             if (isCurrentRoute) currentRoute.add(routePoint);
         }
-        logger.info(String.format("Route from %s to %s of train (id = %s) loaded",
+        LOG.info(String.format("Route from %s to %s of train (id = %s) loaded",
                 station1,
                 station2,
                 trainId));
@@ -275,7 +246,7 @@ public class ClientServiceImpl implements ClientService {
                 || departDate == null
                 || departStation.isEmpty()
                 || ticketPrice == 0) {
-            logger.error("Invalid payment data.");
+            LOG.error("Invalid payment data.");
             throw new ClientServiceException("Invalid payment data.");
         }
 
@@ -292,25 +263,25 @@ public class ClientServiceImpl implements ClientService {
                 departDate,
                 ticketData.getPassenger()) != null
                 ) {
-            logger.error(String.format("Passengers: %s registered already.", ticketData.getPassenger()));
+            LOG.error("Passengers: {} registered already.", ticketData.getPassenger());
             throw new ClientServiceRegisteredPassengerException(String
                     .format("Passengers: %s registered already.", ticketData.getPassenger()));
         }
 
         if (departDate.isBefore(LocalDate.now())) {
-            logger.error(String.format("Date: %s is before now.", departDate));
+            LOG.error("Date: {} is before now.", departDate);
             throw new ClientServiceTimeOutException(String.format("Date: %s is before now.", departDate));
         }
 
         if (Objects.equals(departDate, LocalDate.now())
                 && (MINUTES.between(depTime, LocalTime.now()) < 10
                 || depTime.isBefore(LocalTime.now()))) {
-            logger.error(String.format("Time: %s is invalid.", depTime));
+            LOG.error("Time: {} is invalid.", depTime);
             throw new ClientServiceTimeOutException(String.format("Time: %s is invalid.", depTime));
         }
 
         if (ticketData.getTrainWrapper().getSeats() == 0) {
-            logger.error("No free seats.");
+            LOG.error("No free seats.");
             throw new ClientServiceNoSeatsException("No free seats.");
         }
 
@@ -346,11 +317,11 @@ public class ClientServiceImpl implements ClientService {
         try{
             sendTicketOnEmail(ticketNumber, ticketData);
         } catch (Exception e) {
-            logger.error(String.format("Message not send on email: %s", ticketData.getUserEmail()));
+            LOG.error(String.format("Message not send on email: %s", ticketData.getUserEmail()));
             throw new ClientServiceEmailException(String
                     .format("Message not send on email: %s", ticketData.getUserEmail()));
         }
-        logger.info(String.format("Passenger %s registered", ticketData.getPassenger()));
+        LOG.info("Passenger {} registered", ticketData.getPassenger());
     }
 
     /**
@@ -395,7 +366,7 @@ public class ClientServiceImpl implements ClientService {
 
             ticket.close();
         } catch(FileNotFoundException | DocumentException e){
-            logger.error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 
