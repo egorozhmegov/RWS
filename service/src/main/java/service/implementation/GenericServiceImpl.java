@@ -15,7 +15,7 @@ import java.util.List;
  */
 abstract class GenericServiceImpl<T> implements GenericService<T>{
 
-    private final static Logger LOG = LoggerFactory.getLogger(GenericServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GenericServiceImpl.class);
 
     abstract GenericDao<T> getDao();
 
@@ -28,7 +28,7 @@ abstract class GenericServiceImpl<T> implements GenericService<T>{
     @Transactional
     public void create(T object) {
         getDao().create(object);
-        LOG.info(String.format("Entity successfully created. Entity details: %s", object));
+        LOG.info("Entity successfully created. Entity details: {}", object);
     }
 
     /**

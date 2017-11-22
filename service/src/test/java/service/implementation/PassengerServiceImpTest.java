@@ -74,9 +74,8 @@ public class PassengerServiceImpTest {
 
     @Test
     public void deleteByTrainId0(){
-        long trainId = 1;
-        passengerService.deleteByTrainId(trainId);
-        verify(passengerDao).deleteByTrainId(trainId);
+        passengerService.deleteByTrainId(1L);
+        verify(passengerDao).deleteByTrainId(1L);
     }
 
     @Test

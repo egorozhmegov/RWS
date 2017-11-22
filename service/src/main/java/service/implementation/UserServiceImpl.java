@@ -21,7 +21,7 @@ import service.interfaces.UserService;
 @Service("userServiceImpl")
 public class UserServiceImpl extends GenericServiceImpl<User> implements UserService {
 
-    private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserDao userDao;
@@ -35,7 +35,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     @Override
     @Transactional
     public User getUserByLogin(String login) {
-        LOG.info(String.format("Loaded user with login: '%s'.", login));
+        LOG.info("Loaded user with login: '{}'.", login);
         return userDao.getUserByLogin(login);
     }
 
@@ -62,24 +62,24 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
             throw new UserServiceInvalidDataException("Invalid registration data.");
 
         } else if(getUserByLogin(user.getLogin()) != null){
-            LOG.error(String.format("Employee with login: %s exist already.", user.getLogin()));
+            LOG.error("Employee with login: {} exist already.", user.getLogin());
             throw new UserServiceLoginException(String
                     .format("Employee with login: %s exist already.", user.getLogin()));
 
         } else if(getUserByEmail(user.getEmail().toLowerCase()) != null){
-            LOG.error(String.format("Employee with email: %s exist already.", user.getEmail()));
+            LOG.error("Employee with email: {} exist already.", user.getEmail());
             throw new UserServiceEmailException(String
                     .format("Employee with email: %s exist already.", user.getEmail()));
 
         } else if(getEmployeeByFirstNameAndLastName(user.getFirstName(), user.getLastName()) == null){
-            LOG.error(String.format("Employee %s %s does not exist in company.", user.getFirstName(), user.getLastName()));
+            LOG.error("Employee {} {} does not exist in company.", user.getFirstName(), user.getLastName());
             throw new UserServiceEmployeeException(String
                     .format("Employee %s %s does not exist in company.", user.getFirstName(), user.getLastName()));
 
         } else {
             user.setEmail(user.getEmail().toLowerCase());
             userDao.create(user);
-            LOG.info(String.format("Created user: '%s'.", user));
+            LOG.info("Created user: '{}.", user);
         }
     }
 
@@ -97,7 +97,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
 
         User user = userDao.getUserByLoginAndPassword(login, password);
         if(user == null) {
-            LOG.error("Not valid login or password.");
+            LOG.error("Not valid login: {} or password: {}.", login, password);
             throw new UserServiceInvalidDataException("Not valid login or password.");
         }
         return user;

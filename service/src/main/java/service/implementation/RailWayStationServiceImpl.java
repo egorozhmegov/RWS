@@ -19,7 +19,7 @@ import service.interfaces.ScheduleService;
 @Service("railWayStationServiceImpl")
 public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation> implements RailWayStationService {
 
-    private final static Logger LOG = LoggerFactory.getLogger(RailWayStationServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RailWayStationServiceImpl.class);
 
     @Autowired
     private RailWayStationDao railWayStationDao;
@@ -39,13 +39,13 @@ public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation
     @Override
     public void removeStation(long id) {
         scheduleService.deleteByStationId(id);
-        LOG.info(String.format("All schedules with station (id = '%s') deleted", id));
+        LOG.info("All schedules with station (id = '{}') deleted", id);
 
         passengerService.deleteByStationId(id);
-        LOG.info(String.format("All passengers with station (id = '%s') deleted", id));
+        LOG.info("All passengers with station (id = '{}') deleted", id);
 
         railWayStationDao.delete(id);
-        LOG.info(String.format("Station with (id = '%s') deleted", id));
+        LOG.info("Station with (id = '{}') deleted", id);
     }
 
     /**
@@ -57,7 +57,7 @@ public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation
     @Transactional
     @Override
     public RailWayStation getStationByTitle(String title) {
-        LOG.info(String.format("Station '%s' loaded.", title));
+        LOG.info("Station '{}' loaded.", title);
         return railWayStationDao.getStationByTitle(title);
     }
 
@@ -76,7 +76,7 @@ public class RailWayStationServiceImpl extends GenericServiceImpl<RailWayStation
             throw new RailWayStationServiceException("Invalid add train data.");
         }
         railWayStationDao.create(station);
-        LOG.info(String.format("Created station '%s'.", station));
+        LOG.info("Created station '{}'.", station);
     }
 
     /**

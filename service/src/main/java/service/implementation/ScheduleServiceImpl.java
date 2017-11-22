@@ -21,7 +21,7 @@ import java.util.List;
 @Service("scheduleServiceImpl")
 public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements ScheduleService {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ScheduleServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ScheduleServiceImpl.class);
 
     @Autowired
     private ScheduleDao scheduleDao;
@@ -118,9 +118,7 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     @Transactional
     @Override
     public void deleteByStationAndTrainId(long stationId, long trainId) {
-        LOG.info(String.format("Schedule with stations (id = '%s') and trains (id = '%s') deleted",
-                stationId,
-                trainId));
+        LOG.info("Schedule with stations (id = '{}') and trains (id = '{}') deleted", stationId, trainId);
         scheduleDao.deleteByStationAndTrainId(stationId, trainId);
     }
 

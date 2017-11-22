@@ -1,21 +1,25 @@
 package service.implementation;
 
+import com.itextpdf.text.DocumentException;
 import exception.ClientServiceNoTrainsException;
+import model.Passenger;
 import model.RailWayStation;
 import model.Schedule;
+import model.Train;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import service.interfaces.PassengerService;
 import service.interfaces.RailWayStationService;
 import service.interfaces.ScheduleService;
-import util.ScheduleWrapper;
-import util.StationWrapper;
-import util.TicketData;
-import util.TrainWrapper;
+import service.interfaces.TrainService;
+import util.*;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +38,13 @@ public class ClientServiceImplTest {
     private ScheduleService scheduleService;
 
     @Mock
-    RailWayStationService stationService;
+    private RailWayStationService stationService;
+
+    @Mock
+    private TrainService trainService;
+
+    @Mock
+    private PassengerService passengerService;
 
     private ClientServiceImpl clientService = new ClientServiceImpl();
 
@@ -69,39 +79,90 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void getCurrentRoute(){
+    public void getCurrentRoute0(){
         List<Schedule> currentRoute = new ArrayList<>();
-        long trainId  = 1;
-        String station1 = "1";
-        String station2 = "2";
-        when(clientServiceMock.getCurrentRoute(trainId, station1, station2)).thenReturn(currentRoute);
-        assertEquals(currentRoute, clientServiceMock.getCurrentRoute(trainId, station1, station2));
+        when(trainService.getRoute(1L)).thenReturn(currentRoute);
+        when(clientServiceMock.getCurrentRoute(1L, "", "")).thenReturn(currentRoute);
+        assertEquals(currentRoute, clientServiceMock.getCurrentRoute(1L, "", ""));
     }
 
     @Test
-    public void getTicketPrice(){
-        long trainId = 1;
+    public void getTicketPrice0(){
+        when(trainService.read(1L)).thenReturn(new Train());
         List<Schedule> currentRoute = new ArrayList<>();
-        when(clientServiceMock.getTicketPrice(trainId, currentRoute)).thenReturn(100);
-        assertEquals(100, clientServiceMock.getTicketPrice(trainId, currentRoute));
+        assertEquals(0, clientServiceMock.getTicketPrice(1L, currentRoute));
     }
 
     @Test
     public void getFreeSeats0(){
         LocalDate departDate = LocalDate.of(2017, 10,10);
-        long id  = 1;
-        String station1 = "1";
-        String station2 = "2";
-        int freeSeats = 92;
-        when(clientServiceMock.getFreeSeats(departDate, id, station1, station2)).thenReturn(92);
-        assertEquals(92, clientServiceMock.getFreeSeats(departDate, id, station1, station2));
+        when(stationService.getStationByTitle("")).thenReturn(new RailWayStation());
+        when(passengerService
+                .getRegisteredPassenger(1L, 1L, 1L, departDate, new Passenger()))
+        .thenReturn(new Passenger());
+        assertEquals(92, clientServiceMock.getFreeSeats(departDate, 1L, "", ""));
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void buyTicket0(){
         TicketData ticketData = new TicketData();
+        Train train = new Train();
+        train.setId(1L);
+        TrainWrapper trainWrapper = new TrainWrapper();
+        trainWrapper.setTrain(train);
+        trainWrapper.setDepartDate(LocalDate.of(2017, 10, 14));
+        trainWrapper.setStationFrom(new RailWayStation("a"));
+        trainWrapper.setStationTo(new RailWayStation("b"));
+        trainWrapper.setPrice(100);
+        Passenger passenger
+                = new Passenger("Egor", "Ozhmegov", LocalDate.of(2017, 10, 14));
+        ticketData.setPassenger(passenger);
+        ticketData.setTrainWrapper(trainWrapper);
+        RailWayStation railWayStation = new RailWayStation("ab");
+        railWayStation.setId(1L);
+        List<Schedule> currentRoute = new ArrayList<>();
+        Schedule schedule1 = new Schedule();
+        schedule1.setDepartureTime(LocalTime.of(0, 0));
+        currentRoute.add(schedule1);
+        when(passengerService.getRegisteredPassenger(
+                1L,
+                1L,
+                1L,
+                ticketData.getTrainWrapper().getDepartDate(),
+                ticketData.getPassenger())).thenReturn(passenger);
+        when(stationService.getStationByTitle("a")).thenReturn(railWayStation);
+        when(stationService.getStationByTitle("b")).thenReturn(railWayStation);
+        when(clientServiceMock.getCurrentRoute(1L, "a", "b"))
+                .thenReturn(currentRoute);
         clientServiceMock.buyTicket(ticketData);
-        verify(clientServiceMock).buyTicket(ticketData);
+    }
+
+    @Test(expected = Exception.class)
+    public void sendTicketOnEmail0(){
+        TicketData ticketData = new TicketData();
+        EmailSender sender = new EmailSender(1L);
+        sender.send("");
+        verify(clientServiceMock).sendTicketOnEmail(1L, ticketData);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void createQRCode0() throws FileNotFoundException, DocumentException {
+        TicketData ticketData = new TicketData();
+        Train train = new Train();
+        train.setNumber("1");
+        train.setId(1L);
+        TrainWrapper trainWrapper = new TrainWrapper();
+        trainWrapper.setTrain(train);
+        trainWrapper.setDepartDate(LocalDate.of(2017, 10, 14));
+        RailWayStation station1 = new RailWayStation("a");
+        RailWayStation station2 = new RailWayStation("b");
+        trainWrapper.setStationFrom(station1);
+        trainWrapper.setStationTo(station2);
+        trainWrapper.setPrice(100);
+
+        ticketData.setTrainWrapper(trainWrapper);
+
+        clientServiceMock.createQRCode(1L, ticketData);
     }
 
     @Test

@@ -17,7 +17,7 @@ import javax.jms.*;
 @Service("timetableServiceImpl")
 public class TimetableServiceImpl implements TimetableService {
 
-    private final static Logger LOG = LoggerFactory.getLogger(TimetableServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TimetableServiceImpl.class);
 
     private static final String URL = ActiveMQConnection.DEFAULT_BROKER_URL;
 

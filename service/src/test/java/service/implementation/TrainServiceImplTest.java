@@ -1,13 +1,18 @@
 package service.implementation;
 
+import dao.interfaces.TrainDao;
 import model.RailWayStation;
 import model.Schedule;
 import model.Train;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import service.interfaces.PassengerService;
+import service.interfaces.RailWayStationService;
+import service.interfaces.ScheduleService;
 import service.interfaces.TrainService;
 
 import java.time.LocalTime;
@@ -21,8 +26,20 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class TrainServiceImplTest {
 
+    @InjectMocks
+    private TrainServiceImpl trainServiceMock;
+
     @Mock
-    private TrainService trainServiceMock;
+    private ScheduleService scheduleService;
+
+    @Mock
+    private RailWayStationService railWayStationService;
+
+    @Mock
+    private TrainDao trainDao;
+
+    @Mock
+    private PassengerService passengerService;
 
     private TrainServiceImpl trainService = new TrainServiceImpl();
     private List<Schedule> route1 = new ArrayList<>();
@@ -131,48 +148,54 @@ public class TrainServiceImplTest {
 
     @Test
     public void getRoute0() {
-        long id = 1;
         List<Schedule> schedule = new ArrayList<>();
-        when(trainServiceMock.getRoute(id)).thenReturn(schedule);
-        assertEquals(schedule,trainServiceMock.getRoute(id));
+        when(trainDao.getRoute(1L)).thenReturn(schedule);
+        assertEquals(schedule,trainServiceMock.getRoute(1L));
     }
 
     @Test
     public void getDepartureTime0(){
-        long trainId = 1;
-        long stationId = 1;
-        int weekDay = 1;
         String departureTime = "12:12";
-        when(trainServiceMock.getDepartureTime(trainId, stationId, weekDay)).thenReturn(departureTime);
-        assertEquals(departureTime,trainServiceMock.getDepartureTime(trainId, stationId, weekDay));
+        when(trainDao.getDepartureTime(1L, 1L, 1)).thenReturn(departureTime);
+        assertEquals(departureTime,trainServiceMock.getDepartureTime(1L, 1L, 1));
     }
 
     @Test
     public void addTrain0(){
-        Train train = new Train();
+        Train train = new Train("1", 1);
+        when(trainDao.getTrainByNumber("1")).thenReturn(null);
         trainServiceMock.addTrain(train);
-        verify(trainServiceMock).addTrain(train);
+        verify(trainDao).create(train);
     }
 
     @Test
     public void removeRoutePoint0() {
         Schedule routePoint = new Schedule();
+        RailWayStation station = new RailWayStation("a");
+        station.setId(1L);
+        routePoint.setStation(station);
+        routePoint.setTrain(new Train());
+        when(railWayStationService.getStationByTitle("a")).thenReturn(station);
         trainServiceMock.removeRoutePoint(routePoint);
-        verify(trainServiceMock).removeRoutePoint(routePoint);
+        verify(scheduleService).deleteByStationAndTrainId(1,0);
     }
 
     @Test
     public void removeTrain0() {
-        long id = 1;
-        trainServiceMock.removeTrain(id);
-        verify(trainServiceMock).removeTrain(id);
+        trainServiceMock.removeTrain(1L);
+        verify(scheduleService).deleteByTrainId(1L);
     }
 
     @Test
-    public void addRoutePoint0() {
-        Schedule schedule = new Schedule();
-        trainServiceMock.addRoutePoint(schedule);
-        verify(trainServiceMock).addRoutePoint(schedule);
+    public void removeTrain1() {
+        trainServiceMock.removeTrain(1L);
+        verify(trainDao).delete(1L);
+    }
+
+    @Test
+    public void removeTrain2() {
+        trainServiceMock.removeTrain(1L);
+        verify(passengerService).deleteByTrainId(1L);
     }
 
     @Test
@@ -388,17 +411,6 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void isPossibleAddRoutePoint0(){
-        Schedule routePoint = new Schedule();
-
-        routePoint.setArrivePeriod("");
-        routePoint.setDepartPeriod("mon,tue,fri");
-        routePoint.setDepartureTime(LocalTime.of(0,30));
-
-        assertTrue(trainService.isPossibleAddRoutePoint(routePoint, route1));
-    }
-
-    @Test
     public void isPossibleAddRoutePoint1(){
         Schedule routePoint = new Schedule();
 
@@ -593,5 +605,27 @@ public class TrainServiceImplTest {
         assertTrue(trainService.isPossibleAddRoutePoint(routePoint, route4));
     }
 
-
+    @Test
+    public void addRoutePoint(){
+        Schedule routePoint = new Schedule();
+        Schedule schedule = new Schedule();
+        Train train = new Train();
+        train.setId(1L);
+        train.setNumber("1");
+        train.setTariff(1);
+        routePoint.setTrain(train);
+        routePoint.setDepartureTime(LocalTime.of(1,1));
+        routePoint.setArrivalTime(LocalTime.of(0,0));
+        routePoint.setDepartPeriod("sun");
+        routePoint.setArrivePeriod("sun");
+        RailWayStation station = new RailWayStation();
+        station.setId(1L);
+        station.setTitle("a");
+        routePoint.setStation(station);
+        List<Schedule> route = new ArrayList<>();
+        when(trainDao.getRoute(1L)).thenReturn(route);
+        when(railWayStationService.getStationByTitle("a")).thenReturn(station);
+        when(trainDao.read(1L)).thenReturn(train);
+        trainServiceMock.addRoutePoint(routePoint);
+    }
 }

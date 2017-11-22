@@ -177,10 +177,7 @@ public class ClientServiceImpl implements ClientService {
             }
             if (isCurrentRoute) currentRoute.add(routePoint);
         }
-        LOG.info(String.format("Route from %s to %s of train (id = %s) loaded",
-                station1,
-                station2,
-                trainId));
+        LOG.info("Route from {} to {} of train (id = {}) loaded", station1, station2, trainId);
         return currentRoute;
     }
 
@@ -256,7 +253,7 @@ public class ClientServiceImpl implements ClientService {
 
         LocalTime depTime = currentRoute.get(0).getDepartureTime();
 
-        if (passengerService.getRegisteredPassenger(
+        if(passengerService.getRegisteredPassenger(
                 trainId,
                 departStationId,
                 arriveStationId,
