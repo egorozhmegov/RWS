@@ -125,9 +125,9 @@ public class ClientServiceImpl implements ClientService {
             searchResult.add(trainWrapper);
         }
 
-        if (searchResult.size() == 0) {
+        if (searchResult.isEmpty()) {
             LOG.error("No trains for request: {} - {} on date {}", stationFrom, stationTo, departDate);
-            throw new ClientServiceNoTrainsException(
+            throw new ServiceException(
                     String.format("No trains for request: %s - %s on date %s",
                             stationFrom, stationTo, departDate));
         }
@@ -212,7 +212,7 @@ public class ClientServiceImpl implements ClientService {
         long departStationId = stationService.getStationByTitle(station1).getId();
         long arriveStationId = stationService.getStationByTitle(station2).getId();
 
-        return Train.SEATS - passengerService
+        return Train.getSEATS() - passengerService
                 .getRegisteredPassengers(
                         id,
                         departStationId,
@@ -236,8 +236,8 @@ public class ClientServiceImpl implements ClientService {
         String arriveStation = ticketData.getTrainWrapper().getStationTo().getTitle();
         int ticketPrice = ticketData.getTrainWrapper().getPrice();
 
-        if (ticketData.getPassenger().getFirstName().isEmpty()
-                || ticketData.getPassenger().getLastName().isEmpty()
+        if (ticketData.getPassenger().getPassengerFirstName().isEmpty()
+                || ticketData.getPassenger().getPassengerLastName().isEmpty()
                 || ticketData.getPassenger().getBirthday() == null
                 || trainId == 0
                 || departDate == null
@@ -287,8 +287,8 @@ public class ClientServiceImpl implements ClientService {
 
         for (Schedule schedule : currentRoute) {
             Passenger passenger = new Passenger(
-                    ticketData.getPassenger().getFirstName(),
-                    ticketData.getPassenger().getLastName(),
+                    ticketData.getPassenger().getPassengerFirstName(),
+                    ticketData.getPassenger().getPassengerLastName(),
                     ticketData.getPassenger().getBirthday()
             );
             if (schedule.getArrivalDay() == 0) {
@@ -351,8 +351,8 @@ public class ClientServiceImpl implements ClientService {
             String arrival = String.format("Arrival: %s  %s",
                     ticketData.getTrainWrapper().getArriveDate().toString(),
                     ticketData.getTrainWrapper().getArriveTime().toString());
-            String lastName = String.format("Last Name: %s", ticketData.getPassenger().getLastName());
-            String firstName = String.format("First Name: %s", ticketData.getPassenger().getFirstName());
+            String lastName = String.format("Last Name: %s", ticketData.getPassenger().getPassengerLastName());
+            String firstName = String.format("First Name: %s", ticketData.getPassenger().getPassengerFirstName());
             String birthday = String.format("Birthday: %s", ticketData.getPassenger().getBirthday());
             String finala = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
                     train, direction, departure, arrival, firstName, lastName, birthday);

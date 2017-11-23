@@ -12,7 +12,7 @@ public class Train implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static int SEATS = 92;
+    private static final int SEATS = 92;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,6 +55,10 @@ public class Train implements Serializable {
 
     public void setTariff(int tariff) {
         this.tariff = tariff;
+    }
+
+    public static int getSEATS() {
+        return SEATS;
     }
 
     @Override

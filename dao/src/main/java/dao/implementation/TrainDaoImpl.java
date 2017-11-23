@@ -7,6 +7,7 @@ import model.Train;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,18 +39,20 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
     public List<Schedule> getRoute(long trainId){
         String sqlQuery =
                 "SELECT s FROM Schedule AS s " +
-                        "WHERE s.train.id = " + trainId + " " +
+                        "WHERE s.train.id = :trainId " +
                         "AND s.arrivalDay IN (SELECT min(s1.arrivalDay) " +
                         "FROM Schedule AS s1 " +
-                        "WHERE s1.train.id = " + trainId + " " +
+                        "WHERE s1.train.id = :trainId " +
                         "AND s1.station.id = s.station.id) " +
                         "GROUP BY s.station.id " +
                         "ORDER BY s.arrivalDay, s.arrivalTime";
         Query query = getEntityManager().createQuery(sqlQuery);
+        query.setParameter("trainId", trainId);
+
         try{
             return query.getResultList();
         } catch (Exception e){
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -65,10 +68,13 @@ public class TrainDaoImpl extends GenericDaoImpl<Train> implements TrainDao {
     public String getDepartureTime(long trainId, long stationId, int weekDay){
         String sqlQuery =
                 "SELECT s.departureTime FROM Schedule AS s " +
-                        "WHERE s.train.id = " + trainId + " " +
-                        "AND s.station.id = " + stationId + " " +
-                        "AND s.departureDay = " + weekDay;
+                        "WHERE s.train.id = :trainId " +
+                        "AND s.station.id = :stationId " +
+                        "AND s.departureDay = :weekDay";
         Query query = getEntityManager().createQuery(sqlQuery);
+        query.setParameter("trainId", trainId);
+        query.setParameter("stationId", stationId);
+        query.setParameter("weekDay", weekDay);
         try{
             return (String) query.getSingleResult();
         } catch (Exception e){

@@ -62,7 +62,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
             String sqlQuery = String.format("SELECT u FROM User AS u WHERE u.login = '%s'", login);
             Query query = getEntityManager().createQuery(sqlQuery);
             return (User) query.getSingleResult();
-        } catch (Throwable e){
+        } catch (Exception e){
             return null;
         }
     }
@@ -79,7 +79,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
             String sqlQuery = String.format("SELECT u FROM User AS u WHERE u.email = '%s'", email);
             Query query = getEntityManager().createQuery(sqlQuery);
             return (User) query.getSingleResult();
-        } catch (Throwable e){
+        } catch (Exception e){
             return null;
         }
     }
@@ -94,7 +94,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     @Override
     public Employee getEmployeeByFirstNameAndLastName(String firstName, String lastName) {
         try{
-            String query = String.format("SELECT e FROM Employee AS e WHERE e.firstName = '%s' AND e.lastName = '%s'", firstName, lastName);
+            String query = String.format("SELECT e FROM Employee AS e WHERE e.employeeFirstName = '%s' AND e.employeeLastName = '%s'", firstName, lastName);
             return (Employee) getEntityManager().createQuery(query).getSingleResult();
         } catch(Exception e) {
             return null;

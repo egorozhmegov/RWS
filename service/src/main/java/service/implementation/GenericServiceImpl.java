@@ -40,7 +40,7 @@ abstract class GenericServiceImpl<T> implements GenericService<T>{
     @Override
     @Transactional
     public T read(long id) {
-        LOG.info(String.format("Entity successfully loaded. Id = '%s'", id));
+        LOG.info("Entity successfully loaded. Id = '{}'", id);
         return getDao().read(id);
     }
 
@@ -53,7 +53,7 @@ abstract class GenericServiceImpl<T> implements GenericService<T>{
     @Transactional
     public void update(T object) {
         getDao().update(object);
-        LOG.info(String.format("Entity successfully updated. Entity details: %s", object));
+        LOG.info("Entity successfully updated. Entity details: {}", object);
     }
 
     /**
@@ -65,7 +65,7 @@ abstract class GenericServiceImpl<T> implements GenericService<T>{
     @Transactional
     public void delete(long id) {
         getDao().delete(id);
-        LOG.info(String.format("Entity successfully deleted. Id = '%s'", id));
+        LOG.info("Entity successfully deleted. Id = '{}'", id);
     }
 
     /**

@@ -22,7 +22,7 @@ import java.util.Objects;
 @RestController
 public class UserController {
 
-    private final static String COOKIE = "RWS_COOKIE";
+    private static final String COOKIE = "RWS_COOKIE";
 
     @Autowired
     public UserController(UserService userService) {
@@ -43,6 +43,7 @@ public class UserController {
         try{
             User authUser = userService.authenticate(user);
             Cookie cookie = new Cookie(COOKIE, "dF6p");
+            //cookie.setSecure(true);
             response.addCookie(cookie);
             return new ResponseEntity<>(authUser, HttpStatus.OK);
         } catch (UserServiceInvalidDataException e){

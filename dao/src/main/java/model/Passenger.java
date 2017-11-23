@@ -19,10 +19,10 @@ public class Passenger implements Serializable {
     private long id;
 
     @Column(name = "FIRST_NAME")
-    private String firstName;
+    private String passengerFirstName;
 
     @Column(name = "LAST_NAME")
-    private String lastName;
+    private String passengerLastName;
 
     @Column(name = "BIRTH_DAY")
     private LocalDate birthday;
@@ -46,9 +46,9 @@ public class Passenger implements Serializable {
     }
 
 
-    public Passenger(String firstName, String lastName, LocalDate birthday) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Passenger(String passengerFirstName, String passengerLastName, LocalDate birthday) {
+        this.passengerFirstName = passengerFirstName;
+        this.passengerLastName = passengerLastName;
         this.birthday = birthday;
     }
 
@@ -60,20 +60,20 @@ public class Passenger implements Serializable {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getPassengerFirstName() {
+        return passengerFirstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setPassengerFirstName(String passengerFirstName) {
+        this.passengerFirstName = passengerFirstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getPassengerLastName() {
+        return passengerLastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setPassengerLastName(String passengerLastName) {
+        this.passengerLastName = passengerLastName;
     }
 
     public LocalDate getBirthday() {
@@ -120,8 +120,8 @@ public class Passenger implements Serializable {
     public String toString() {
         return "Passenger{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", passengerFirstName='" + passengerFirstName + '\'' +
+                ", passengerLastName='" + passengerLastName + '\'' +
                 ", birthday=" + birthday +
                 ", trainDate=" + trainDate +
                 ", train=" + train +

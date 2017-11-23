@@ -152,8 +152,8 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         String departPeriod = routePoint.getDepartPeriod();
         String arrivePeriod = routePoint.getArrivePeriod();
 
-        String[] listDepartDays = listDepartDays = departPeriod.split(",");
-        String[] listArriveDays = listArriveDays = arrivePeriod.split(",");
+        String[] listDepartDays = departPeriod.split(",");
+        String[] listArriveDays = arrivePeriod.split(",");
 
         if (station == null
                 || isExistRoutePoint(route, station)
@@ -182,7 +182,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         }
 
         List<Integer> days
-                = intListArriveDays.size() == 0
+                = intListArriveDays.isEmpty()
                 ? intListDepartDays
                 : intListArriveDays;
 
@@ -348,13 +348,13 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         LocalTime departureTime = routePoint.getDepartureTime();
         LocalTime arrivalTime = routePoint.getArrivalTime();
 
-        if (route.size() == 0
+        if (route.isEmpty()
                 && arrivalTime == null
                 && departureTime != null
                 && arrivePeriod.get(0) == 0
                 && departPeriod.get(0) != 0) {
             return true;
-        } else if (route.size() == 0
+        } else if (route.isEmpty()
                 && (arrivalTime != null
                 || arrivePeriod.get(0) != 0)) {
             return false;

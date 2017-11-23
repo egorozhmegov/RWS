@@ -55,8 +55,8 @@ public class UserServiceImplTest {
     @Test
     public void registerUser0(){
         User user = new User();
-        user.setFirstName("root");
-        user.setLastName("root");
+        user.setUserFirstName("root");
+        user.setUserLastName("root");
         user.setEmail("root");
         user.setLogin("root");
         user.setPassword("root");

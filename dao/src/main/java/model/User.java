@@ -18,10 +18,10 @@ public class User implements Serializable {
     private long id;
 
     @Column(name = "FIRST_NAME")
-    private String firstName;
+    private String userFirstName;
 
     @Column(name = "LAST_NAME")
-    private String lastName;
+    private String userLastName;
 
     @Column(name = "EMAIL")
     private String email;
@@ -41,14 +41,16 @@ public class User implements Serializable {
 
     public User(String userFirstName,
                 String userLastName,
-                String userEmail,
-                String userLogin,
-                String userPassword) {
-        this.firstName = userFirstName;
-        this.lastName = userLastName;
-        this.email = userEmail;
-        this.login = userLogin;
-        this.password = userPassword;
+                String email,
+                String login,
+                String password,
+                UserRole role) {
+        this.userFirstName = userFirstName;
+        this.userLastName = userLastName;
+        this.email = email;
+        this.login = login;
+        this.password = password;
+        this.role = role;
     }
 
     public long getId() {
@@ -75,20 +77,20 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getUserFirstName() {
+        return userFirstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setUserFirstName(String userFirstName) {
+        this.userFirstName = userFirstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getUserLastName() {
+        return userLastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setUserLastName(String userLastName) {
+        this.userLastName = userLastName;
     }
 
     public String getEmail() {
@@ -111,11 +113,11 @@ public class User implements Serializable {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", userFirstName='" + userFirstName + '\'' +
+                ", userLastName='" + userLastName + '\'' +
                 ", email='" + email + '\'' +
                 ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
+                ", role=" + role +
                 '}';
     }
 }

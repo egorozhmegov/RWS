@@ -41,7 +41,7 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     @Override
     public void deleteByTrainId(long trainId){
         scheduleDao.deleteByTrainId(trainId);
-        LOG.info(String.format("Schedule with trains (id = '%s') deleted", trainId));
+        LOG.info("Schedule with trains (id = '{}') deleted", trainId);
     }
 
     /**
@@ -53,7 +53,7 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     @Override
     public void deleteByStationId(long stationId){
         scheduleDao.deleteByStationId(stationId);
-        LOG.info(String.format("Schedule with stations (id = '%s') deleted", stationId));
+        LOG.info("Schedule with stations (id = '{}') deleted", stationId);
     }
 
     /**
@@ -67,9 +67,7 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     @Transactional
     @Override
     public List<Schedule> searchTrain(long departStationId, long arriveStationId, int departDay){
-        LOG.info(String.format("Train from station (id = %s) to station (id = %s) loaded.",
-                departStationId,
-                arriveStationId));
+        LOG.info("Train from station (id = {}) to station (id = {}) loaded.", departStationId, arriveStationId);
         return scheduleDao.searchTrain(departStationId, arriveStationId, departDay);
     }
 

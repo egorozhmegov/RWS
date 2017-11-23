@@ -60,10 +60,10 @@ public class ClientController {
     public ResponseEntity<List<TrainWrapper>> searchTrains(@RequestBody TrainWrapper request) {
         try{
             return new ResponseEntity<>(clientService.searchTrains(request), HttpStatus.OK);
-        } catch(ClientServiceNoTrainsException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (ClientServiceException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch(ServiceException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

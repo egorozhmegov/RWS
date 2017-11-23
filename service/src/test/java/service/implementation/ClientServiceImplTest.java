@@ -1,7 +1,7 @@
 package service.implementation;
 
 import com.itextpdf.text.DocumentException;
-import exception.ClientServiceNoTrainsException;
+import exception.ServiceException;
 import model.Passenger;
 import model.RailWayStation;
 import model.Schedule;
@@ -64,7 +64,7 @@ public class ClientServiceImplTest {
         assertEquals(stations, clientServiceMock.getAllStations());
     }
 
-    @Test(expected = ClientServiceNoTrainsException.class)
+    @Test(expected = ServiceException.class)
     public void searchTrains0(){
         List<TrainWrapper> searchResult = new ArrayList<>();
         TrainWrapper request = new TrainWrapper();
@@ -145,7 +145,7 @@ public class ClientServiceImplTest {
         verify(clientServiceMock).sendTicketOnEmail(1L, ticketData);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void createQRCode0() throws FileNotFoundException, DocumentException {
         TicketData ticketData = new TicketData();
         Train train = new Train();

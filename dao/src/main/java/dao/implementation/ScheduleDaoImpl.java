@@ -6,6 +6,7 @@ import model.Schedule;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +19,8 @@ public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements Schedul
      */
     @PersistenceContext
     private EntityManager entityManager;
+
+    private static final String SELECT = "SELECT s FROM Schedule AS s ";
 
     /**
      * Delete schedule by train id.
@@ -57,32 +60,34 @@ public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements Schedul
     public List<Schedule> searchTrain(long departStationId, long arriveStationId, int departDay) {
 
         String sqlQuery =
-                "SELECT s FROM Schedule AS s " +
+                SELECT +
                         "WHERE s IN " +
-                        "(SELECT s FROM Schedule AS s " +
-                        "WHERE s.station.id IN (" + arriveStationId + "," + departStationId + ") " +
+                        "(" + SELECT +
+                        "WHERE s.station.id IN (:arriveStationId,:departStationId) " +
                         "AND s.train.id IN " +
                         "(SELECT s.train.id FROM Schedule AS s " +
-                        "WHERE (s.departureDay = " + departDay + " AND s.station.id = " + departStationId + ") " +
-                        "OR s.station.id = "+ arriveStationId + "  " +
+                        "WHERE (s.departureDay = :departDay AND s.station.id = :departStationId) " +
+                        "OR s.station.id = :arriveStationId  " +
                         "GROUP BY s.train.id HAVING count(s.train.id) > 1) " +
                         "ORDER BY s.departureDay, s.departureTime) " +
-                        "AND s IN (SELECT s " +
-                        "FROM Schedule AS s " +
+                        "AND s IN (" + SELECT +
                         "WHERE s.departureTime IN" +
                         "(SELECT min(s.departureTime) " +
                         "FROM Schedule AS s " +
-                        "WHERE s.departureDay = " + departDay + " " +
-                        "AND s.station.id IN (" + arriveStationId + "," + departStationId + ") " +
+                        "WHERE s.departureDay = :departDay " +
+                        "AND s.station.id IN (:arriveStationId,:departStationId) " +
                         "GROUP BY s.train.id)) " +
-                        "AND s.station.id = " + departStationId + " " +
-                        "AND s.departureDay = " + departDay;
+                        "AND s.station.id = :departStationId " +
+                        "AND s.departureDay = :departDay";
 
         Query query = getEntityManager().createQuery(sqlQuery);
+        query.setParameter("arriveStationId", arriveStationId);
+        query.setParameter("departStationId", departStationId);
+        query.setParameter("departDay", departDay);
         try{
             return query.getResultList();
         } catch (Exception e){
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -96,15 +101,17 @@ public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements Schedul
     @Override
     public List<Schedule> getStationDepartSchedule(long stationId, int weekDay){
         String sqlQuery =
-                "SELECT s FROM Schedule AS s " +
-                "WHERE s.station.id = " + stationId + " " +
-                "AND s.departureDay = " + weekDay + " " +
+                SELECT +
+                "WHERE s.station.id = :stationId " +
+                "AND s.departureDay = :weekDay " +
                 "ORDER BY s.departureTime";
         Query query = getEntityManager().createQuery(sqlQuery);
+        query.setParameter("stationId", stationId);
+        query.setParameter("weekDay", weekDay);
         try{
             return query.getResultList();
         } catch (Exception e){
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -118,15 +125,17 @@ public class ScheduleDaoImpl extends GenericDaoImpl<Schedule> implements Schedul
     @Override
     public List<Schedule> getStationArriveSchedule(long stationId, int weekDay){
         String sqlQuery =
-                "SELECT s FROM Schedule AS s " +
-                "WHERE s.station.id = " + stationId + " " +
-                "AND s.arrivalDay = " + weekDay + " " +
+                SELECT +
+                "WHERE s.station.id = :stationId " +
+                "AND s.arrivalDay = :weekDay " +
                 "ORDER BY s.arrivalTime";
         Query query = getEntityManager().createQuery(sqlQuery);
+        query.setParameter("stationId", stationId);
+        query.setParameter("weekDay", weekDay);
         try{
             return query.getResultList();
         } catch (Exception e){
-            return null;
+            return new ArrayList<>();
         }
     }
 

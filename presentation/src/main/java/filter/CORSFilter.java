@@ -8,7 +8,7 @@ import java.io.IOException;
 public class CORSFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        //init filter config
     }
 
     @Override
@@ -31,6 +31,6 @@ public class CORSFilter implements Filter {
 
     @Override
     public void destroy() {
-
+        //destroy
     }
 }

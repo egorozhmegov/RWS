@@ -1,6 +1,5 @@
 package service.interfaces;
 
-import exception.UserServiceInvalidDataException;
 import model.Employee;
 import model.User;
 
@@ -37,7 +36,7 @@ public interface UserService extends GenericService<User> {
      * @param authentication User
      * @return User
      */
-    User authenticate(User authentication) throws UserServiceInvalidDataException;
+    User authenticate(User authentication);
 
     /**
      * Get employee by Fist Name and Last Name.

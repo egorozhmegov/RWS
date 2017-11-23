@@ -9,7 +9,7 @@ import java.io.IOException;
 public class SessionFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        //init filter config
     }
 
     @Override
@@ -28,6 +28,6 @@ public class SessionFilter implements Filter {
 
     @Override
     public void destroy() {
-
+        //destroy
     }
 }

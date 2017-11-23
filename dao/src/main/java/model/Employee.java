@@ -18,16 +18,16 @@ public class Employee implements Serializable {
     private long id;
 
     @Column(name = "FIRST_NAME")
-    private String firstName;
+    private String employeeFirstName;
 
     @Column(name = "LAST_NAME")
-    private String lastName;
+    private String employeeLastName;
 
     public Employee(){}
 
-    public Employee(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Employee(String employeeFirstName, String employeeLastName) {
+        this.employeeFirstName = employeeFirstName;
+        this.employeeLastName = employeeLastName;
     }
 
     public long getId() {
@@ -38,19 +38,19 @@ public class Employee implements Serializable {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getEmployeeFirstName() {
+        return employeeFirstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setEmployeeFirstName(String employeeFirstName) {
+        this.employeeFirstName = employeeFirstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getEmployeeLastName() {
+        return employeeLastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setEmployeeLastName(String employeeLastName) {
+        this.employeeLastName = employeeLastName;
     }
 }

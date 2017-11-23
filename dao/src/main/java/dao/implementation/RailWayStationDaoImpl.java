@@ -44,7 +44,7 @@ class RailWayStationDaoImpl extends GenericDaoImpl<RailWayStation> implements Ra
             Query query = getEntityManager().createQuery(sqlQuery);
             RailWayStation station = (RailWayStation) query.getSingleResult();
             return station;
-        } catch (Throwable e){
+        } catch (Exception e){
             return null;
         }
     }

@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,17 +38,18 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
     @Override
     public List<Passenger> getRegisteredPassengers(long trainId, LocalDate departDate, LocalDate arriveDate) {
         String sqlQuery =
-                "SELECT p FROM Passenger AS p " +
-                        "WHERE p.train.id = " + trainId + " " +
-                        "AND (p.trainDate BETWEEN '" + Date.valueOf(departDate) + "' " +
-                            "AND '" + Date.valueOf(arriveDate) + "')" +
-                        "GROUP BY p.birthday, p.firstName, p.lastName";
+                String.format("SELECT p FROM Passenger AS p " +
+                        "WHERE p.train.id = %s " +
+                        "AND (p.trainDate BETWEEN '%s' " +
+                        "AND '%s')" +
+                        "GROUP BY p.birthday, p.passengerFirstName, p.passengerLastName",
+                        trainId, Date.valueOf(departDate), Date.valueOf(arriveDate));
 
         Query query = getEntityManager().createQuery(sqlQuery);
         try{
             return query.getResultList();
         } catch(Exception e){
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -66,14 +68,20 @@ public class PassengerDaoImpl extends GenericDaoImpl<Passenger> implements Passe
                                      LocalDate arriveDate,
                                      Passenger passenger){
         String sqlQuery =
-                "SELECT p FROM Passenger AS p " +
-                        "WHERE p.train.id = " + trainId + " " +
-                        "AND p.firstName = '" + passenger.getFirstName() + "' " +
-                        "AND p.lastName = '" + passenger.getLastName() + "' " +
-                        "AND p.birthday = '" + Date.valueOf(passenger.getBirthday()) + "' " +
-                        "AND (p.trainDate BETWEEN '" + Date.valueOf(departDate) + "' " +
-                        "AND '" + Date.valueOf(arriveDate) + "')" +
-                        "GROUP BY p.firstName";
+                String.format("SELECT p FROM Passenger AS p " +
+                        "WHERE p.train.id = %s " +
+                        "AND p.passengerFirstName = '%s' " +
+                        "AND p.passengerLastName = '%s' " +
+                        "AND p.birthday = '%s' " +
+                        "AND (p.trainDate BETWEEN '%s' " +
+                        "AND '%s')" +
+                        "GROUP BY p.passengerFirstName",
+                        trainId,
+                        passenger.getPassengerFirstName(),
+                        passenger.getPassengerLastName(),
+                        Date.valueOf(passenger.getBirthday()),
+                        Date.valueOf(departDate),
+                        Date.valueOf(arriveDate));
 
         Query query = getEntityManager().createQuery(sqlQuery);
         try{

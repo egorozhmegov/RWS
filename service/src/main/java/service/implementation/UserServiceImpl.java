@@ -48,10 +48,10 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     @Transactional
     public void registerUser(User user) {
         if(user == null
-                || user.getFirstName() == null
-                || user.getFirstName().isEmpty()
-                || user.getLastName() == null
-                || user.getLastName().isEmpty()
+                || user.getUserFirstName() == null
+                || user.getUserFirstName().isEmpty()
+                || user.getUserLastName() == null
+                || user.getUserLastName().isEmpty()
                 || user.getEmail() == null
                 || user.getEmail().isEmpty()
                 || user.getLogin() == null
@@ -71,10 +71,10 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
             throw new UserServiceEmailException(String
                     .format("Employee with email: %s exist already.", user.getEmail()));
 
-        } else if(getEmployeeByFirstNameAndLastName(user.getFirstName(), user.getLastName()) == null){
-            LOG.error("Employee {} {} does not exist in company.", user.getFirstName(), user.getLastName());
+        } else if(getEmployeeByFirstNameAndLastName(user.getUserFirstName(), user.getUserLastName()) == null){
+            LOG.error("Employee {} {} does not exist in company.", user.getUserFirstName(), user.getUserLastName());
             throw new UserServiceEmployeeException(String
-                    .format("Employee %s %s does not exist in company.", user.getFirstName(), user.getLastName()));
+                    .format("Employee %s %s does not exist in company.", user.getUserFirstName(), user.getUserLastName()));
 
         } else {
             user.setEmail(user.getEmail().toLowerCase());
@@ -91,7 +91,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
      */
     @Override
     @Transactional
-    public User authenticate(User authentication) throws UserServiceInvalidDataException {
+    public User authenticate(User authentication) {
         String login = authentication.getLogin();
         String password = authentication.getPassword();
 
@@ -113,8 +113,9 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     @Transactional
     @Override
     public Employee getEmployeeByFirstNameAndLastName(String firstName, String lastName){
-        LOG.info(String.format("Employee: '%s' '%s' loaded.", firstName, lastName));
-        return userDao.getEmployeeByFirstNameAndLastName(firstName, lastName);
+        Employee employee = userDao.getEmployeeByFirstNameAndLastName(firstName, lastName);
+        LOG.info("Employee: '{}' '{}' loaded.", employee.getEmployeeFirstName(), employee.getEmployeeLastName());
+        return employee;
     }
 
     /**
@@ -126,7 +127,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     @Transactional
     @Override
     public User getUserByEmail(String email){
-        LOG.info(String.format("Loaded user with email: '%s'.", email));
+        LOG.info("Loaded user with email: '{}'.", email);
         return userDao.getUserByEmail(email);
     }
 

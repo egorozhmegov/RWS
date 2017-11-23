@@ -1,5 +1,9 @@
 package util;
 
+import exception.EmailSenderServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -9,15 +13,13 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class of email sender. Use gmail smtp server.
  */
 public class EmailSender {
 
-    private final static Logger LOG = LoggerFactory.getLogger(EmailSender.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmailSender.class);
 
     private String username;
     private String password;
@@ -41,8 +43,10 @@ public class EmailSender {
      *
      * @param toEmail String
      */
+
     public void send(String toEmail){
         Session session = Session.getInstance(props, new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
@@ -72,10 +76,10 @@ public class EmailSender {
             message.setContent(multipart);
 
             Transport.send(message);
-            LOG.info(String.format("Message sended on email: %s", toEmail));
+            LOG.info("Message sended on email: {}", toEmail);
         } catch (MessagingException e) {
-            LOG.error(String.format("Message not sended on email: %s", toEmail));
-            throw new RuntimeException(e);
+            LOG.error("Message not sended on email: {}", toEmail);
+            throw new EmailSenderServiceException(String.format("Message not sended on email: %s", toEmail));
         }
     }
 }
