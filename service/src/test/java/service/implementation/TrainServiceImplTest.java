@@ -15,6 +15,7 @@ import service.interfaces.RailWayStationService;
 import service.interfaces.ScheduleService;
 import service.interfaces.TrainService;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -628,4 +629,228 @@ public class TrainServiceImplTest {
         when(trainDao.read(1L)).thenReturn(train);
         trainServiceMock.addRoutePoint(routePoint);
     }
+
+    @Test
+    public void isValidFirstRoutePointPos0(){
+        RailWayStation station = new RailWayStation("station");
+        LocalTime departDate = LocalTime.of(1,30);
+        LocalTime arriveDate = null;
+        String[] departDays = {"sun"};
+        String[] arriveDays = {""};
+
+        boolean result = TrainServiceImpl.isValidFirstRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void isValidFirstRoutePointNeg1(){
+        RailWayStation station = new RailWayStation("station");
+        LocalTime departDate = LocalTime.of(1,30);
+        LocalTime arriveDate = null;
+        String[] departDays = {"sun"};
+        String[] arriveDays = {"sun"};
+
+        boolean result = TrainServiceImpl.isValidFirstRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void isValidFirstRoutePointNeg2(){
+        RailWayStation station = new RailWayStation("station");
+        LocalTime departDate = LocalTime.of(1,30);
+        LocalTime arriveDate = LocalTime.of(1,30);
+        String[] departDays = {"sun"};
+        String[] arriveDays = {""};
+
+        boolean result = TrainServiceImpl.isValidFirstRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void isValidFirstRoutePointNeg3(){
+        RailWayStation station = new RailWayStation("");
+        LocalTime departDate = LocalTime.of(1,30);
+        LocalTime arriveDate = null;
+        String[] departDays = {"sun"};
+        String[] arriveDays = {""};
+
+        boolean result = TrainServiceImpl.isValidFirstRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+
+        assertFalse(result);
+    }
+    @Test
+    public void isValidLastRoutePointPos0(){
+        RailWayStation station = new RailWayStation("station");
+        LocalTime departDate = null;
+        LocalTime arriveDate = LocalTime.of(1,30);
+        String[] departDays = {""};
+        String[] arriveDays = {"sun"};
+
+        boolean result = TrainServiceImpl.isValidLastRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void isValidLastRoutePointNeg1(){
+        RailWayStation station = new RailWayStation("station");
+        LocalTime departDate = null;
+        LocalTime arriveDate = LocalTime.of(1,30);
+        String[] departDays = {"sun"};
+        String[] arriveDays = {"sun"};
+
+        boolean result = TrainServiceImpl.isValidLastRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void isValidLastRoutePointNeg2(){
+        RailWayStation station = new RailWayStation("station");
+        LocalTime departDate = LocalTime.of(1,30);
+        LocalTime arriveDate = LocalTime.of(1,30);
+        String[] departDays = {""};
+        String[] arriveDays = {"sun"};
+
+        boolean result = TrainServiceImpl.isValidLastRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void isValidLastRoutePointNeg3(){
+        RailWayStation station = new RailWayStation("");
+        LocalTime departDate = LocalTime.of(1,30);
+        LocalTime arriveDate = null;
+        String[] departDays = {"sun"};
+        String[] arriveDays = {""};
+
+        boolean result = TrainServiceImpl.isValidLastRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void isValidRoutePointDaysPos0(){
+        String[] departDays = {"sun", "mon", "tue"};
+        String[] arriveDays = {"sun", "mon", "tue"};
+
+        boolean result = TrainServiceImpl.isValidRoutePointDays(departDays, arriveDays);
+
+        assertTrue(result);
+    }
+
+
+    @Test
+    public void isValidRoutePointDaysPos1(){
+        String[] departDays = {"sun"};
+        String[] arriveDays = {"sat"};
+
+        boolean result = TrainServiceImpl.isValidRoutePointDays(departDays, arriveDays);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void isValidRoutePointDaysNeg0(){
+        String[] departDays = {"sun"};
+        String[] arriveDays = {"fri"};
+
+        boolean result = TrainServiceImpl.isValidRoutePointDays(departDays, arriveDays);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void isValidRoutePointTimePos0(){
+        String[] departDays = {"sun, mon"};
+        String[] arriveDays = {"sun, mon"};
+        LocalTime departTime = LocalTime.of(1,30);
+        LocalTime arriveTime = LocalTime.of(1,20);
+
+        boolean result = TrainServiceImpl.isValidRoutePointTime(departDays, arriveDays, departTime, arriveTime);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void isValidRoutePointTimePos1(){
+        String[] departDays = {"mon, mon"};
+        String[] arriveDays = {"sun, sun"};
+        LocalTime departTime = LocalTime.of(1,30);
+        LocalTime arriveTime = LocalTime.of(1,20);
+
+        boolean result = TrainServiceImpl.isValidRoutePointTime(departDays, arriveDays, departTime, arriveTime);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void isValidRoutePointTimeNeg0(){
+        String[] departDays = {"sun, mon"};
+        String[] arriveDays = {"sun, mon"};
+        LocalTime departTime = LocalTime.of(1,30);
+        LocalTime arriveTime = LocalTime.of(1,40);
+
+        boolean result = TrainServiceImpl.isValidRoutePointTime(departDays, arriveDays, departTime, arriveTime);
+
+        assertFalse(result);
+    }
+
+
+
+//    @Test
+//    public void isValidRoutePointPos0(){
+//        RailWayStation station = new RailWayStation("station");
+//        LocalTime departDate = LocalTime.of(1,30);
+//        LocalTime arriveDate = LocalTime.of(1,25);
+//        String[] departDays = {"sun"};
+//        String[] arriveDays = {"sun"};
+//
+//        boolean result = TrainServiceImpl.isValidRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+//
+//        assertTrue(result);
+//    }
+//
+//    @Test
+//    public void isValidRoutePointNeg0(){
+//        RailWayStation station = new RailWayStation("station");
+//        LocalTime departDate = LocalTime.of(1,30);
+//        LocalTime arriveDate = LocalTime.of(1,25);
+//        String[] departDays = {""};
+//        String[] arriveDays = {"sun"};
+//
+//        boolean result = TrainServiceImpl.isValidRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+//
+//        assertFalse(result);
+//    }
+//
+//    @Test
+//    public void isValidRoutePointNeg1(){
+//        RailWayStation station = new RailWayStation("station");
+//        LocalTime departDate = LocalTime.of(1,30);
+//        LocalTime arriveDate = LocalTime.of(1,35);
+//        String[] departDays = {"sun"};
+//        String[] arriveDays = {"sun"};
+//
+//        boolean result = TrainServiceImpl.isValidRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+//
+//        assertFalse(result);
+//    }
+//
+//    @Test
+//    public void isValidRoutePointNeg2(){
+//        RailWayStation station = new RailWayStation("station");
+//        LocalTime departDate = LocalTime.of(1,30);
+//        LocalTime arriveDate = LocalTime.of(1,25);
+//        String[] departDays = {"sun"};
+//        String[] arriveDays = {"sat"};
+//
+//        boolean result = TrainServiceImpl.isValidRoutePoint(station, departDate, departDays, arriveDate, arriveDays);
+//
+//        assertFalse(result);
+//    }
 }

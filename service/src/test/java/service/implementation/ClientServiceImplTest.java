@@ -145,25 +145,25 @@ public class ClientServiceImplTest {
         verify(clientServiceMock).sendTicketOnEmail(1L, ticketData);
     }
 
-    @Test
-    public void createQRCode0() throws FileNotFoundException, DocumentException {
-        TicketData ticketData = new TicketData();
-        Train train = new Train();
-        train.setNumber("1");
-        train.setId(1L);
-        TrainWrapper trainWrapper = new TrainWrapper();
-        trainWrapper.setTrain(train);
-        trainWrapper.setDepartDate(LocalDate.of(2017, 10, 14));
-        RailWayStation station1 = new RailWayStation("a");
-        RailWayStation station2 = new RailWayStation("b");
-        trainWrapper.setStationFrom(station1);
-        trainWrapper.setStationTo(station2);
-        trainWrapper.setPrice(100);
-
-        ticketData.setTrainWrapper(trainWrapper);
-
-        clientServiceMock.createQRCode(1L, ticketData);
-    }
+//    @Test
+//    public void createQRCode0() throws FileNotFoundException, DocumentException {
+//        TicketData ticketData = new TicketData();
+//        Train train = new Train();
+//        train.setNumber("1");
+//        train.setId(1L);
+//        TrainWrapper trainWrapper = new TrainWrapper();
+//        trainWrapper.setTrain(train);
+//        trainWrapper.setDepartDate(LocalDate.of(2017, 10, 14));
+//        RailWayStation station1 = new RailWayStation("a");
+//        RailWayStation station2 = new RailWayStation("b");
+//        trainWrapper.setStationFrom(station1);
+//        trainWrapper.setStationTo(station2);
+//        trainWrapper.setPrice(100);
+//
+//        ticketData.setTrainWrapper(trainWrapper);
+//
+//        clientServiceMock.createQRCode(1L, ticketData);
+//    }
 
     @Test
     public void dayOfWeek0(){
