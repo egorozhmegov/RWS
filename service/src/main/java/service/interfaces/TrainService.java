@@ -65,28 +65,4 @@ public interface TrainService extends GenericService<Train> {
      * @return boolean
      */
     boolean isExistRoutePoint(List<Schedule> route, RailWayStation station);
-
-    /**
-     * Create list of train periods. The days have number format.
-     * <p>
-     * 1 - Sunday
-     * 2 - Monday
-     * 3 - Tuesday
-     * 4 - Wednesday
-     * 5 - Thursday
-     * 6 - Friday
-     * 7 - Saturday
-     *
-     * @param period String[]
-     * @return List<Integer>
-     */
-    List<Integer> parseToIntTrainPeriod(String[] period);
-
-    /**
-     * Check possibility add route point. Added route point must have time between times
-     * nearest points or before time the first point or after time the last point.
-     *
-     * @return boolean
-     */
-    boolean isPossibleAddRoutePoint(Schedule routePoint, List<Schedule> route);
 }

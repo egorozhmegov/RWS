@@ -4,6 +4,8 @@ import dao.interfaces.GenericDao;
 import dao.interfaces.TrainDao;
 import exception.TrainExistServiceException;
 import exception.TrainNumberServiceException;
+import exception.TrainRoutePointAddException;
+import exception.TrainRoutePointDataException;
 import model.RailWayStation;
 import model.Schedule;
 import model.Train;
@@ -18,7 +20,6 @@ import service.interfaces.ScheduleService;
 import service.interfaces.TrainService;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -306,7 +307,8 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
         boolean valid = true;
 
         for (int i = 0; i < departDays.length; i++) {
-            if(departDays[i].equals(arriveDays[i]) && departureTime.isBefore(arrivalTime)){
+            if(departDays[i].equals(arriveDays[i])
+                    && departureTime.isBefore(arrivalTime)){
                 valid = false;
                 break;
             }
@@ -332,14 +334,19 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
             LocalTime arrivalTime,
             String[] arriveDays){
 
-            if(isValidFirstRoutePoint(station, departureTime, arriveDays, arrivalTime, arriveDays)){
-                return isAddFirstRoutePoint(route, station, departureTime, arriveDays, arrivalTime, arriveDays);
+            if(isValidFirstRoutePoint(
+                    station, departureTime, arriveDays, arrivalTime, arriveDays)){
+                return isAddFirstRoutePoint(
+                        route, station, departureTime, arriveDays, arrivalTime, arriveDays);
 
-            } else if(isValidFirstRoutePoint(station, departureTime, arriveDays, arrivalTime, arriveDays)){
-                return isAddLastRoutePoint(route, station, departureTime, arriveDays, arrivalTime, arriveDays);
+            } else if(isValidFirstRoutePoint(
+                    station, departureTime, arriveDays, arrivalTime, arriveDays)){
+                return isAddLastRoutePoint(
+                        route, station, departureTime, arriveDays, arrivalTime, arriveDays);
 
             } else {
-                return isAddMediumRoutePoint(route, station, departureTime, arriveDays, arrivalTime, arriveDays);
+                return isAddMiddleRoutePoint(
+                        route, station, departureTime, arriveDays, arrivalTime, arriveDays);
             }
     }
 
@@ -363,19 +370,19 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
             String[] arriveDays){
 
         boolean isAdd = true;
+
         if(route.size() > 0) {
             Schedule firstPoint = route.get(0);
             RailWayStation nextStation = firstPoint.getStation();
             String[] nextDepartDays = firstPoint.getDepartPeriod().split(SEPARATOR);
-            String[] nextArriveDays = firstPoint.getDepartPeriod().split(SEPARATOR);
+            String[] nextArriveDays = firstPoint.getArrivePeriod().split(SEPARATOR);
             LocalTime nextDepartureTime = firstPoint.getDepartureTime();
             LocalTime nextArrivalTime = firstPoint.getArrivalTime();
 
             isAdd = !isValidFirstRoutePoint(
                     nextStation, nextDepartureTime, nextDepartDays, nextArrivalTime, nextArriveDays)
                     && isValidPeriodDays(nextArriveDays, departDays)
-                    && !isValidFirstRoutePoint(
-                            nextStation, nextDepartureTime, nextDepartDays, nextArrivalTime, nextArriveDays)
+                    && isValidRoutePoint(nextStation, nextArrivalTime, nextArriveDays, departureTime, departDays)
                     && isValidRoutePointTime(nextArriveDays, departDays, nextArrivalTime, departureTime);
         }
         return isAdd;
@@ -401,19 +408,20 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
             String[] arriveDays){
 
         boolean isAdd = true;
+
         if(route.size() > 0) {
             Schedule lastPoint = route.get(route.size() - 1);
             RailWayStation prevStation = lastPoint.getStation();
             String[] prevDepartDays = lastPoint.getDepartPeriod().split(SEPARATOR);
-            String[] prevArriveDays = lastPoint.getDepartPeriod().split(SEPARATOR);
+            String[] prevArriveDays = lastPoint.getArrivePeriod().split(SEPARATOR);
             LocalTime prevDepartureTime = lastPoint.getDepartureTime();
             LocalTime prevArrivalTime = lastPoint.getArrivalTime();
 
-//            isAdd = !isValidFirstRoutePoint(
-//                    prevStation, prevDepartureTime, prevDepartDays, prevDepartureTime, prevDepartDays)
-//                    && isValidPeriodDays(arriveDays, prevDepartDays)
-//                    && !isValidLastRoutePoint(station, departureTime, departDays, arrivalTime, arriveDays)
-//                    && isValidRoutePointTime(nextArriveDays, departDays, nextArrivalTime, departureTime);
+            isAdd = !isValidLastRoutePoint(
+                    prevStation, prevDepartureTime, prevDepartDays, prevArrivalTime, prevArriveDays)
+                    && isValidPeriodDays(arriveDays, prevDepartDays)
+                    && isValidRoutePoint(prevStation, arrivalTime, arriveDays, prevDepartureTime, prevDepartDays)
+                    && isValidRoutePointTime(arriveDays, prevDepartDays, arrivalTime, prevDepartureTime);
         }
         return isAdd;
     }
@@ -429,7 +437,7 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
      * @param arriveDays String[]
      * @return boolean
      */
-    static boolean isAddMediumRoutePoint(
+    static boolean isAddMiddleRoutePoint(
             List<Schedule> route,
             RailWayStation station,
             LocalTime departureTime,
@@ -437,8 +445,139 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
             LocalTime arrivalTime,
             String[] arriveDays){
 
+        boolean isAdd = true;
 
-        return true;
+        if(route.size() > 0) {
+            Schedule nextPoint =
+                    getNextRoutePoint(route, station, departureTime, departDays, arrivalTime, arriveDays);
+            if(nextPoint == null) return false;
+            String[] nextArriveDays = nextPoint.getArrivePeriod().split(SEPARATOR);
+            LocalTime nextArrivalTime = nextPoint.getArrivalTime();
+
+            Schedule prevPoint =
+                    getPrevRoutePoint(route, station, departureTime, departDays, arrivalTime, arriveDays);
+            if(prevPoint == null) return false;
+            RailWayStation prevStation = prevPoint.getStation();
+            String[] prevDepartDays = prevPoint.getDepartPeriod().split(SEPARATOR);
+            LocalTime prevDepartureTime = prevPoint.getDepartureTime();
+
+            isAdd = isValidRoutePoint(
+                        station, arrivalTime, arriveDays, prevDepartureTime, prevDepartDays)
+                    && isValidRoutePoint(
+                        station, nextArrivalTime, nextArriveDays, departureTime, departDays)
+                    && !isValidLastRoutePoint(
+                        prevStation, prevDepartureTime, prevDepartDays, arrivalTime, arriveDays);
+        }
+        return isAdd;
+    }
+
+    /**
+     * Gets next route point.
+     *
+     * @param route List<Schedule>
+     * @param station RailWayStation
+     * @param departureTime LocalTime
+     * @param departDays String[]
+     * @param arrivalTime LocalTime
+     * @param arriveDays String[]
+     * @return Schedule
+     */
+    static Schedule getNextRoutePoint(
+            List<Schedule> route,
+            RailWayStation station,
+            LocalTime departureTime,
+            String[] departDays,
+            LocalTime arrivalTime,
+            String[] arriveDays){
+
+        Schedule routePoint = null;
+
+        if(!isValidRoutePoint(station, arrivalTime, arriveDays, route.get(0).getDepartureTime(),
+                route.get(0).getDepartPeriod().split(SEPARATOR))){
+            return null;
+        }
+
+        for (Schedule point : route) {
+            LocalTime nextArrivalTime = point.getArrivalTime();
+            if(nextArrivalTime == null) continue;
+
+            String[] nextArrivalDays = point.getArrivePeriod().split(SEPARATOR);
+            if(nextArrivalDays.length == 0 || nextArrivalDays[0].trim().isEmpty()) continue;
+
+            LocalTime nextDepartureTime = point.getDepartureTime();
+
+            if(nextDepartureTime != null){
+                String[] nextDepartDays = point.getDepartPeriod().split(SEPARATOR);
+
+                if((isValidRoutePoint(station, nextArrivalTime, nextArrivalDays, arrivalTime, arriveDays)
+                        && isValidRoutePoint(station, departureTime, departDays, nextArrivalTime, nextArrivalDays))
+                        || (isValidRoutePoint(station, arrivalTime, arriveDays, nextArrivalTime, nextArrivalDays)
+                        && isValidRoutePoint(station, nextDepartureTime, nextDepartDays, departureTime, departDays))){
+                    return null;
+                }
+            }
+
+            if(isValidRoutePoint(station, nextArrivalTime, nextArrivalDays, departureTime, departDays)){
+                routePoint = point; break;
+            }
+        }
+        return routePoint;
+    }
+
+    /**
+     * Gets prev route point.
+     *
+     * @param route List<Schedule>
+     * @param station RailWayStation
+     * @param departureTime LocalTime
+     * @param departDays String[]
+     * @param arrivalTime LocalTime
+     * @param arriveDays String[]
+     * @return Schedule
+     */
+    static Schedule getPrevRoutePoint(
+            List<Schedule> route,
+            RailWayStation station,
+            LocalTime departureTime,
+            String[] departDays,
+            LocalTime arrivalTime,
+            String[] arriveDays){
+
+        Schedule routePoint = null;
+
+        if(!isValidRoutePoint(
+                station,
+                route.get(route.size() - 1).getArrivalTime(),
+                route.get(route.size() - 1).getArrivePeriod().split(SEPARATOR),
+                departureTime,
+                departDays)){
+            return null;
+        }
+
+        for (Schedule point : route) {
+            LocalTime prevDepartureTime = point.getDepartureTime();
+            if(prevDepartureTime == null) continue;
+            String[] prevDepartDays = point.getDepartPeriod().split(SEPARATOR);
+            if(prevDepartDays.length == 0 || prevDepartDays[0].trim().isEmpty()) continue;
+
+            LocalTime prevArrivalTime = point.getArrivalTime();
+
+            if(prevArrivalTime != null){
+                String[] prevArriveDays = point.getArrivePeriod().split(SEPARATOR);
+
+                if((isValidRoutePoint(station, prevDepartureTime, prevDepartDays, arrivalTime, arriveDays)
+                            && isValidRoutePoint(station, departureTime, departDays, prevDepartureTime, prevDepartDays))
+                        || (isValidRoutePoint(station, arrivalTime, arriveDays, prevArrivalTime, prevArriveDays)
+                            && isValidRoutePoint(station, prevDepartureTime, prevDepartDays, departureTime, departDays))){
+                    return null;
+                }
+            }
+
+            if(isValidRoutePoint(station, arrivalTime, arriveDays, prevDepartureTime, prevDepartDays)){
+                routePoint = point;
+            }
+        }
+        return routePoint;
     }
 
     /**
@@ -458,12 +597,15 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
 
         if (!isValidAddRoutePointData(station, departureTime, departPeriod, arrivalTime, arrivePeriod)){
             LOG.error("Invalid add route point data.");
-            throw new TrainNumberServiceException("Invalid add route point data.");
+            throw new TrainRoutePointDataException("Invalid add route point data.");
         }
 
         List<Schedule> route = trainDao.getRoute(routePoint.getTrain().getId());
 
-
+        if (!isAddRoutePoint(route, station, departureTime, departPeriod, arrivalTime, arrivePeriod)){
+            LOG.error("Invalid add route point: {}.", station);
+            throw new TrainRoutePointAddException(String.format("Invalid add route point: %s.", station));
+        }
 
 
 
@@ -535,202 +677,9 @@ public class TrainServiceImpl extends GenericServiceImpl<Train> implements Train
     public boolean isExistRoutePoint(List<Schedule> route, RailWayStation station) {
         boolean result = false;
         for (Schedule routPoint : route) {
-            if (Objects.equals(routPoint
-                    .getStation()
-                    .getTitle(), station.getTitle())) {
+            if (Objects.equals(routPoint.getStation().getTitle(), station.getTitle())) {
                 result = true;
             }
-        }
-        return result;
-    }
-
-    /**
-     * Create list of train periods. The days have number format.
-     * <p>
-     * 1 - Sunday
-     * 2 - Monday
-     * 3 - Tuesday
-     * 4 - Wednesday
-     * 5 - Thursday
-     * 6 - Friday
-     * 7 - Saturday
-     *
-     * @param period String[]
-     * @return List<Integer>
-     */
-    @Override
-    public List<Integer> parseToIntTrainPeriod(String[] period) {
-        List<Integer> result = new ArrayList<>();
-
-        for (String day : period)
-            result.add(WEEK_DAYS.indexOf(day) + 1);
-
-        return result;
-    }
-
-
-    /**
-     * Check possibility add route point. Added route point must have time between times
-     * nearest points or before time the first point or after time the last point.
-     *
-     * @return boolean
-     */
-    @Override
-    public boolean isPossibleAddRoutePoint(Schedule routePoint, List<Schedule> route) {
-        boolean result = true;
-
-        List<Integer> departPeriod
-                = parseToIntTrainPeriod(routePoint
-                .getDepartPeriod()
-                .split(SEPARATOR)
-        );
-
-        List<Integer> arrivePeriod
-                = parseToIntTrainPeriod(routePoint
-                .getArrivePeriod()
-                .split(SEPARATOR)
-        );
-
-        LocalTime departureTime = routePoint.getDepartureTime();
-        LocalTime arrivalTime = routePoint.getArrivalTime();
-
-        if (route.isEmpty()
-                && arrivalTime == null
-                && departureTime != null
-                && arrivePeriod.get(0) == 0
-                && departPeriod.get(0) != 0) {
-            return true;
-        } else if (route.isEmpty()
-                && (arrivalTime != null
-                || arrivePeriod.get(0) != 0)) {
-            return false;
-        }
-
-
-        if (arrivePeriod.get(0) == 0) {
-            List<Integer> routeDepartPeriod = parseToIntTrainPeriod(route
-                    .get(0)
-                    .getDepartPeriod()
-                    .split(SEPARATOR));
-            LocalTime routeDepartureTime = route.get(0).getDepartureTime();
-
-            for (int i = 0; i < departPeriod.size(); i++) {
-                int departureDay = departPeriod.get(i);
-                int routeDepartureDay = routeDepartPeriod.get(i);
-
-                if (departureDay > routeDepartureDay
-                        && departureDay == 7
-                        && routeDepartureDay == 1) {
-                    result = true;
-                } else if (departureDay > routeDepartureDay) {
-                    result = false;
-                    break;
-                } else if (Objects.equals(departureDay, routeDepartureDay)
-                        && departureTime.isAfter(routeDepartureTime)) {
-                    result = false;
-                    break;
-                }
-            }
-        } else if (departPeriod.get(0) == 0) {
-
-            List<Integer> routeArrivePeriod = parseToIntTrainPeriod(route
-                    .get(route.size() - 1)
-                    .getArrivePeriod()
-                    .split(SEPARATOR));
-
-            LocalTime routeArrivalTime = route.get(route.size() - 1).getArrivalTime();
-
-            for (int i = 0; i < arrivePeriod.size(); i++) {
-                int arrivalDay = arrivePeriod.get(i);
-                int routeArrivalDay = routeArrivePeriod.get(i);
-
-                if (arrivalDay < routeArrivalDay
-                        && arrivalDay == 1
-                        && routeArrivalDay == 7) {
-                    result = true;
-                } else if (arrivalDay < routeArrivalDay) {
-                    result = false;
-                    break;
-                } else if (Objects.equals(arrivalDay, routeArrivalDay)
-                        && arrivalTime.isBefore(routeArrivalTime)) {
-                    result = false;
-                    break;
-                }
-            }
-        } else {
-            for (int i = 1; i < route.size(); i++) {
-                List<Integer> routeArrivePeriod
-                        = parseToIntTrainPeriod(route
-                        .get(i)
-                        .getArrivePeriod()
-                        .split(SEPARATOR));
-                LocalTime routeArrivalTime = route.get(i).getArrivalTime();
-
-                List<Integer> prevDepartPeriod
-                        = parseToIntTrainPeriod(route
-                        .get(i - 1)
-                        .getDepartPeriod()
-                        .split(SEPARATOR));
-
-                LocalTime prevDepartureTime = route.get(i - 1).getDepartureTime();
-
-                boolean containsFreeRow = true;
-
-
-                for (int j = 0; j < departPeriod.size(); j++) {
-                    int arrivalDay = arrivePeriod.get(j);
-                    int departureDay = departPeriod.get(j);
-                    int routeArrivalDay = routeArrivePeriod.get(j);
-                    int prevDepartureDay = prevDepartPeriod.get(j);
-
-                    if (arrivalDay < prevDepartureDay
-                            && arrivalDay == 1
-                            && prevDepartureDay == 7
-                            && ((arrivalDay < routeArrivalDay
-                            || (Objects.equals(arrivalDay, routeArrivalDay)
-                            && arrivalTime.isBefore(routeArrivalTime))))
-                            && (departureDay < routeArrivalDay
-                            || (Objects.equals(departureDay, routeArrivalDay)
-                            && departureTime.isBefore(routeArrivalTime)))) {
-                        containsFreeRow = true;
-                    } else if (arrivalDay < prevDepartureDay) {
-                        containsFreeRow = false;
-                        break;
-                    } else if (Objects.equals(arrivalDay, prevDepartureDay)
-                            && arrivalTime.isBefore(prevDepartureTime)) {
-                        containsFreeRow = false;
-                        break;
-                    } else if (Objects.equals(arrivalDay, prevDepartureDay)
-                            && arrivalTime.isAfter(prevDepartureTime)
-                            && arrivalDay > routeArrivalDay) {
-                        containsFreeRow = false;
-                        break;
-                    } else if (Objects.equals(arrivalDay, prevDepartureDay)
-                            && arrivalTime.isAfter(prevDepartureTime)
-                            && Objects.equals(arrivalDay, routeArrivalDay)
-                            && arrivalTime.isAfter(routeArrivalTime)) {
-                        containsFreeRow = false;
-                        break;
-                    } else if (arrivalDay > prevDepartureDay
-                            && Objects.equals(arrivalDay, routeArrivalDay)
-                            && arrivalTime.isAfter(routeArrivalTime)) {
-                        containsFreeRow = false;
-                        break;
-                    } else if (arrivalDay > routeArrivalDay) {
-                        containsFreeRow = false;
-                        break;
-                    } else if (departureDay > routeArrivalDay) {
-                        containsFreeRow = false;
-                        break;
-                    } else if (Objects.equals(departureDay, routeArrivalDay)
-                            && departureTime.isAfter(routeArrivalTime)) {
-                        containsFreeRow = false;
-                        break;
-                    }
-                }
-                if (containsFreeRow) return true;
-            }
-            return false;
         }
         return result;
     }
