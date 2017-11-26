@@ -1,6 +1,7 @@
 package service.implementation;
 
 import dao.interfaces.TrainDao;
+import exception.TrainRoutePointAddException;
 import model.RailWayStation;
 import model.Schedule;
 import model.Train;
@@ -642,7 +643,7 @@ public class TrainServiceImplTest {
         String[] departDays = {"mon","tue","fri"};
         String[] arriveDays = {"", "", ""};
 
-        boolean result = TrainServiceImpl.isAddFirstRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+        boolean result = TrainServiceImpl.isAddFirstRoutePoint(route, station, departDate, departDays);
 
         assertTrue(result);
     }
@@ -666,7 +667,7 @@ public class TrainServiceImplTest {
         String[] departDays = {"mon","tue","fri"};
         String[] arriveDays = {"", "", ""};
 
-        boolean result = TrainServiceImpl.isAddFirstRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+        boolean result = TrainServiceImpl.isAddFirstRoutePoint(route, station, departDate, departDays);
 
         assertTrue(result);
     }
@@ -682,7 +683,7 @@ public class TrainServiceImplTest {
         String[] departDays = {"mon","tue","fri"};
         String[] arriveDays = {"", "", ""};
 
-        boolean result = TrainServiceImpl.isAddFirstRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+        boolean result = TrainServiceImpl.isAddFirstRoutePoint(route, station, departDate, departDays);
 
         assertTrue(result);
     }
@@ -707,7 +708,7 @@ public class TrainServiceImplTest {
         String[] arriveDays = {"", "", ""};
 
         boolean result = TrainServiceImpl
-                .isAddFirstRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+                .isAddFirstRoutePoint(route, station, departDate, departDays);
 
         assertFalse(result);
     }
@@ -732,7 +733,7 @@ public class TrainServiceImplTest {
         String[] departDays = {"mon","tue","fri"};
         String[] arriveDays = {"", "", ""};
 
-        boolean result = TrainServiceImpl.isAddFirstRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+        boolean result = TrainServiceImpl.isAddFirstRoutePoint(route, station, departDate, departDays);
 
         assertFalse(result);
     }
@@ -757,7 +758,7 @@ public class TrainServiceImplTest {
         String[] departDays = {"tue","tue","fri"};
         String[] arriveDays = {"", "", ""};
 
-        boolean result = TrainServiceImpl.isAddFirstRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+        boolean result = TrainServiceImpl.isAddFirstRoutePoint(route, station, departDate, departDays);
 
         assertFalse(result);
     }
@@ -783,7 +784,7 @@ public class TrainServiceImplTest {
         String[] arriveDays = {"mon","tue","fri"};
 
         boolean result = TrainServiceImpl
-                .isAddLastRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+                .isAddLastRoutePoint(route, station, arriveDate, arriveDays);
 
         assertTrue(result);
     }
@@ -808,7 +809,7 @@ public class TrainServiceImplTest {
         String[] arriveDays = {"mon","tue","fri"};
 
         boolean result = TrainServiceImpl
-                .isAddLastRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+                .isAddLastRoutePoint(route, station, arriveDate, arriveDays);
 
         assertTrue(result);
     }
@@ -824,7 +825,7 @@ public class TrainServiceImplTest {
         String[] arriveDays = {"mon","tue","fri"};
         String[] departDays = {"", "", ""};
 
-        boolean result = TrainServiceImpl.isAddLastRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+        boolean result = TrainServiceImpl.isAddLastRoutePoint(route, station, arriveDate, arriveDays);
 
         assertTrue(result);
     }
@@ -849,7 +850,7 @@ public class TrainServiceImplTest {
         String[] departDays = {"", "", ""};
 
         boolean result = TrainServiceImpl
-                .isAddLastRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+                .isAddLastRoutePoint(route, station, arriveDate, arriveDays);
 
         assertFalse(result);
     }
@@ -874,7 +875,7 @@ public class TrainServiceImplTest {
         String[] arriveDays = {"mon","tue","fri"};
         String[] departDays = {"", "", ""};
 
-        boolean result = TrainServiceImpl.isAddLastRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+        boolean result = TrainServiceImpl.isAddLastRoutePoint(route, station, arriveDate, arriveDays);
 
         assertFalse(result);
     }
@@ -900,7 +901,7 @@ public class TrainServiceImplTest {
         String[] departDays = {"", "", ""};
 
         boolean result = TrainServiceImpl
-                .isAddLastRoutePoint(route, station, departDate, departDays, arriveDate, arriveDays);
+                .isAddLastRoutePoint(route, station, arriveDate, arriveDays);
 
         assertFalse(result);
     }
@@ -929,7 +930,7 @@ public class TrainServiceImplTest {
                 .getNextRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays));
     }
 
-    @Test
+    @Test(expected = TrainRoutePointAddException.class)
     public void getNextRoutePoint2(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(1,40);
@@ -937,8 +938,8 @@ public class TrainServiceImplTest {
         LocalTime arriveTime = LocalTime.of(8,30);
         String[] arriveDays = {"tue", "wed", "sat"};
 
-        assertEquals(null, TrainServiceImpl
-                .getNextRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays));
+        TrainServiceImpl
+                .getNextRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays);
     }
 
     @Test
@@ -977,7 +978,7 @@ public class TrainServiceImplTest {
                 .getNextRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays));
     }
 
-    @Test
+    @Test (expected = TrainRoutePointAddException.class)
     public void getNextRoutePoint6(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(4,40);
@@ -985,11 +986,11 @@ public class TrainServiceImplTest {
         LocalTime arriveTime = LocalTime.of(3,0);
         String[] arriveDays = {"mon", "tue", "fri"};
 
-        assertEquals(null, TrainServiceImpl
-                .getNextRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays));
+        TrainServiceImpl
+                .getNextRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays);
     }
 
-    @Test
+    @Test(expected = TrainRoutePointAddException.class)
     public void getNextRoutePoint7(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(4,40);
@@ -997,8 +998,8 @@ public class TrainServiceImplTest {
         LocalTime arriveTime = LocalTime.of(3,35);
         String[] arriveDays = {"mon", "tue", "fri"};
 
-        assertEquals(null, TrainServiceImpl
-                .getNextRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays));
+        TrainServiceImpl
+                .getNextRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays);
     }
 
     @Test
@@ -1073,7 +1074,7 @@ public class TrainServiceImplTest {
                 .getPrevRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays));
     }
 
-    @Test
+    @Test(expected = TrainRoutePointAddException.class)
     public void getPrevRoutePoint5(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(5,0);
@@ -1081,11 +1082,11 @@ public class TrainServiceImplTest {
         LocalTime arriveTime = LocalTime.of(4,40);
         String[] arriveDays = {"mon", "tue", "fri"};
 
-        assertEquals(null, TrainServiceImpl
-                .getPrevRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays));
+        TrainServiceImpl
+                .getPrevRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays);
     }
 
-    @Test
+    @Test(expected = TrainRoutePointAddException.class)
     public void getPrevRoutePoint6(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(4,45);
@@ -1093,8 +1094,8 @@ public class TrainServiceImplTest {
         LocalTime arriveTime = LocalTime.of(4,40);
         String[] arriveDays = {"mon", "tue", "fri"};
 
-        assertEquals(null, TrainServiceImpl
-                .getPrevRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays));
+        TrainServiceImpl
+                .getPrevRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays);
     }
 
     @Test
@@ -1162,6 +1163,96 @@ public class TrainServiceImplTest {
 
         assertTrue(result);
     }
+
+    @Test
+    public void isAddMiddleRoutePointPos3(){
+        List<Schedule> route1 = new ArrayList<>();
+        Schedule point1 = new Schedule();
+        point1.setStation(new RailWayStation("a"));
+        point1.setDepartPeriod("mon,tue,fri");
+        point1.setDepartureTime(LocalTime.of(1,30));
+        route1.add(point1);
+
+        RailWayStation station = new RailWayStation("station");
+        LocalTime departTime = LocalTime.of(2,30);
+        String[] departDays = {"mon", "tue", "fri"};
+        LocalTime arriveTime = LocalTime.of(2,20);
+        String[] arriveDays = {"mon", "tue", "fri"};
+
+        boolean result = TrainServiceImpl
+                .isAddMiddleRoutePoint(route1, station, departTime, departDays, arriveTime, arriveDays);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void isAddMiddleRoutePointPos4(){
+        List<Schedule> route1 = new ArrayList<>();
+        Schedule point1 = new Schedule();
+        point1.setStation(new RailWayStation("a"));
+        point1.setDepartPeriod("mon,tue,fri");
+        point1.setDepartureTime(LocalTime.of(1,30));
+
+        Schedule point2 = new Schedule();
+        point2.setStation(new RailWayStation("b"));
+        point2.setArrivePeriod("mon,tue,fri");
+        point2.setArrivalTime(LocalTime.of(4,30));
+        point2.setDepartPeriod("mon,tue,fri");
+        point2.setDepartureTime(LocalTime.of(4,50));
+
+        route1.add(point1);
+        route1.add(point2);
+
+        RailWayStation station = new RailWayStation("station");
+        LocalTime departTime = LocalTime.of(5,30);
+        String[] departDays = {"mon", "tue", "fri"};
+        LocalTime arriveTime = LocalTime.of(4,55);
+        String[] arriveDays = {"mon", "tue", "fri"};
+
+        boolean result = TrainServiceImpl
+                .isAddMiddleRoutePoint(route1, station, departTime, departDays, arriveTime, arriveDays);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void isAddMiddleRoutePointPos5(){
+        List<Schedule> route1 = new ArrayList<>();
+        Schedule point1 = new Schedule();
+        point1.setStation(new RailWayStation("a"));
+        point1.setDepartPeriod("mon,tue,fri");
+        point1.setDepartureTime(LocalTime.of(1,30));
+
+        Schedule point2 = new Schedule();
+        point2.setStation(new RailWayStation("b"));
+        point2.setArrivePeriod("mon,tue,fri");
+        point2.setArrivalTime(LocalTime.of(4,30));
+        point2.setDepartPeriod("mon,tue,fri");
+        point2.setDepartureTime(LocalTime.of(4,50));
+
+        Schedule point3 = new Schedule();
+        point3.setStation(new RailWayStation("c"));
+        point3.setArrivePeriod("mon,tue,fri");
+        point3.setArrivalTime(LocalTime.of(12,50));
+        point3.setDepartPeriod("mon,tue,fri");
+        point3.setDepartureTime(LocalTime.of(13,15));
+
+        route1.add(point1);
+        route1.add(point2);
+        route1.add(point3);
+
+        RailWayStation station = new RailWayStation("station");
+        LocalTime departTime = LocalTime.of(15,30);
+        String[] departDays = {"mon", "tue", "fri"};
+        LocalTime arriveTime = LocalTime.of(14,55);
+        String[] arriveDays = {"mon", "tue", "fri"};
+
+        boolean result = TrainServiceImpl
+                .isAddMiddleRoutePoint(route1, station, departTime, departDays, arriveTime, arriveDays);
+
+        assertTrue(result);
+    }
+
 
     @Test
     public void isAddMiddleRoutePointNeg0(){
@@ -1273,6 +1364,26 @@ public class TrainServiceImplTest {
                 .isAddRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays);
 
         assertFalse(result);
+    }
+
+    @Test
+    public void parseToIntTrainPeriod0(){
+        String[] days = {"sun", "mon", "thu"};
+        List<Integer> result = new ArrayList<>();
+        result.add(1);
+        result.add(2);
+        result.add(5);
+
+        assertEquals(result, TrainServiceImpl.parseToIntTrainPeriod(days));
+    }
+
+    @Test
+    public void parseToIntTrainPeriod1(){
+        String[] days = {""};
+        List<Integer> result = new ArrayList<>();
+        result.add(0);
+
+        assertEquals(result, TrainServiceImpl.parseToIntTrainPeriod(days));
     }
 
     @Before

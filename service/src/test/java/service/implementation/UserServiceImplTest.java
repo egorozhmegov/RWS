@@ -1,6 +1,7 @@
 package service.implementation;
 
 import dao.interfaces.UserDao;
+import exception.UserServiceInvalidDataException;
 import model.Employee;
 import model.User;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class UserServiceImplTest {
         assertEquals(employee, userService.getEmployeeByFirstNameAndLastName("", ""));
     }
 
-    @Test
+    @Test(expected = UserServiceInvalidDataException.class)
     public void authenticate0(){
         User user = new User();
         user.setLogin("root");
@@ -52,7 +53,7 @@ public class UserServiceImplTest {
         assertEquals(user, userService.authenticate(user));
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void registerUser0(){
         User user = new User();
         user.setUserFirstName("root");

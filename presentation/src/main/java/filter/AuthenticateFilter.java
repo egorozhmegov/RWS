@@ -1,5 +1,10 @@
 package filter;
 
+import controller.UserController;
+import model.UserSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import service.interfaces.UserService;
+
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -8,14 +13,17 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class AuthenticateFilter implements Filter {
+
+    @Autowired
+    private UserService userService;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        //init filter config
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        final String RWS_COOKIE = "RWS_COOKIE";
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
@@ -29,14 +37,21 @@ public class AuthenticateFilter implements Filter {
                 && !Objects.equals(req.getRequestURI(),"/client/payment")){
 
             Cookie[] cookies = req.getCookies();
+
             boolean foundCookie = false;
+            UserSession userSession = null;
 
             if (cookies != null) {
                 for (Cookie ck : cookies) {
-                    if (Objects.equals(ck.getName(), RWS_COOKIE)) {
-                        foundCookie = true;
-                        break;
+                    String sessionId = ck.getValue();
+
+                    if(Objects.equals(UserController.COOKIE, ck.getName())){
+                        userSession = userService.getUserSession(sessionId);
                     }
+
+                    if (userSession != null && Objects.equals(sessionId, userSession.getSessionId()))
+                        req.setAttribute("userSession", userSession);
+                        foundCookie = true; break;
                 }
             }
 
@@ -53,6 +68,6 @@ public class AuthenticateFilter implements Filter {
 
     @Override
     public void destroy() {
-
+        //destroy
     }
 }

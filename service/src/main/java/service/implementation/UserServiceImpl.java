@@ -2,18 +2,25 @@ package service.implementation;
 
 import dao.interfaces.GenericDao;
 import dao.interfaces.UserDao;
+import dao.interfaces.UserSessionDao;
 import exception.UserServiceEmailException;
 import exception.UserServiceEmployeeException;
 import exception.UserServiceInvalidDataException;
 import exception.UserServiceLoginException;
 import model.Employee;
 import model.User;
+import model.UserSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import service.interfaces.UserRoleService;
 import service.interfaces.UserService;
+import util.PasswordCrypt;
+
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 /**
  * User account service implementation.
@@ -23,8 +30,18 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
 
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private static final String ROLE_ADMIN = "ADMIN";
+
+    public static final int SESSION_TIME = 5;
+
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserSessionDao userSessionDao;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     /**
      * Get user by login.
@@ -77,7 +94,14 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
                     .format("Employee %s %s does not exist in company.", user.getUserFirstName(), user.getUserLastName()));
 
         } else {
+            try {
+                user.setPassword(PasswordCrypt.getPassword(user.getPassword()));
+            } catch (NoSuchAlgorithmException e) {
+                LOG.error("Can not get crypt password of user: {} {}",
+                        user.getUserLastName(), user.getUserFirstName());
+            }
             user.setEmail(user.getEmail().toLowerCase());
+            user.setRole(userRoleService.getUserRoleByRole(ROLE_ADMIN));
             userDao.create(user);
             LOG.info("Created user: '{}.", user);
         }
@@ -93,7 +117,13 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     @Transactional
     public User authenticate(User authentication) {
         String login = authentication.getLogin();
-        String password = authentication.getPassword();
+        String password = null;
+        try {
+            password = PasswordCrypt.getPassword(authentication.getPassword());
+        } catch (NoSuchAlgorithmException e) {
+            LOG.error("Can not get crypt password of user: {} {}",
+                    authentication.getUserLastName(), authentication.getUserFirstName());
+        }
 
         User user = userDao.getUserByLoginAndPassword(login, password);
         if(user == null) {
@@ -129,6 +159,41 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     public User getUserByEmail(String email){
         LOG.info("Loaded user with email: '{}'.", email);
         return userDao.getUserByEmail(email);
+    }
+
+    /**
+     * Create user session.
+     *
+     * @param sessionId String
+     */
+    @Transactional
+    @Override
+    public void createUserSession(String sessionId) {
+        LOG.info("Created session with id: {}", sessionId);
+        userSessionDao.create(new UserSession(sessionId, LocalDateTime.now().plusMinutes(SESSION_TIME)));
+    }
+
+    /**
+     * Gets user session.
+     *
+     * @param sessionId String.
+     * @return UserSession.
+     */
+    @Transactional
+    @Override
+    public UserSession getUserSession(String sessionId){
+        return userSessionDao.getUserSessionById(sessionId);
+    }
+
+    /**
+     * Update user session.
+     *
+     * @param userSession UserSession.
+     */
+    @Transactional
+    @Override
+    public void updateUserSession(UserSession userSession) {
+        userSessionDao.update(userSession);
     }
 
     public void setUserDao(UserDao userDao) {

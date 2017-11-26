@@ -5,6 +5,7 @@ import dao.interfaces.UserRoleDao;
 import model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.UserRoleService;
 
 /**
@@ -23,5 +24,17 @@ public class UserRoleServiceImpl extends GenericServiceImpl<UserRole> implements
 
     public void setUserRoleDao(UserRoleDao userRoleDao) {
         this.userRoleDao = userRoleDao;
+    }
+
+    /**
+     * Gets user role entity by role title.
+     *
+     * @param role String
+     * @return UserRole
+     */
+    @Transactional
+    @Override
+    public UserRole getUserRoleByRole(String role) {
+        return userRoleDao.getUserRoleByRole(role);
     }
 }

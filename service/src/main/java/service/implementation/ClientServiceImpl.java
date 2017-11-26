@@ -15,6 +15,7 @@ import util.*;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -127,11 +128,9 @@ public class ClientServiceImpl implements ClientService {
 
         if (searchResult.isEmpty()) {
             LOG.error("No trains for request: {} - {} on date {}", stationFrom, stationTo, departDate);
-            throw new ServiceException(
-                    String.format("No trains for request: %s - %s on date %s",
+            throw new ServiceException(String.format("No trains for request: %s - %s on date %s",
                             stationFrom, stationTo, departDate));
         }
-
         LOG.info("Search trains: '{}'", searchResult);
         return searchResult;
     }
@@ -145,13 +144,8 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public int dayOfWeek(LocalDate date) {
-        return TrainServiceImpl
-                .WEEK_DAYS
-                .indexOf(date
-                        .getDayOfWeek()
-                        .toString()
-                        .toLowerCase()
-                        .substring(0, 3)) + 1;
+        return TrainServiceImpl.WEEK_DAYS
+                .indexOf(date.getDayOfWeek().toString().toLowerCase().substring(0, 3)) + 1;
     }
 
     /**
@@ -168,6 +162,7 @@ public class ClientServiceImpl implements ClientService {
         List<Schedule> currentRoute = new ArrayList<>();
 
         boolean isCurrentRoute = false;
+
         for (Schedule routePoint : trainRoute) {
             if (Objects.equals(routePoint.getStation().getTitle(), station1)) {
                 isCurrentRoute = true;
@@ -190,9 +185,7 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public int getTicketPrice(long trainId, List<Schedule> currentRoute) {
-        return trainService
-                .read(trainId)
-                .getTariff() * currentRoute.size();
+        return trainService.read(trainId).getTariff() * currentRoute.size();
     }
 
     /**
@@ -205,20 +198,12 @@ public class ClientServiceImpl implements ClientService {
      * @return int
      */
     @Override
-    public int getFreeSeats(LocalDate departDate,
-                            long id,
-                            String station1,
-                            String station2) {
+    public int getFreeSeats(LocalDate departDate, long id, String station1, String station2) {
         long departStationId = stationService.getStationByTitle(station1).getId();
         long arriveStationId = stationService.getStationByTitle(station2).getId();
 
-        return Train.getSEATS() - passengerService
-                .getRegisteredPassengers(
-                        id,
-                        departStationId,
-                        arriveStationId,
-                        departDate)
-                .size();
+        return Train.getSEATS() - passengerService.getRegisteredPassengers(
+                        id, departStationId, arriveStationId, departDate).size();
     }
 
 
@@ -303,11 +288,7 @@ public class ClientServiceImpl implements ClientService {
         }
 
         long ticketNumber = passengerService.getRegisteredPassenger(
-                trainId,
-                departStationId,
-                arriveStationId,
-                departDate,
-                ticketData.getPassenger()).getId();
+                trainId, departStationId, arriveStationId, departDate, ticketData.getPassenger()).getId();
 
         createQRCode(ticketNumber, ticketData);
 
@@ -326,17 +307,21 @@ public class ClientServiceImpl implements ClientService {
      *
      * @param ticketData TicketData
      */
-    public void sendTicketOnEmail(long ticketNumber, TicketData ticketData){
-        EmailSender sender = new EmailSender(ticketNumber);
-        sender.send(ticketData.getUserEmail());
+    void sendTicketOnEmail(long ticketNumber, TicketData ticketData){
+        EmailSender sender = null;
+        try {
+            sender = new EmailSender(ticketNumber);
+            sender.send(ticketData.getUserEmail());
+        } catch (NoSuchAlgorithmException e) {
+            LOG.error("Can not get password of support email.");
+        }
     }
 
-    public void createQRCode(long ticketNumber, TicketData ticketData) {
+   void createQRCode(long ticketNumber, TicketData ticketData) {
         try{
             Document ticket = new Document(new Rectangle(160, 160));
-            PdfWriter writer = PdfWriter
-                    .getInstance(ticket, new FileOutputStream(String
-                            .format("C:/Users/Ozhmegov/Desktop/t-systems/RWS/service/src/main/java/util/tickets/ticket_%s.pdf", ticketNumber)));
+            PdfWriter.getInstance(ticket, new FileOutputStream(String
+                    .format("C:/Users/Ozhmegov/Desktop/t-systems/RWS/service/src/main/java/util/tickets/ticket_%s.pdf", ticketNumber)));
             ticket.open();
 
             ticket.add(new Paragraph(String.format("Ticket № %s", ticketNumber)));
@@ -380,12 +365,7 @@ public class ClientServiceImpl implements ClientService {
         int depMonth = departDay.getMonthValue();
         int depDay = departDay.getDayOfMonth();
         int weekDay = TrainServiceImpl
-                .WEEK_DAYS.indexOf(departDay
-                        .getDayOfWeek()
-                        .toString()
-                        .substring(0, 3)
-                        .toLowerCase()) + 1;
-
+                .WEEK_DAYS.indexOf(departDay.getDayOfWeek().toString().substring(0, 3).toLowerCase()) + 1;
         int routePointDay;
         int routePointMonth = depMonth;
         int routePointYear = depYear;

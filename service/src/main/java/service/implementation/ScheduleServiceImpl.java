@@ -80,10 +80,7 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     @Transactional
     @Override
     public List<Schedule> getDepartSchedule(StationWrapper stationWrapper){
-        long stationId =
-                railWayStationService
-                .getStationByTitle(stationWrapper.getStation())
-                .getId();
+        long stationId = railWayStationService.getStationByTitle(stationWrapper.getStation()).getId();
         int weekDay = clientService.dayOfWeek(stationWrapper.getDate());
         LOG.info("Departure station schedule loaded.");
         return scheduleDao.getStationDepartSchedule(stationId, weekDay);
@@ -98,10 +95,7 @@ public class ScheduleServiceImpl extends GenericServiceImpl<Schedule> implements
     @Transactional
     @Override
     public List<Schedule> getArriveSchedule(StationWrapper stationWrapper){
-        long stationId =
-                railWayStationService
-                .getStationByTitle(stationWrapper.getStation())
-                .getId();
+        long stationId = railWayStationService.getStationByTitle(stationWrapper.getStation()).getId();
         int weekDay = clientService.dayOfWeek(stationWrapper.getDate());
         LOG.info("Arrival station schedule loaded.");
         return scheduleDao.getStationArriveSchedule(stationId, weekDay);

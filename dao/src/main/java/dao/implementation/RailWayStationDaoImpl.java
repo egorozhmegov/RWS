@@ -42,8 +42,7 @@ class RailWayStationDaoImpl extends GenericDaoImpl<RailWayStation> implements Ra
         try{
             String sqlQuery = String.format("SELECT r FROM RailWayStation AS r WHERE r.title = '%s'", title);
             Query query = getEntityManager().createQuery(sqlQuery);
-            RailWayStation station = (RailWayStation) query.getSingleResult();
-            return station;
+            return (RailWayStation) query.getSingleResult();
         } catch (Exception e){
             return null;
         }

@@ -2,6 +2,7 @@ package service.interfaces;
 
 import model.Employee;
 import model.User;
+import model.UserSession;
 
 /**
  * User service.
@@ -46,4 +47,26 @@ public interface UserService extends GenericService<User> {
      * @return Employee
      */
     Employee getEmployeeByFirstNameAndLastName(String firstName, String lastName);
+
+    /**
+     * Create user session.
+     *
+     * @param sessionId String
+     */
+    void createUserSession(String sessionId);
+
+    /**
+     * Gets user session.
+     *
+     * @param sessionId String.
+     * @return UserSession.
+     */
+    UserSession getUserSession(String sessionId);
+
+    /**
+     * Update user session.
+     *
+     * @param userSession UserSession.
+     */
+    void updateUserSession(UserSession userSession);
 }

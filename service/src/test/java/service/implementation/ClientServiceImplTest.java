@@ -18,6 +18,7 @@ import service.interfaces.TrainService;
 import util.*;
 
 import java.io.FileNotFoundException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -138,32 +139,32 @@ public class ClientServiceImplTest {
     }
 
     @Test(expected = Exception.class)
-    public void sendTicketOnEmail0(){
+    public void sendTicketOnEmail0() throws NoSuchAlgorithmException {
         TicketData ticketData = new TicketData();
         EmailSender sender = new EmailSender(1L);
         sender.send("");
         verify(clientServiceMock).sendTicketOnEmail(1L, ticketData);
     }
 
-//    @Test
-//    public void createQRCode0() throws FileNotFoundException, DocumentException {
-//        TicketData ticketData = new TicketData();
-//        Train train = new Train();
-//        train.setNumber("1");
-//        train.setId(1L);
-//        TrainWrapper trainWrapper = new TrainWrapper();
-//        trainWrapper.setTrain(train);
-//        trainWrapper.setDepartDate(LocalDate.of(2017, 10, 14));
-//        RailWayStation station1 = new RailWayStation("a");
-//        RailWayStation station2 = new RailWayStation("b");
-//        trainWrapper.setStationFrom(station1);
-//        trainWrapper.setStationTo(station2);
-//        trainWrapper.setPrice(100);
-//
-//        ticketData.setTrainWrapper(trainWrapper);
-//
-//        clientServiceMock.createQRCode(1L, ticketData);
-//    }
+    @Test (expected = NullPointerException.class)
+    public void createQRCode0() throws FileNotFoundException, DocumentException {
+        TicketData ticketData = new TicketData();
+        Train train = new Train();
+        train.setNumber("1");
+        train.setId(1L);
+        TrainWrapper trainWrapper = new TrainWrapper();
+        trainWrapper.setTrain(train);
+        trainWrapper.setDepartDate(LocalDate.of(2017, 10, 14));
+        RailWayStation station1 = new RailWayStation("a");
+        RailWayStation station2 = new RailWayStation("b");
+        trainWrapper.setStationFrom(station1);
+        trainWrapper.setStationTo(station2);
+        trainWrapper.setPrice(100);
+
+        ticketData.setTrainWrapper(trainWrapper);
+
+        clientServiceMock.createQRCode(1L, ticketData);
+    }
 
     @Test
     public void dayOfWeek0(){

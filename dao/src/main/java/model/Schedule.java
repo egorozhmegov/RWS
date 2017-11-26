@@ -51,14 +51,12 @@ public class Schedule implements Serializable {
                     LocalTime arrivalTime,
                     int departureDay,
                     int arrivalDay,
-                    String departPeriod,
-                    String arrivePeriod) {
+                    RailWayStation station) {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.departureDay = departureDay;
         this.arrivalDay = arrivalDay;
-        this.departPeriod = departPeriod;
-        this.arrivePeriod = arrivePeriod;
+        this.station = station;
     }
 
     public long getId() {

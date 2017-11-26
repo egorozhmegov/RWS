@@ -12,6 +12,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
 /**
@@ -26,10 +27,10 @@ public class EmailSender {
     private Properties props;
     private long trainNumber;
 
-    public EmailSender(long trainNumber) {
+    public EmailSender(long trainNumber) throws NoSuchAlgorithmException {
         this.trainNumber = trainNumber;
         this.username = "rws.inf@gmail.com";
-        this.password = "egor1229@-@";
+        this.password = PasswordCrypt.getPassword("egor1229@-@");
         props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
