@@ -24,28 +24,28 @@ public class UserServiceImplTest {
     private UserDao userDao;
 
     @Test
-    public void getUserByLogin0(){
+    public void getUserByLoginPos0(){
         User user = new User();
         when(userDao.getUserByLogin("")).thenReturn(user);
         assertEquals(user, userService.getUserByLogin(""));
     }
 
     @Test
-    public void getUserByEmail0(){
+    public void getUserByEmailPos0(){
         User user = new User();
         when(userDao.getUserByEmail("")).thenReturn(user);
         assertEquals(user, userService.getUserByEmail(""));
     }
 
     @Test
-    public void getEmployeeByFirstNameAndLastName0(){
+    public void getEmployeeByFirstNameAndLastNamePos0(){
         Employee employee = new Employee();
         when(userDao.getEmployeeByFirstNameAndLastName("", "")).thenReturn(employee);
         assertEquals(employee, userService.getEmployeeByFirstNameAndLastName("", ""));
     }
 
     @Test(expected = UserServiceInvalidDataException.class)
-    public void authenticate0(){
+    public void authenticatePos0(){
         User user = new User();
         user.setLogin("root");
         user.setPassword("root");
@@ -54,7 +54,7 @@ public class UserServiceImplTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void registerUser0(){
+    public void registerUserNeg0(){
         User user = new User();
         user.setUserFirstName("root");
         user.setUserLastName("root");

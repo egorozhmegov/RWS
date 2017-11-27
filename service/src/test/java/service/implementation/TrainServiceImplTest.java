@@ -45,22 +45,63 @@ public class TrainServiceImplTest {
 
     private List<Schedule> route = new ArrayList<>();
 
+
+    @Before
+    public void initRoute1(){
+        Schedule point1 = new Schedule();
+        point1.setStation(new RailWayStation("a"));
+        point1.setDepartPeriod("mon,tue,fri");
+        point1.setDepartureTime(LocalTime.of(1,30));
+
+        Schedule point2 = new Schedule();
+        point2.setStation(new RailWayStation("b"));
+        point2.setArrivePeriod("mon,tue,fri");
+        point2.setArrivalTime(LocalTime.of(4,30));
+        point2.setDepartPeriod("mon,tue,fri");
+        point2.setDepartureTime(LocalTime.of(4,50));
+
+        Schedule point3 = new Schedule();
+        point3.setStation(new RailWayStation("c"));
+        point3.setArrivePeriod("mon,tue,fri");
+        point3.setArrivalTime(LocalTime.of(12,50));
+        point3.setDepartPeriod("mon,tue,fri");
+        point3.setDepartureTime(LocalTime.of(13,15));
+
+        Schedule point4 = new Schedule();
+        point4.setStation(new RailWayStation("d"));
+        point4.setArrivePeriod("tue,wed,sat");
+        point4.setArrivalTime(LocalTime.of(8,50));
+        point4.setDepartPeriod("tue,wed,sat");
+        point4.setDepartureTime(LocalTime.of(9,30));
+
+        Schedule point5 = new Schedule();
+        point5.setStation(new RailWayStation("e"));
+        point5.setArrivePeriod("tue,wed,sat");
+        point5.setArrivalTime(LocalTime.of(19,30));
+
+        route.add(point1);
+        route.add(point2);
+        route.add(point3);
+        route.add(point4);
+        route.add(point5);
+    }
+
     @Test
-    public void getRoute0() {
+    public void getRoutePos0() {
         List<Schedule> schedule = new ArrayList<>();
         when(trainDao.getRoute(1L)).thenReturn(schedule);
         assertEquals(schedule,trainServiceMock.getRoute(1L));
     }
 
     @Test
-    public void getDepartureTime0(){
+    public void getDepartureTimePos0(){
         String departureTime = "12:12";
         when(trainDao.getDepartureTime(1L, 1L, 1)).thenReturn(departureTime);
         assertEquals(departureTime,trainServiceMock.getDepartureTime(1L, 1L, 1));
     }
 
     @Test
-    public void addTrain0(){
+    public void addTrainPos0(){
         Train train = new Train("1", 1);
         when(trainDao.getTrainByNumber("1")).thenReturn(null);
         trainServiceMock.addTrain(train);
@@ -68,7 +109,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void removeRoutePoint0() {
+    public void removeRoutePointPos0() {
         Schedule routePoint = new Schedule();
         RailWayStation station = new RailWayStation("a");
         station.setId(1L);
@@ -80,25 +121,25 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void removeTrain0() {
+    public void removeTrainPos0() {
         trainServiceMock.removeTrain(1L);
         verify(scheduleService).deleteByTrainId(1L);
     }
 
     @Test
-    public void removeTrain1() {
+    public void removeTrainPos1() {
         trainServiceMock.removeTrain(1L);
         verify(trainDao).delete(1L);
     }
 
     @Test
-    public void removeTrain2() {
+    public void removeTrainPos2() {
         trainServiceMock.removeTrain(1L);
         verify(passengerService).deleteByTrainId(1L);
     }
 
     @Test
-    public void isExistRoutePoint0() throws Exception {
+    public void isExistRoutePointPos0() throws Exception {
 
         List<Schedule> route = new ArrayList<>();
         RailWayStation checkStation = new RailWayStation("C");
@@ -124,7 +165,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void isExistRoutePoint1() throws Exception {
+    public void isExistRoutePointNeg0() throws Exception {
 
         List<Schedule> route = new ArrayList<>();
         RailWayStation checkStation = new RailWayStation("F");
@@ -150,7 +191,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void isExistRoutePoint2() throws Exception {
+    public void isExistRoutePointNeg1() throws Exception {
 
         List<Schedule> route = new ArrayList<>();
         RailWayStation checkStation = new RailWayStation();
@@ -176,7 +217,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void isExistRoutePoint3() throws Exception {
+    public void isExistRoutePointNeg3() throws Exception {
 
         List<Schedule> route = new ArrayList<>();
         RailWayStation checkStation = new RailWayStation(null);
@@ -202,7 +243,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void addRoutePoint(){
+    public void addRoutePointPos0(){
         Schedule routePoint = new Schedule();
         Schedule schedule = new Schedule();
         Train train = new Train();
@@ -1015,7 +1056,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void getPrevRoutePoint0(){
+    public void getPrevRoutePointPos0(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(8,40);
         String[] departDays = {"mon", "tue", "fri"};
@@ -1027,7 +1068,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void getPrevRoutePoint1(){
+    public void getPrevRoutePointPos1(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(9,50);
         String[] departDays = {"tue", "wed", "sat"};
@@ -1039,7 +1080,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void getPrevRoutePoint2(){
+    public void getPrevRoutePointPos2(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(2,20);
         String[] departDays = {"mon", "tue", "fri"};
@@ -1051,7 +1092,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void getPrevRoutePoint3(){
+    public void getPrevRoutePointPos3(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(12,20);
         String[] departDays = {"tue", "wed", "sat"};
@@ -1063,7 +1104,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void getPrevRoutePoint4(){
+    public void getPrevRoutePointPos4(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(22,20);
         String[] departDays = {"tue", "wed", "sat"};
@@ -1075,7 +1116,7 @@ public class TrainServiceImplTest {
     }
 
     @Test(expected = TrainRoutePointAddException.class)
-    public void getPrevRoutePoint5(){
+    public void getPrevRoutePointNeg0(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(5,0);
         String[] departDays = {"mon", "tue", "fri"};
@@ -1087,7 +1128,7 @@ public class TrainServiceImplTest {
     }
 
     @Test(expected = TrainRoutePointAddException.class)
-    public void getPrevRoutePoint6(){
+    public void getPrevRoutePointNeg1(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(4,45);
         String[] departDays = {"mon", "tue", "fri"};
@@ -1099,7 +1140,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void getPrevRoutePoint7(){
+    public void getPrevRoutePointNeg2(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(20,0);
         String[] departDays = {"tue", "wed", "sat"};
@@ -1111,7 +1152,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void getPrevRoutePoint8(){
+    public void getPrevRoutePointNeg3(){
         RailWayStation station = new RailWayStation("station");
         LocalTime departTime = LocalTime.of(2,30);
         String[] departDays = {"mon", "tue", "fri"};
@@ -1367,7 +1408,7 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void parseToIntTrainPeriod0(){
+    public void parseToIntTrainPeriodPos0(){
         String[] days = {"sun", "mon", "thu"};
         List<Integer> result = new ArrayList<>();
         result.add(1);
@@ -1378,51 +1419,11 @@ public class TrainServiceImplTest {
     }
 
     @Test
-    public void parseToIntTrainPeriod1(){
+    public void parseToIntTrainPeriodPos1(){
         String[] days = {""};
         List<Integer> result = new ArrayList<>();
         result.add(0);
 
         assertEquals(result, TrainServiceImpl.parseToIntTrainPeriod(days));
-    }
-
-    @Before
-    public void initRoute1(){
-        Schedule point1 = new Schedule();
-        point1.setStation(new RailWayStation("a"));
-        point1.setDepartPeriod("mon,tue,fri");
-        point1.setDepartureTime(LocalTime.of(1,30));
-
-        Schedule point2 = new Schedule();
-        point2.setStation(new RailWayStation("b"));
-        point2.setArrivePeriod("mon,tue,fri");
-        point2.setArrivalTime(LocalTime.of(4,30));
-        point2.setDepartPeriod("mon,tue,fri");
-        point2.setDepartureTime(LocalTime.of(4,50));
-
-        Schedule point3 = new Schedule();
-        point3.setStation(new RailWayStation("c"));
-        point3.setArrivePeriod("mon,tue,fri");
-        point3.setArrivalTime(LocalTime.of(12,50));
-        point3.setDepartPeriod("mon,tue,fri");
-        point3.setDepartureTime(LocalTime.of(13,15));
-
-        Schedule point4 = new Schedule();
-        point4.setStation(new RailWayStation("d"));
-        point4.setArrivePeriod("tue,wed,sat");
-        point4.setArrivalTime(LocalTime.of(8,50));
-        point4.setDepartPeriod("tue,wed,sat");
-        point4.setDepartureTime(LocalTime.of(9,30));
-
-        Schedule point5 = new Schedule();
-        point5.setStation(new RailWayStation("e"));
-        point5.setArrivePeriod("tue,wed,sat");
-        point5.setArrivalTime(LocalTime.of(19,30));
-
-        route.add(point1);
-        route.add(point2);
-        route.add(point3);
-        route.add(point4);
-        route.add(point5);
     }
 }

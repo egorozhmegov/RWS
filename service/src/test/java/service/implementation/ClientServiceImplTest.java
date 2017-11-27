@@ -1,5 +1,6 @@
 package service.implementation;
 
+import com.itextpdf.text.DocumentException;
 import exception.ServiceException;
 import model.Passenger;
 import model.RailWayStation;
@@ -16,6 +17,7 @@ import service.interfaces.ScheduleService;
 import service.interfaces.TrainService;
 import util.*;
 
+import java.io.FileNotFoundException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -48,7 +50,7 @@ public class ClientServiceImplTest {
     private ClientServiceImpl clientService = new ClientServiceImpl();
 
     @Test
-    public void getSchedule0(){
+    public void getSchedulePos0(){
         StationWrapper stationWrapper = new StationWrapper();
         ScheduleWrapper scheduleWrapper = new ScheduleWrapper();
         when(scheduleService.getArriveSchedule(stationWrapper)).thenReturn(new ArrayList<Schedule>());
@@ -57,14 +59,14 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void getAllStations0(){
+    public void getAllStationsPos0(){
         List<RailWayStation> stations = new ArrayList<>();
         when(stationService.getAll()).thenReturn(stations);
         assertEquals(stations, clientServiceMock.getAllStations());
     }
 
     @Test(expected = ServiceException.class)
-    public void searchTrains0(){
+    public void searchTrainsNeg0(){
         List<TrainWrapper> searchResult = new ArrayList<>();
         TrainWrapper request = new TrainWrapper();
         request.setStationFrom(new RailWayStation("a"));
@@ -78,7 +80,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void getCurrentRoute0(){
+    public void getCurrentRoutePos0(){
         List<Schedule> currentRoute = new ArrayList<>();
         when(trainService.getRoute(1L)).thenReturn(currentRoute);
         when(clientServiceMock.getCurrentRoute(1L, "", "")).thenReturn(currentRoute);
@@ -86,14 +88,14 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void getTicketPrice0(){
+    public void getTicketPricePos00(){
         when(trainService.read(1L)).thenReturn(new Train());
         List<Schedule> currentRoute = new ArrayList<>();
         assertEquals(0, clientServiceMock.getTicketPrice(1L, currentRoute));
     }
 
     @Test
-    public void getFreeSeats0(){
+    public void getFreeSeatsPos0(){
         LocalDate departDate = LocalDate.of(2017, 10,10);
         when(stationService.getStationByTitle("")).thenReturn(new RailWayStation());
         when(passengerService
@@ -103,7 +105,7 @@ public class ClientServiceImplTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void buyTicket0(){
+    public void buyTicketNeg0(){
         TicketData ticketData = new TicketData();
         Train train = new Train();
         train.setId(1L);
@@ -137,7 +139,7 @@ public class ClientServiceImplTest {
     }
 
     @Test(expected = Exception.class)
-    public void sendTicketOnEmail0() throws NoSuchAlgorithmException {
+    public void sendTicketOnEmailNeg0() throws NoSuchAlgorithmException {
         TicketData ticketData = new TicketData();
         EmailSender sender = new EmailSender(1L);
         sender.send("");
@@ -145,7 +147,7 @@ public class ClientServiceImplTest {
     }
 
     @Test (expected = NullPointerException.class)
-    public void createQRCode0() throws FileNotFoundException, DocumentException {
+    public void createQRCodeNeg0() throws FileNotFoundException, DocumentException {
         TicketData ticketData = new TicketData();
         Train train = new Train();
         train.setNumber("1");
@@ -165,13 +167,13 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void dayOfWeek0(){
+    public void dayOfWeekPos0(){
         assertEquals(2, clientService
                 .dayOfWeek(LocalDate.of(2017, 10, 9)));
     }
 
     @Test
-    public void getRoutePointDate0(){
+    public void getRoutePointDatePos0(){
         Schedule schedule = new Schedule();
         schedule.setArrivalDay(6);
 
@@ -180,7 +182,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void getRoutePointDate1(){
+    public void getRoutePointDateNeg0(){
         Schedule schedule = new Schedule();
         schedule.setArrivalDay(6);
 
@@ -189,7 +191,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void getRoutePointDate2(){
+    public void getRoutePointDateNeg1(){
         Schedule schedule = new Schedule();
         schedule.setArrivalDay(7);
 
@@ -198,7 +200,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void getRoutePointDate3(){
+    public void getRoutePointDatePos1(){
         Schedule schedule = new Schedule();
         schedule.setArrivalDay(1);
 
@@ -207,7 +209,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void getRoutePointDate4(){
+    public void getRoutePointDatePos2(){
         Schedule schedule = new Schedule();
         schedule.setArrivalDay(1);
 
@@ -216,7 +218,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void getRoutePointDate5(){
+    public void getRoutePointDatePos3(){
         Schedule schedule = new Schedule();
         schedule.setArrivalDay(4);
 
@@ -225,7 +227,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void getRoutePointDate6(){
+    public void getRoutePointDatePos4(){
         Schedule schedule = new Schedule();
         schedule.setArrivalDay(2);
 

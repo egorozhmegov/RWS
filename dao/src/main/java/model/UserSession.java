@@ -20,6 +20,7 @@ public class UserSession implements Serializable{
     private String sessionId;
 
     @Column(name = "EXPIRED_TIME")
+    @SuppressWarnings("squid:S3437")
     private LocalDateTime expiredTime;
 
     public UserSession() {

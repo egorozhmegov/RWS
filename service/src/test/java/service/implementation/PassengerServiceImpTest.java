@@ -44,7 +44,7 @@ public class PassengerServiceImpTest {
         currenRoute.add(new Schedule());
     }
     @Test
-    public void getRegisteredPassengers0(){
+    public void getRegisteredPassengersPos0(){
         when(railWayStationService.read(1L)).thenReturn(new RailWayStation());
         when(clientService.getCurrentRoute(1L,
                 railWayStationService.read(1L).getTitle(),
@@ -59,7 +59,7 @@ public class PassengerServiceImpTest {
     }
 
     @Test
-    public void getRegisteredPassenger0(){
+    public void getRegisteredPassengerPos0(){
         when(railWayStationService.read(1L)).thenReturn(new RailWayStation());
         when(clientService.getCurrentRoute(1L,
                 railWayStationService.read(1L).getTitle(),
@@ -73,13 +73,13 @@ public class PassengerServiceImpTest {
     }
 
     @Test
-    public void deleteByTrainId0(){
+    public void deleteByTrainIdPos0(){
         passengerService.deleteByTrainId(1L);
         verify(passengerDao).deleteByTrainId(1L);
     }
 
     @Test
-    public void deleteByStationId0(){
+    public void deleteByStationIdPos0(){
         long stationId = 1;
         passengerService.deleteByStationId(stationId);
         verify(passengerDao).deleteByStationId(stationId);

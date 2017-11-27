@@ -31,32 +31,32 @@ public class RailWayStationServiceImplTest {
     private PassengerService passengerService;
 
     @Test
-    public void removeStation0(){
+    public void removeStationPos0(){
         railWayStationService.removeStation(1L);
         verify(scheduleService).deleteByStationId(1L);
     }
 
     @Test
-    public void removeStation1(){
+    public void removeStationPos1(){
         railWayStationService.removeStation(1L);
         verify(railWayStationDao).delete(1L);
     }
 
     @Test
-    public void removeStation2(){
+    public void removeStationPos2(){
         railWayStationService.removeStation(1L);
         verify(passengerService).deleteByStationId(1L);
     }
 
     @Test
-    public void getStationByTitle0(){
+    public void getStationByTitlePos0(){
         RailWayStation station = new RailWayStation();
         when(railWayStationService.getStationByTitle("")).thenReturn(station);
         assertEquals(station, railWayStationService.getStationByTitle(""));
     }
 
     @Test
-    public void addStation0(){
+    public void addStationPos0(){
         RailWayStation station = new RailWayStation("a");
         when(railWayStationService.getStationByTitle("")).thenReturn(station);
         railWayStationService.addStation(station);
@@ -64,7 +64,7 @@ public class RailWayStationServiceImplTest {
     }
 
     @Test
-    public void isExistStation(){
+    public void isExistStationPos0(){
         when(railWayStationDao.getStationByTitle("")).thenReturn(null);
         assertEquals(null, railWayStationService.getStationByTitle(""));
     }

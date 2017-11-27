@@ -35,19 +35,19 @@ public class ScheduleServiceImplTest {
     private ClientService clientService;
 
     @Test
-    public void deleteByTrainId0(){
+    public void deleteByTrainIdPos0(){
         scheduleService.deleteByTrainId(1L);
         verify(scheduleDao).deleteByTrainId(1L);
     }
 
     @Test
-    public void deleteByStationId0(){
+    public void deleteByStationIdPos0(){
         scheduleService.deleteByStationId(1L);
         verify(scheduleDao).deleteByStationId(1L);
     }
 
     @Test
-    public void searchTrain0(){
+    public void searchTrainPos0(){
         List<Schedule> result = new ArrayList<>();
         when(scheduleDao.searchTrain(1L,1L,1))
                 .thenReturn(result);
@@ -55,7 +55,7 @@ public class ScheduleServiceImplTest {
     }
 
     @Test
-    public void getDepartSchedule0(){
+    public void getDepartSchedulePos0(){
         List<Schedule> result = new ArrayList<>();
         StationWrapper stationWrapper = new StationWrapper();
         when(railWayStationService
@@ -69,7 +69,7 @@ public class ScheduleServiceImplTest {
     }
 
     @Test
-    public void getArrivalSchedule0(){
+    public void getArrivalSchedulePos0(){
         List<Schedule> result = new ArrayList<>();
         StationWrapper stationWrapper = new StationWrapper();
         when(railWayStationService
@@ -83,7 +83,7 @@ public class ScheduleServiceImplTest {
     }
 
     @Test
-    public void deleteByStationAndTrainId0(){
+    public void deleteByStationAndTrainIdPos0(){
         scheduleService.deleteByStationAndTrainId(1L,1L);
         verify(scheduleDao).deleteByStationAndTrainId(1L, 1L);
     }

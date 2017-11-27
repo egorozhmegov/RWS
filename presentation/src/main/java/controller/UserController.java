@@ -47,7 +47,7 @@ public class UserController {
         this.userSessionService = userSessionService;
 
         watchdog.scheduleAtFixedRate(
-                () -> userSessionService.removeExpiredSessionIds(), 0, 1, TimeUnit.MINUTES);
+                userSessionService::removeExpiredSessionIds, 0, 1, TimeUnit.MINUTES);
     }
 
     /**
@@ -58,6 +58,7 @@ public class UserController {
      * @return ResponseEntity<User>
      */
     @RequestMapping(value = "/loginEmployee", method = RequestMethod.POST)
+    @SuppressWarnings("squid:S2092")
     public ResponseEntity<User> login(@RequestBody User user,
                                       HttpServletRequest request,
                                       HttpServletResponse response) {

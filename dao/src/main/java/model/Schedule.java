@@ -19,9 +19,11 @@ public class Schedule implements Serializable {
     private long id;
 
     @Column(name = "DEPARTURE_TIME")
+    @SuppressWarnings("squid:S3437")
     private LocalTime departureTime;
 
     @Column(name = "ARRIVAL_TIME")
+    @SuppressWarnings("squid:S3437")
     private LocalTime arrivalTime;
 
     @Column(name = "DEPARTURE_DAY")

@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/**
+ * Session filter.
+ */
 public class SessionFilter implements Filter {
 
     @Autowired
@@ -21,12 +24,24 @@ public class SessionFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
-                filterConfig.getServletContext());
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(
+                this, filterConfig.getServletContext());
     }
 
+    /**
+     * Update cookie.
+     *
+     * @param request ServletRequest
+     * @param response ServletResponse
+     * @param chain FilterChain
+     * @throws IOException exception
+     * @throws ServletException exception
+     */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    @SuppressWarnings("squid:S2092")
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 

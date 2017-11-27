@@ -25,9 +25,11 @@ public class Passenger implements Serializable {
     private String passengerLastName;
 
     @Column(name = "BIRTH_DAY")
+    @SuppressWarnings("squid:S3437")
     private LocalDate birthday;
 
     @Column(name = "TRAIN_DATE")
+    @SuppressWarnings("squid:S3437")
     private LocalDate trainDate;
 
     @ManyToOne
