@@ -1,6 +1,5 @@
 package service.implementation;
 
-import com.itextpdf.text.DocumentException;
 import exception.ServiceException;
 import model.Passenger;
 import model.RailWayStation;
@@ -17,7 +16,6 @@ import service.interfaces.ScheduleService;
 import service.interfaces.TrainService;
 import util.*;
 
-import java.io.FileNotFoundException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalTime;

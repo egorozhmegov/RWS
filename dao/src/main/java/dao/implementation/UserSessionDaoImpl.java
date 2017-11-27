@@ -44,4 +44,17 @@ public class UserSessionDaoImpl extends GenericDaoImpl<UserSession> implements U
             return null;
         }
     }
+
+    /**
+     * Removes session.
+     *
+     * @param sessionId String
+     */
+    @Override
+    public void removeSession(String sessionId) {
+        getEntityManager()
+                .createQuery(String
+                .format("DELETE FROM UserSession AS u WHERE u.sessionId = '%s'", sessionId))
+                .executeUpdate();
+    }
 }

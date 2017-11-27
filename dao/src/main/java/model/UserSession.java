@@ -53,4 +53,13 @@ public class UserSession implements Serializable{
     public void setExpiredTime(LocalDateTime expiredTime) {
         this.expiredTime = expiredTime;
     }
+
+    @Override
+    public String toString() {
+        return "UserSession{" +
+                "id=" + id +
+                ", sessionId='" + sessionId + '\'' +
+                ", expiredTime=" + expiredTime +
+                '}';
+    }
 }

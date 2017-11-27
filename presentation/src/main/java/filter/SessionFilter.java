@@ -4,22 +4,25 @@ import controller.UserController;
 import model.User;
 import model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import service.interfaces.UserService;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import service.interfaces.UserSessionService;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class SessionFilter implements Filter {
 
     @Autowired
-    private UserService userService;
+    private UserSessionService userSessionService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        //init filter config
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                filterConfig.getServletContext());
     }
 
     @Override
@@ -28,12 +31,13 @@ public class SessionFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
 
         if(res.getStatus() >= 200 && res.getStatus() < 300) {
-            User user = (User) req.getAttribute("user");
-            UserSession userSession = (UserSession) req.getAttribute("userSession");
+            User user = (User) req.getSession().getAttribute("user");
+            UserSession userSession = (UserSession) req.getSession().getAttribute("userSession");
             if(user != null && userSession != null){
                 String sessionId = UserController.generateSessionId(user.getLogin(), user.getPassword());
                 userSession.setSessionId(sessionId);
-                userService.updateUserSession(userSession);
+                userSession.setExpiredTime(LocalDateTime.now().plusMinutes(5));
+                userSessionService.updateUserSession(userSession);
                 Cookie cookie = new Cookie(UserController.COOKIE, sessionId);
                 cookie.setMaxAge(300);
                 res.addCookie(cookie);

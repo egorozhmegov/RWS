@@ -14,4 +14,11 @@ public interface UserSessionDao extends GenericDao<UserSession> {
      * @return UserSession
      */
     UserSession getUserSessionById(String sessionId);
+
+    /**
+     * Removes session.
+     *
+     * @param sessionId String
+     */
+    void removeSession(String sessionId);
 }

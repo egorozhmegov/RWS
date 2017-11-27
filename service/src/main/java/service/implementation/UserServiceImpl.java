@@ -2,14 +2,12 @@ package service.implementation;
 
 import dao.interfaces.GenericDao;
 import dao.interfaces.UserDao;
-import dao.interfaces.UserSessionDao;
 import exception.UserServiceEmailException;
 import exception.UserServiceEmployeeException;
 import exception.UserServiceInvalidDataException;
 import exception.UserServiceLoginException;
 import model.Employee;
 import model.User;
-import model.UserSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import service.interfaces.UserRoleService;
 import service.interfaces.UserService;
+import service.interfaces.UserSessionService;
 import util.PasswordCrypt;
 
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
 
 /**
  * User account service implementation.
@@ -32,16 +30,14 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
 
     private static final String ROLE_ADMIN = "ADMIN";
 
-    public static final int SESSION_TIME = 5;
-
     @Autowired
     private UserDao userDao;
 
     @Autowired
-    private UserSessionDao userSessionDao;
+    private UserRoleService userRoleService;
 
     @Autowired
-    private UserRoleService userRoleService;
+    private UserSessionService userSessionService;
 
     /**
      * Get user by login.
@@ -166,34 +162,9 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
      *
      * @param sessionId String
      */
-    @Transactional
     @Override
     public void createUserSession(String sessionId) {
-        LOG.info("Created session with id: {}", sessionId);
-        userSessionDao.create(new UserSession(sessionId, LocalDateTime.now().plusMinutes(SESSION_TIME)));
-    }
-
-    /**
-     * Gets user session.
-     *
-     * @param sessionId String.
-     * @return UserSession.
-     */
-    @Transactional
-    @Override
-    public UserSession getUserSession(String sessionId){
-        return userSessionDao.getUserSessionById(sessionId);
-    }
-
-    /**
-     * Update user session.
-     *
-     * @param userSession UserSession.
-     */
-    @Transactional
-    @Override
-    public void updateUserSession(UserSession userSession) {
-        userSessionDao.update(userSession);
+        userSessionService.createUserSession(sessionId);
     }
 
     public void setUserDao(UserDao userDao) {

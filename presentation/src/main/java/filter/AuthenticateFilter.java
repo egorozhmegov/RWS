@@ -3,23 +3,26 @@ package filter;
 import controller.UserController;
 import model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import service.interfaces.UserService;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import service.interfaces.UserSessionService;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class AuthenticateFilter implements Filter {
 
     @Autowired
-    private UserService userService;
+    private UserSessionService userSessionService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        //init filter config
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                filterConfig.getServletContext());
     }
 
     @Override
@@ -44,14 +47,16 @@ public class AuthenticateFilter implements Filter {
             if (cookies != null) {
                 for (Cookie ck : cookies) {
                     String sessionId = ck.getValue();
-
                     if(Objects.equals(UserController.COOKIE, ck.getName())){
-                        userSession = userService.getUserSession(sessionId);
+                        userSession = userSessionService.getUserSession(sessionId);
                     }
 
-                    if (userSession != null && Objects.equals(sessionId, userSession.getSessionId()))
-                        req.setAttribute("userSession", userSession);
+                    if (userSession != null
+                            && Objects.equals(sessionId, userSession.getSessionId())
+                            && userSession.getExpiredTime().isAfter(LocalDateTime.now())){
+                        req.getSession().setAttribute("userSession", userSession);
                         foundCookie = true; break;
+                    }
                 }
             }
 

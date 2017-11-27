@@ -65,6 +65,10 @@
 
     <bean id="userSessionDao" class="dao.implementation.UserSessionDaoImpl"/>
 
+    <bean id="userSessionService" class="service.implementation.UserSessionServiceImpl" >
+        <property name="userSessionDao" ref="userSessionDao"/>
+    </bean>
+
     <bean id="clientService" class="service.implementation.ClientServiceImpl" />
 
     <bean id="timetableService" class="service.implementation.TimetableServiceImpl" />
