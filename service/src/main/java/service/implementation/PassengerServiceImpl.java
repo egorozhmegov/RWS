@@ -55,11 +55,8 @@ public class PassengerServiceImpl extends GenericServiceImpl<Passenger> implemen
         List<Passenger> registeredPassengers = new ArrayList<>();
 
         List<Schedule> route = clientService.getCurrentRoute(
-                trainId, railWayStationService
-                         .read(departStationId).
-                         getTitle(), railWayStationService
-                                     .read(arriveStationId)
-                                     .getTitle());
+                trainId, railWayStationService.read(departStationId).
+                         getTitle(), railWayStationService.read(arriveStationId).getTitle());
 
         LocalDate arriveDate = clientService.getRoutePointDate(departDate, route.get(route.size() - 1));
 
@@ -98,19 +95,12 @@ public class PassengerServiceImpl extends GenericServiceImpl<Passenger> implemen
                                             Passenger passenger){
 
         List<Schedule> route = clientService.getCurrentRoute(
-                trainId, railWayStationService
-                        .read(departStationId).
-                                getTitle(), railWayStationService
-                        .read(arriveStationId)
-                        .getTitle());
+                trainId, railWayStationService.read(departStationId).getTitle(),
+                         railWayStationService.read(arriveStationId).getTitle());
 
         LocalDate arrivalDay = clientService.getRoutePointDate(departDay, route.get(route.size() - 1));
         LOG.info("Registered passenger loaded.");
-        return passengerDao.getRegisteredPassenger(
-                trainId
-                ,departDay
-                ,arrivalDay
-                ,passenger);
+        return passengerDao.getRegisteredPassenger(trainId, departDay, arrivalDay, passenger);
     }
 
 

@@ -300,7 +300,6 @@ public class ClientServiceImpl implements ClientService {
                     .format("Message not send on email: %s", ticketData.getUserEmail()));
         }
         LOG.info("Passenger {} registered", ticketData.getPassenger());
-        System.out.println("JENKINS");
     }
 
     /**
