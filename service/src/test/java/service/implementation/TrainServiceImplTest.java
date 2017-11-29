@@ -1174,7 +1174,7 @@ public class TrainServiceImplTest {
         boolean result = TrainServiceImpl
                 .isAddMiddleRoutePoint(route, station, departTime, departDays, arriveTime, arriveDays);
 
-        assertTrue(result);
+        assertFalse(result);
     }
 
     @Test
